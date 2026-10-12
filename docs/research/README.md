@@ -7,7 +7,8 @@ Broad survey of cellular-automata models tied to geography, focused on
 |---|---|
 | `search-protocol.md` | Goal, domains, sources, selection rules, output format |
 | `reimplementability-criteria.md` | Scoring of publications (S1–S5, classes A–D) |
-| `domains/*.md` | Per-domain survey: search log, model families, catalogue, entries, leads |
+| `domains/*.md` | Per-domain survey: search log, model families, catalogue, entries, leads, round-2 changes |
+| `domains/new-phenomena.md` | Horizon scan of phenomena outside the longlist (round 2) |
 | `catalogue.md` | Cross-domain summary for selecting models to implement |
 
 Workflow rules:

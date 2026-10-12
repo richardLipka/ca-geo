@@ -1,6 +1,6 @@
 # Movement of people and vehicles — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 Domain code: `mov`. BibTeX keys as in the `mov` fragment of `/references.bib`.
 
 **Verification note.** The OpenAlex daily quota was exhausted early in this round
@@ -46,6 +46,25 @@ Date of all searches: 2026-10-12.
 | floor field / lattice gas / Nagel–Schreckenberg / BML | GitHub (API + `gh`) | 0 / 1 / 132 / 19 repos | many third-party NaSch & BML implementations; no author-published FFCA repo found |
 | web searches (tsunami CA, WUI fire + evacuation CA, CA accessibility, FFCA code) | WebSearch | — | leads listed under "Gaps" |
 
+### Round 2
+
+OpenAlex was still quota-blocked; searches and metadata checks used Crossref (paced, occasional HTTP 429 retried) and Semantic Scholar. Full texts came from arXiv, Springer OA PDFs, Nature OA PDFs, MDPI (in-app browser), IntechOpen and an author PDF at VUT Brno. HAL (Anubis check), ScienceDirect (CAPTCHA) and the U. Twente repository (Cloudflare check) blocked access; we did not try to get past these checks. Downloaded PDFs stayed in the agent scratchpad and were deleted after text extraction.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| OA-PDF lookup: NaSch, BML, Wood 2012, Zheng 2019, Weiss 2018 | Semantic Scholar | 5 | BML (arXiv) and Wood 2012 (Springer OA) read. NaSch (HAL) and Weiss 2018 (U. Twente) blocked by bot checks. Zheng 2019 closed. |
+| Full text: Liu 2023 | MDPI (in-app browser) | 1 | Read, including speed-reduction equations. |
+| `Potuzak road traffic simulation cellular automaton`; `Potuzak distributed traffic simulation Nagel Schreckenberg` | Crossref; Semantic Scholar | 6 + 6 | ZČU papers are on network division and communication protocols for distributed simulation. The 2026 OA paper was read: it uses a static traffic-assignment benchmark, no CA. Lead closed. |
+| `Potuzak … Nagel-Schreckenberg … West Bohemia` | web search | – | No ZČU CA link. Found CZ work at VUT Brno instead: Korček, Sekanina & Fučík (CA traffic, calibrated on Czech road data), a VUT CA traffic simulator (software result) and a VUT bachelor thesis on NaSch. |
+| `Korcek cellular automata traffic simulation GPU` | Crossref | 3 relevant | Korček et al. 2011 (IEEE IV), 2012 (ITSC; author PDF read), 2012 (LNCS, travel-time calibration, not assessed). |
+| `Toprakli … cellular automata … pedestrian evacuation` (3 variants) | Crossref | 0 | Still not in Crossref. Found on the Gazi University portal (journal article, 2024); stays an unverified lead. |
+| `cellular automata tsunami evacuation real map`; `… flood evacuation residents town`; `floor field … GIS urban area earthquake shelter`; `… OpenStreetMap city scale` | Crossref | ranked | No CA evacuation on real city maps beyond round-1 items. Arai et al. 2011 (NaSch-based evacuation traffic, Sidoarjo mudflow, Indonesia) added. |
+| `cellular automata wildfire evacuation traffic coupled` | Crossref | ranked | Kita 2014 (already a lead), Arai 2011, Li, Cova & Dennison 2018 (fire + traffic coupling, not CA; not assessed). |
+| `cellular automaton accessibility … travel time`; Weiss 2020 / Nelson 2019 lookups | Crossref; Nature OA | ranked | Weiss 2020 (healthcare travel time) and Nelson 2019 (accessibility suite with open R code) read; both cost-distance fronts, not CA. |
+| `Was Lubas cellular automata crowd …`; `Bazior Palka Was …`; `Porzycki … stadium` | Crossref | 3 + 3 + 3 | AGH Kraków (PL) CA crowd group: Lubaś 2016 (Allianz Arena stadium model), Bazior 2020 (multi-cell pedestrians), Porzycki 2014 (NIST TN 1822 tests applied to CA). |
+| `wildlife vehicle collision cellular automaton road` | Crossref | ranked | No CA found. Bénard et al. 2023 (individual-based model, bioRxiv) noted as a new-phenomenon reference. |
+| `cellular automata crowd mass event festival stadium` | Crossref | ranked | Carneiro 2013 (stadium CA, not assessed), Lubaś 2016. |
+
 ## Model families
 
 1. **Floor-field cellular automata (FFCA) for pedestrians.** One pedestrian per cell of
@@ -63,7 +82,8 @@ Date of all searches: 2026-10-12.
    neighbour with a drift towards its target. These are the forerunners of FFCA, used
    for counterflow and evacuation (`muramatsu1999jamming`, `guo2008mobile`,
    `guo2013modeling`). `blue2001cellular` covers rule-based bidirectional walkway CA.
-3. **Single-lane stochastic traffic CA.** NaSch: acceleration, braking to the gap,
+3. **Single-lane stochastic traffic CA.** Round 2 CZ example: an extended NaSch with ten
+   parameters calibrated by a genetic algorithm on Czech road data (`korcek2012evolutionary`). NaSch: acceleration, braking to the gap,
    random slowdown with probability p, then movement; 7.5 m cells, 1 s steps,
    vmax = 5 (`nagel1992cellular`). Slow-to-start / VDR
    (`barlovic1998metastable`). Brake-light / comfortable-driving model with empirical
@@ -84,6 +104,8 @@ Date of all searches: 2026-10-12.
    evacuation time to high ground for tsunamis), `weiss2018global` (global friction
    surface and travel time to cities). The geographic evacuation literature (tsunami,
    flood) mostly uses this least-cost approach or agent-based models, not true CA.
+   Round 2: `nelson2019suite` (open R scripts with gdistance) and `weiss2020global` (walking-only
+   and motorised friction surfaces) are fully open versions of the Weiss 2018 method.
 7. **CA on real outdoor geometry.** Only a few verified items: `velasquez2021outdoors`
    (CA plus graph on Google elevation tiles for hill evacuation routes) and
    `dang2021chain` (multi-floor CA navigation grid for VR crowd evacuation).
@@ -96,7 +118,7 @@ Date of all searches: 2026-10-12.
 | Key | Year | Short title | Phenomenon | CA design (grid / neighbourhood / states / det. or stoch.) | S1 S2 S3 S4 S5 | Total | Class | Code | Access | Assessed from |
 |---|---|---|---|---|---|---|---|---|---|---|
 | nagel1992cellular | 1992 | NaSch freeway CA | single-lane traffic | 1D, 7.5 m cells, look-ahead vmax; v∈{0..5}; stochastic | 2 2 1 2 2 | 9 | A | third-party (GitHub) | OA (HAL, bot-blocked) | review full text (maerivoet2005) |
-| biham1992selforganization | 1992 | BML city traffic | 2D grid jamming | 2D torus, 2 species, alternate update; deterministic | 2 2 1 2 2 | 9 | A | third-party JS | OA (arXiv) | abstract + review full text |
+| biham1992selforganization | 1992 | BML city traffic | 2D grid jamming | 2D torus, 2 species, alternate update; deterministic | 2 2 1 2 2 | 9 | A | third-party JS | OA (arXiv) | full text (r2) |
 | kirchner2002simulation | 2002 | Bionics FFCA evacuation | room evacuation | 2D 0.4 m, Moore, static+dynamic field; stochastic parallel | 2 2 0 2 2 | 8 | B | not found | OA (arXiv) | full text |
 | kirchner2003friction | 2003 | Friction & clogging in FFCA | bottleneck clogging | as above + friction μ | 2 2 0 2 2 | 8 | B | not found | OA (arXiv) | full text |
 | rickert1996two | 1996 | Two-lane CA traffic | multi-lane traffic | 2 × 1D NaSch + lane-change sub-step; stochastic | 2 2 0 2 2 | 8 | B | not found | OA (arXiv) | full text |
@@ -105,11 +127,11 @@ Date of all searches: 2026-10-12.
 | weiss2018global | 2018 | Global travel time to cities | accessibility | 1 km friction raster, least-cost front from cities | 1 1 1 2 2 | 7 | B | GEE assets (closed platform); data open | OA (repository) | abstract + web summary (provisional) |
 | burstedde2001simulation | 2001 | 2D CA pedestrian dynamics | lane formation, evacuation | 2D 0.4 m, Moore, preference matrix + floor fields | 2 1 0 2 1 | 6 | C | not found | OA (arXiv) | full text |
 | nowak2012quantitative | 2012 | FFCA counterflow | bidirectional flow | FFCA, 2 species, anticipation | 1 1 0 2 2 | 6 | C | not found | OA (arXiv) | abstract (provisional) |
-| wood2012anisotropic | 2012 | Anisotropic path tsunami evacuation | tsunami pedestrian evacuation time | raster least-cost, slope-direction anisotropy | 1 1 1 2 1 | 6 | C | closed (ArcGIS tool) | OA (Springer) | abstract (provisional) |
+| wood2012anisotropic | 2012 | Anisotropic path tsunami evacuation | tsunami pedestrian evacuation time | raster least-cost, slope-direction anisotropy (Tobler) | 2 2 1 2 1 | 8 | B | closed (ArcGIS tool) | OA (Springer) | full text (r2) |
 | nagel1998twolane | 1998 | Systematic two-lane rules | lane changing | NaSch + lane-change scheme | 1 1 0 2 1 | 5 | C | not found | OA (arXiv) | abstract (provisional) |
 | barlovic1998metastable | 1998 | VDR slow-to-start | metastability, hysteresis | NaSch with velocity-dependent p | 1 1 0 2 1 | 5 | C | not found | OA (arXiv) | abstract (provisional) |
 | chopard1996cellular | 1996 | CA street network with rotaries | Manhattan city traffic | 2D street lattice, rotary junctions | 1 1 0 2 1 | 5 | C | not found | OA (UNIGE repository) | abstract (provisional) |
-| liu2023cellular | 2023 | CA evacuation with fire products | building fire evacuation | FFCA with speed reduced by visibility/CO from FDS | 1 1 0 1 2 | 5 | C | not found | OA (MDPI) | abstract (provisional) |
+| liu2023cellular | 2023 | CA evacuation with fire products | building fire evacuation | 0.4 m Moore CA; dwell time scaled by visibility/CO factors from FDS | 1 1 0 1 2 | 5 | C | not found | OA (MDPI) | full text (r2) |
 | blue2001cellular | 2001 | Bidirectional walkway CA | pedestrian counterflow | 2D rule-based CA, multi-speed | 1 0 0 2 1 | 4 | C | not found | paywall | metadata only (provisional) |
 | muramatsu1999jamming | 1999 | Counterflow lattice gas | pedestrian jamming | 2D biased random walk, 2 species | 1 0 0 2 1 | 4 | C | not found | paywall | metadata only (provisional) |
 | guo2008mobile | 2008 | Mobile lattice gas evacuation | room evacuation | 2D lattice gas, multi-step per tick | 1 0 0 2 1 | 4 | C | not found | paywall | metadata only (provisional) |
@@ -127,6 +149,18 @@ Date of all searches: 2026-10-12.
 | schadschneider2009evacuation | 2009 | Evacuation dynamics | review (pedestrians) | — | n/a | — | n/a | — | paywall | metadata |
 | zheng2009modeling | 2009 | Crowd evacuation: seven approaches | review (evacuation) | — | n/a | — | n/a | — | paywall | metadata |
 | pelechano2008evacuation | 2008 | CA for high-rise evacuation: challenges | critique/review | — | n/a | — | n/a | — | OA (UPC repository) | metadata |
+| nelson2019suite | 2019 | Global accessibility indicators (r2) | travel time to settlements of 9 size classes | 30″ friction raster, least-cost (gdistance); not CA | 2 1 2 2 2 | 9 | A | yes (R scripts, figshare) | OA | full text (r2) |
+| weiss2020global | 2020 | Travel time to healthcare (r2) | accessibility to hospitals/clinics, motorised and walking | friction raster, Dijkstra (GEE / gdistance); not CA | 2 1 1 2 2 | 8 | B | stated on project page (not inspected) | OA | full text (r2) |
+| korcek2012evolutionary | 2012 | GA calibration of CA traffic, CZ data (r2) | road traffic, Czech road segments | 1D, 7.5 m cells, extended NaSch (p1–p10) | 2 2 0 1 2 | 7 | B | not found | author PDF (VUT) | full text (r2) |
+| placzek2010fuzzy | 2010 | Fuzzy cellular traffic model (r2) | queue discharge at signals (PL) | 1D cellular, fuzzy-number vehicle states | 1 1 0 2 1 | 5 | C | not found | preprint (arXiv 1112.4055) | abstract (provisional) |
+| bazior2020using | 2020 | Multi-cell pedestrians, high density (r2) | dense crowds (PL) | 2D fine grid, pedestrian = several cells | 1 1 0 2 1 | 5 | C | not found | OA (Springer) | abstract (provisional) |
+| korcek2011scalable | 2011 | Scalable CA traffic simulation (r2) | large networks, CZ group | 1D CA, bit-level states, smoother braking | 1 1 0 1 1 | 4 | C | not found (VUT software result, licence required) | paywall | abstract (provisional) |
+| arai2011cellular | 2011 | CA evacuation traffic, Sidoarjo mudflow (r2) | vehicular evacuation from a disaster area (Indonesia) | NaSch-based, lane changing, driver types | 1 1 0 1 1 | 4 | C | not found | OA (IntechOpen) | full text (r2) |
+| lubas2016cellular | 2016 | CA basis for crowd ABM, stadium (r2) | large-scale crowd (stadium) (PL) | non-homogeneous asynchronous CA + agents | 1 0 0 1 1 | 3 | D | not found | paywall | abstract via catalogue summary (provisional) |
+| ronchi2013process | 2013 | NIST TN 1822 evacuation-model tests (r2) | verification & validation suite | — | n/a | — | n/a | — | OA (NIST) | full text (test list) |
+| porzycki2014application | 2014 | NIST TN 1822 applied to CA (r2) | V&V of CA crowd models (PL) | — | n/a | — | n/a | — | paywall | metadata |
+| vanetten2017gdistance | 2017 | R package gdistance (r2) | cost-distance on grids (software paper) | — | n/a | — | n/a | yes (CRAN) | OA | metadata |
+| potuzak2026benchmark | 2026 | Road-network division benchmark, ZČU (r2) | distributed traffic simulation (CZ), not CA | — | n/a | — | n/a | yes (GitLab, RONDIBET) | OA | full text (r2) |
 
 ## Entries
 
@@ -243,17 +277,21 @@ Date of all searches: 2026-10-12.
 - **Reimplementability:** S1 1. S2 1. S3 0. S4 1. S5 1 → **4, C**. Assessed from: abstract (provisional).
 - **Browser fit:** Good.
 - **Relevance to ca-geo:** **Chain L12 (HYD-02 → MOV-01)**. A template for coupling a flood CA depth raster to evacuees through extra floor fields: a height field from the DEM and a danger field from water depth.
+- **Round 2:** no OA copy found (Semantic Scholar: closed). Score unchanged.
 
 ### liu2023cellular — Cellular Automaton Model for Pedestrian Evacuation Considering Impacts of Fire Products
 - **Citation:** Liu, Y., Li, J., Sun, C. (2023). Cellular Automaton Model for Pedestrian Evacuation Considering Impacts of Fire Products. *Fire* 6(8), 320. DOI: 10.3390/fire6080320 (verified: Crossref)
-- **Access:** OA (MDPI; automated access blocked).
-- **Phenomenon and study area:** Single-room and multi-room building fire.
-- **Model:** CA evacuation in which walking speed and familiarity change over time with visibility and CO concentration. These are imported from FDS smoke simulations, giving one-way coupling.
+- **Access:** OA (MDPI). Round 2: full text read in the in-app browser.
+- **Phenomenon and study area:** Single-room (13.2 × 10.4 m) and multi-room (38 × 18.4 m) building with a 4 MW fire.
+- **Model:** CA evacuation in which walking speed and familiarity change over time with visibility and CO concentration. These are imported from FDS/Pyrosim smoke simulations, giving one-way coupling.
+  - 0.4 m cells, Moore neighbourhood, free speed 1.2 m/s. Speed is turned into a dwell time per cell, ST = S / (v · f_s · f_CO).
+  - Visibility factor f_s = min(1, max(0.2, 1 − 0.34·(3 − VIS))). CO factor f_CO is 1 below 0.1% CO, falls with concentration and exposure time between 0.1% and 0.25%, and is 0 above.
+  - Visibility range uses a line-of-sight check against obstacles and the lowest visibility along the line. Unfamiliar pedestrians follow the densest visible cluster (density-peak clustering).
 - **Inputs:** FDS output fields. **Parameters:** partly in the abstract (densities 0.1–0.5 p/m², CO yield). **Code:** not found.
 - **Validation:** Quantitative scenario results (percentage changes in efficiency), not validated against data.
-- **Reimplementability:** S1 1. S2 1. S3 0. S4 1. S5 2 → **5, C**. Assessed from: abstract (provisional).
+- **Reimplementability:** S1 1 – the speed coupling is explicit, but the movement rule and conflict handling are only sketched; S2 1; S3 0; S4 1; S5 2 – evacuation times for densities 0.1–0.5 in a table → **5, C**. Round 2: re-assessed from full text — score unchanged.
 - **Browser fit:** The CA part fits. The FDS fields would have to be precomputed.
-- **Relevance to ca-geo:** L12 pattern. Hazard-field → speed-reduction coupling, the same idea as using a gas plume (ATM-03) to slow or block evacuees.
+- **Relevance to ca-geo:** L12 pattern. Hazard-field → speed-reduction coupling, the same idea as using a gas plume (ATM-03) to slow or block evacuees. The f_s and f_CO factors are a ready formula for slowing evacuees in a smoke or gas raster.
 
 ### velasquez2021outdoors — Outdoors Evacuation Routes Algorithm Using Cellular Automata and Graph Theory for Uphills and Downhills
 - **Citation:** Velasquez, W., Alvarez-Alvarado, M.S. (2021). Outdoors Evacuation Routes Algorithm Using Cellular Automata and Graph Theory for Uphills and Downhills. *Sustainability* 13(9), 4731. DOI: 10.3390/su13094731 (verified: OpenAlex/Crossref)
@@ -287,7 +325,7 @@ Date of all searches: 2026-10-12.
 - **Parameters:** vmax, p, density. Standard values are widely documented. Free-flow mean speed is vmax − p.
 - **Code:** third-party open implementations verified, for example https://github.com/morethanoneanimal/Nagel-Schreckenberg-simulation, https://github.com/jstitch/NaSch.py, https://github.com/yohm/sim_ns_model. These are not by the authors.
 - **Validation:** Fundamental diagram and space-time plots, with analytical limits known.
-- **Reimplementability:** S1 2. S2 2. S3 1 – third-party code only. S4 2. S5 2 → **9, A**. Assessed from: full text of review (maerivoet2005cellular) plus abstract.
+- **Reimplementability:** S1 2. S2 2. S3 1 – third-party code only. S4 2. S5 2 → **9, A**. Assessed from: full text of review (maerivoet2005cellular) plus abstract. Round 2: the HAL copy is behind an automated-browser check (Anubis), which we did not try to pass; score unchanged.
 - **Browser fit:** Trivial. Millions of cell updates per second in JS.
 - **Relevance to ca-geo:** MOV-02 lead **confirmed**. Run on OSM road links as 1D lattices with junction rules (see esser1997microscopic). Needs a rasterised or graph representation, not a 2D raster CA.
 
@@ -334,13 +372,13 @@ Date of all searches: 2026-10-12.
 
 ### biham1992selforganization — Self-organization and a dynamical transition in traffic-flow models
 - **Citation:** Biham, O., Middleton, A.A., Levine, D. (1992). Self-organization and a dynamical transition in traffic-flow models. *Physical Review A* 46(10), R6124–R6127. DOI: 10.1103/physreva.46.r6124 (verified: Crossref)
-- **Access:** OA, arXiv cond-mat/9206001.
+- **Access:** OA, arXiv cond-mat/9206001. Round 2: full text read.
 - **Phenomenon and study area:** Abstract city grid. Sharp jamming transition.
-- **Model:** 2D torus with two car species (east-bound and north-bound). Species move on alternate steps, one cell if the target is empty. Deterministic apart from the random initial condition. Rules confirmed in maerivoet2005cellular §5.2.1.
+- **Model:** 2D torus with two car species (east-bound and north-bound). Species move on alternate steps, one cell if the target is empty (a blocked car does not move even if the blocker leaves in the same step). Deterministic apart from the random initial condition. Rules confirmed in maerivoet2005cellular §5.2.1. The paper also defines a stochastic variant without the alternating "traffic light" (random choice in conflicts; p_c ≈ 0.10 at 512 × 512) and an overlap variant with a continuous transition.
 - **Parameters:** Density only.
 - **Code:** third-party, for example https://github.com/MaciekBaron/BMLTrafficJS (JavaScript) and https://github.com/kdelrosso/traffic-flow-sim (verified URLs).
-- **Validation:** Transition from free flow to global gridlock at a critical density.
-- **Reimplementability:** S1 2. S2 2. S3 1. S4 2. S5 2 → **9, A**. Assessed from: abstract + review full text.
+- **Validation:** Transition from free flow (v = 1) to global gridlock (v = 0) at a critical density, shown for 16 × 16 to 512 × 512 lattices; p_c(N) decreases with N and its infinite-size limit is left open. The 1D analogue has v = 1 for p < 1/2 and v = (1 − p)/p above.
+- **Reimplementability:** S1 2. S2 2. S3 1. S4 2. S5 2 → **9, A**. Round 2: re-assessed from full text — scores confirmed (was assessed from abstract + review).
 - **Browser fit:** Trivial. Ideal as a teaching demo.
 - **Relevance to ca-geo:** MOV-02 conceptual demo. Not geographic as such, but it is the bridge from 2D raster CA to traffic.
 
@@ -401,14 +439,19 @@ Date of all searches: 2026-10-12.
 
 ### wood2012anisotropic — Anisotropic path modeling to assess pedestrian-evacuation potential from Cascadia-related tsunamis in the US Pacific Northwest
 - **Citation:** Wood, N.J., Schmidtlein, M.C. (2012). Anisotropic path modeling to assess pedestrian-evacuation potential from Cascadia-related tsunamis in the US Pacific Northwest. *Natural Hazards* 62(2), 275–300. DOI: 10.1007/s11069-011-9994-2 (verified: Crossref; online 2011, print 2012)
-- **Access:** OA (Springer). Automated access redirected to login.
+- **Access:** OA (Springer, CC BY-NC). Round 2: full text read.
 - **Phenomenon and study area:** Pedestrian evacuation time to high ground before tsunami arrival, Long Beach Peninsula, Washington, USA.
-- **Model:** Least-cost path distance on a raster. Travel cost depends on land cover and on slope direction, so uphill and downhill differ. Not a CA as such, but a cost-distance front equivalent to the MOV-03 mechanism.
-- **Inputs:** Elevation (several resolutions, including lidar), land cover, safe-zone boundary. **Parameters:** travel speeds (varied in sensitivity tests). **Code:** ArcGIS path-distance tool (closed). The USGS Pedestrian Evacuation Analyst page returned 403 and was not verified.
-- **Validation:** Sensitivity of travel times and exposed population to resolution and speed assumptions.
-- **Reimplementability:** S1 1. S2 1. S3 1. S4 2. S5 1 → **6, C**. Assessed from: abstract (provisional).
-- **Browser fit:** Very good.
-- **Relevance to ca-geo:** MOV-03 + MOV-01 on a DEM. Direct template for "time to safe ground" maps from a flood extent (HYD-02) or other hazard. CZ DEM (DMR 5G) and land cover would fit.
+- **Model:** Least-cost distance from the safe zone outward over a raster. Four variants are compared: straight-line, road-network only, isotropic slope + land cover, and anisotropic slope + land cover.
+  - Each cell gets a "speed conservation value" (SCV, the fraction of maximum walking speed). Slope SCV comes from Tobler's hiking function, speed = 6·exp(−3.5·|slope + 0.05|) km/h, divided by its maximum. Land-cover SCV comes from Soule & Goldman terrain coefficients: Table 1 maps NLCD classes to values (roads 1.0; developed 0.91; forest, grass and crops 0.83; shrub 0.67; barren and wetlands 0.56; water impassable).
+  - The anisotropic variant computes the slope between each cell and each neighbour and looks up the Tobler-based cost by direction. Because the search runs from safety into the hazard zone, the sign of the slope is reversed.
+  - Distance surfaces are turned into time with a base speed of 1.1 m/s (15th percentile of walking speeds of a mixed population).
+- **Inputs:** Lidar DEM (1 m, also coarser versions), land cover, roads, tsunami inundation line (safe-zone boundary), population.
+- **Parameters:** All given (Tobler formula, SCV table, base speed). Sensitivity to DEM and land-cover resolution is tested.
+- **Code:** ArcGIS Path Distance tool (closed). The USGS Pedestrian Evacuation Analyst page was not verified.
+- **Validation:** Difference maps (minutes) between model variants and between resolutions; for example, in one resolution test half of the cells showed no change and 40% were overestimated by up to 15 min. No observed evacuation data.
+- **Reimplementability:** S1 2 – complete cost model and direction handling; S2 2 – all values tabulated; S3 1 – closed tool only; S4 2 – DEM and land cover are generic; S5 1 – results are tied to local US data, so they cannot be reproduced exactly → **8, B** (was 6, C provisional). Round 2: re-assessed from full text — S1 2, S2 2 (were 1, 1).
+- **Browser fit:** Very good. A Dijkstra or fast-marching front with 8 neighbours and a direction-dependent cost.
+- **Relevance to ca-geo:** MOV-03 + MOV-01 on a DEM. The SCV table maps directly to CORINE / Urban Atlas classes, and Tobler plus the direction reversal is exactly what a "time to safe ground" front needs. Direct template for a flood (HYD-02) or fire (HAZ-01) evacuation-time map on CZ DMR 5G.
 
 ### weiss2018global — A global map of travel time to cities to assess inequalities in accessibility in 2015
 - **Citation:** Weiss, D.J., Nelson, A., Gibson, H.S., Temperley, W., Peedell, S., Lieber, A., Hancher, M., Poyart, E. et al. (2018). A global map of travel time to cities to assess inequalities in accessibility in 2015. *Nature* 553(7688), 333–336. DOI: 10.1038/nature25181 (verified: OpenAlex/Crossref)
@@ -418,7 +461,7 @@ Date of all searches: 2026-10-12.
 - **Inputs:** Open global layers. **Parameters:** speed tables (in supplementary material; not seen).
 - **Code / data:** Friction surface and accessibility GeoTIFFs in DANS (https://doi.org/10.17026/dans-ztx-2sd2, verified 200). Earth Engine assets `Oxford/MAP/friction_surface_2015_v1_0` and `Oxford/MAP/accessibility_to_cities_2015_v1_0` (catalog pages verified 200). No standalone code repository found.
 - **Validation:** Comparison with Google Maps travel times (as reported in summaries; not checked).
-- **Reimplementability:** S1 1. S2 1. S3 1. S4 2. S5 2 – the open output raster is a direct reference → **7, B**. Assessed from: abstract + web summaries (provisional).
+- **Reimplementability:** S1 1. S2 1. S3 1. S4 2. S5 2 – the open output raster is a direct reference → **7, B**. Assessed from: abstract + web summaries (provisional). Round 2: the U. Twente author copy is behind a Cloudflare check, so still not read. The method is restated in the OA follow-ups `nelson2019suite` and `weiss2020global`.
 - **Browser fit:** Good for a regional clip (e.g. CZ at 1 km is about 80 000 cells).
 - **Relevance to ca-geo:** MOV-03. The open friction surface is a ready-made cost raster, and its accessibility map is a benchmark for our own front-propagation CA.
 
@@ -449,66 +492,211 @@ Date of all searches: 2026-10-12.
 - **Access:** OA (UPC repository hdl.handle.net/2117/11066, per Semantic Scholar; not opened).
 - **Reimplementability:** n/a. A critical view of the limits of CA evacuation tools (grid artefacts, behaviour). Useful for stating the limitations of a browser CA demo.
 
+### Round 2 additions
+
+### korcek2012evolutionary — Evolutionary approach to calibration of cellular automaton based traffic simulation models (round 2)
+- **Citation:** Korcek, P., Sekanina, L., Fucik, O. (2012). Evolutionary approach to calibration of cellular automaton based traffic simulation models. In *2012 15th International IEEE Conference on Intelligent Transportation Systems*, 122–129. DOI: 10.1109/itsc.2012.6338759 (verified: Crossref)
+- **Access:** author PDF at VUT Brno FIT (https://www.fit.vut.cz/research/publication-file/9898/itsc2012.pdf). Round 2: full text read (text extraction; tables partly garbled).
+- **Phenomenon and study area:** Road traffic on three Czech road sections measured by detectors in 2010 (data from industrial partners): among them a winding segment with a 50 km/h limit and a section with climbing lanes; a 130 km/h motorway limit is also mentioned (the extracted text is partly garbled). **CZ study.**
+- **Model:** Single-lane CA in the NaSch family with 7.5 m cells and a step of 0.6–1.5 s. The authors' earlier update (`korcek2011scalable`) adds parameters p1–p10 to the transition function, for example probabilistic acceleration and anticipation of the leader's speed, so that a car cannot drop from top speed to zero in one step. Pseudocode of the updated rule is given.
+- **Calibration:** A genetic algorithm (population of 60, up to 125 000 iterations) fits the CA parameters and traffic-stream parameters. The objective is the normalised orthogonal distance between simulated and measured flow–speed–density points, using the Van Aerde functional form.
+- **Inputs:** Detector flow, speed and occupancy (not public); road geometry.
+- **Parameters:** Table I lists the model parameters; Table III gives the evolved values and per-point errors for each data set.
+- **Code:** not found (the simulator is a VUT software result that requires a licence; see gaps).
+- **Validation:** About 20% lower error than a manually tuned model; fundamental diagrams compared with field data.
+- **Reimplementability:** S1 2; S2 2 – values per data set; S3 0; S4 1 – detector data not public, but the method runs on any loop-detector series (e.g. Czech national traffic information system data, to be checked); S5 2 → **7, B**. Assessed from: full text.
+- **Browser fit:** Easy; the GA calibration would run offline or in a Web Worker.
+- **Relevance to ca-geo:** MOV-02. The only verified CA traffic study calibrated on Czech data. Gives a reference parameter set for Czech motorway and urban traffic.
+
+### korcek2011scalable — A scalable cellular automata based microscopic traffic simulation (round 2)
+- **Citation:** Korcek, P., Sekanina, L., Fucik, O. (2011). A scalable cellular automata based microscopic traffic simulation. In *2011 IEEE Intelligent Vehicles Symposium (IV)*, 13–18. DOI: 10.1109/ivs.2011.5940393 (verified: Crossref)
+- **Access:** paywall (IEEE). Abstract from the VUT FIT publication record.
+- **Phenomenon and study area:** Very large road networks (VUT Brno group, CZ).
+- **Model:** CA traffic model extended to avoid unrealistic stops from top speed in one step; bit-level state encoding for memory efficiency; OpenMP parallel version with near-linear speed-up.
+- **Validation:** Compared with fundamental diagrams.
+- **Reimplementability:** S1 1, S2 1, S3 0, S4 1, S5 1 → **4, C**. Assessed from: abstract (provisional). The rule is restated in `korcek2012evolutionary`.
+- **Relevance to ca-geo:** MOV-02 background for the CZ calibration paper; bit-packing idea for large browser networks.
+
+### placzek2010fuzzy — Fuzzy Cellular Model for On-Line Traffic Simulation (round 2)
+- **Citation:** Płaczek, B. (2010). Fuzzy Cellular Model for On-Line Traffic Simulation. In *Lecture Notes in Computer Science* (PPAM 2009), 553–560. DOI: 10.1007/978-3-642-14403-5_59 (verified: Crossref)
+- **Access:** preprint on arXiv (1112.4055).
+- **Phenomenon and study area:** Queue discharge at a signal, for on-line traffic control (Polish author).
+- **Model:** Cellular traffic model in which vehicle parameters are fuzzy numbers, to carry input uncertainty into the result. Compared with NaSch.
+- **Reimplementability:** S1 1, S2 1, S3 0, S4 2, S5 1 → **5, C**. Assessed from: abstract (provisional).
+- **Relevance to ca-geo:** MOV-02 variant. Low priority; shows a Central European line of CA traffic work.
+
+### bazior2020using — Using Cellular Automata to Model High Density Pedestrian Dynamics (round 2)
+- **Citation:** Bazior, G., Pałka, D., Wąs, J. (2020). Using Cellular Automata to Model High Density Pedestrian Dynamics. In *Lecture Notes in Computer Science* (ICCS 2020), 486–498. DOI: 10.1007/978-3-030-50371-0_36 (verified: Crossref)
+- **Access:** OA (Springer).
+- **Phenomenon and study area:** Very dense crowds (AGH Kraków group, PL).
+- **Model:** A pedestrian occupies several small cells, with shapes for a person with a backpack, a wheeled suitcase or a bicycle, instead of one 0.4 m cell. Movement mechanisms are defined for these shapes.
+- **Reimplementability:** S1 1, S2 1, S3 0, S4 2, S5 1 → **5, C**. Assessed from: abstract (provisional).
+- **Relevance to ca-geo:** MOV-01 at high density (mass events). Shows how to go beyond one-person-per-cell FFCA.
+
+### lubas2016cellular — Cellular Automata as the basis of effective and realistic agent-based models of crowd behavior (round 2)
+- **Citation:** Lubaś, R., Wąs, J., Porzycki, J. (2016). Cellular Automata as the basis of effective and realistic agent-based models of crowd behavior. *The Journal of Supercomputing* 72(6), 2170–2196. DOI: 10.1007/s11227-016-1718-7 (verified: Crossref)
+- **Access:** paywall. Abstract seen only as a catalogue summary (CoMSES).
+- **Phenomenon and study area:** Large-scale crowd simulation, applied to a model of the Allianz Arena stadium (Munich) (AGH Kraków group, PL).
+- **Model:** Non-homogeneous, asynchronous CA combined with agents; architecture, synchronisation, object hierarchy and a new conflict-resolution method for agents.
+- **Reimplementability:** S1 1, S2 0, S3 0, S4 1, S5 1 → **3, D**. Assessed from: abstract via catalogue summary (provisional).
+- **Relevance to ca-geo:** New-phenomenon lead (crowds at mass events). Related: Porzycki et al. (2014) applied the NIST TN 1822 tests to CA crowd models (`porzycki2014application`).
+
+### arai2011cellular — Cellular Automata for Traffic Modelling and Simulations in a Situation of Evacuation from Disaster Areas (round 2)
+- **Citation:** Arai, K., Harsono, T., Basuki, A. (2011). Cellular Automata for Traffic Modelling and Simulations in a Situation of Evacuation from Disaster Areas. In *Cellular Automata – Simplicity Behind Complexity* (InTech). DOI: 10.5772/15769 (verified: Crossref)
+- **Access:** OA (IntechOpen). Round 2: full text read (text extraction).
+- **Phenomenon and study area:** Vehicle evacuation from the area of the Sidoarjo (LUSI) hot mudflow, East Java, Indonesia.
+- **Model:** NaSch-based stochastic traffic CA with lane changing and a modified car-following term that separates "usual" and "diligent" drivers; an optimal-velocity continuous model is discussed alongside.
+- **Inputs:** Road segment geometry; a 24-hour speed survey on the Porong road (speed distributions by vehicle type).
+- **Parameters:** Survey distributions given; several CA parameters are left as tuning weights.
+- **Code:** not found.
+- **Validation:** Survey statistics; evacuation-time scenarios (qualitative to semi-quantitative).
+- **Reimplementability:** S1 1, S2 1, S3 0, S4 1, S5 1 → **4, C**. Assessed from: full text.
+- **Relevance to ca-geo:** Chain L12 (hazard → vehicle evacuation on a real road). Weakly specified, but one of the few CA traffic studies tied to a real hazard zone.
+
+### nelson2019suite — A suite of global accessibility indicators (round 2)
+- **Citation:** Nelson, A., Weiss, D.J., van Etten, J., Cattaneo, A., McMenomy, T.S., Koo, J. (2019). A suite of global accessibility indicators. *Scientific Data* 6, 266. DOI: 10.1038/s41597-019-0265-5 (verified: Crossref)
+- **Access:** OA. Round 2: full text read (methods and code sections).
+- **Phenomenon and study area:** Travel time from every location to the nearest settlement in nine size classes (from 5 000 people to 5 million), global, 2015, about 1 km resolution.
+- **Model:** Not a CA. Least-cost accumulation over the Weiss 2018 friction surface (time to cross one metre). The R package gdistance builds an 8-neighbour transition matrix of conductances (mean of neighbouring pixel values, inverted from resistance) and accumulates cost from source pixels. Processing runs zone by zone because of raster size.
+- **Inputs:** The open 2015 friction surface and settlement point/extent data.
+- **Parameters:** Friction values come from Weiss 2018 (supplementary speed tables not seen); processing steps are fully described.
+- **Code:** R scripts for the layers and for validation on figshare, DOI 10.6084/m9.figshare.7638134.v3 (resolves).
+- **Validation:** Compared with travel times from a routing API (validation scripts included). The nine output rasters are open.
+- **Reimplementability:** S1 2; S2 1; S3 2; S4 2; S5 2 → **9, A**. Assessed from: full text. Not a CA, but the same front mechanism as MOV-03.
+- **Browser fit:** Good for a CZ clip at 1 km (about 80 000 cells).
+- **Relevance to ca-geo:** MOV-03 benchmark. Clip the open rasters to CZ and compare with a browser front on the same friction surface.
+
+### weiss2020global — Global maps of travel time to healthcare facilities (round 2)
+- **Citation:** Weiss, D.J., Nelson, A., Vargas-Ruiz, C.A., Gligorić, K., Bavadekar, S., Gabrilovich, E. et al. (2020). Global maps of travel time to healthcare facilities. *Nature Medicine* 26(12), 1835–1838. DOI: 10.1038/s41591-020-1059-1 (verified: Crossref)
+- **Access:** OA. Round 2: full text read (methods).
+- **Phenomenon and study area:** Travel time to the nearest hospital or clinic, global, with and without motorised transport. Facility locations from OpenStreetMap, Google Maps and academic sources.
+- **Model:** Not a CA. Dijkstra least-cost on gridded friction surfaces (Google Earth Engine `cumulativeCost`, R gdistance `accCost`). In the walking-only surface every road is walked at 5 km/h and water is crossed at 1 km/h.
+- **Parameters:** Speed assignments per surface type are in the supplementary material (not seen).
+- **Code / data:** Friction surfaces and travel-time maps as GeoTIFF; the paper states that source code is at https://malariaatlas.org/research-project/accessibility_to_healthcare/ (page checked 200, code not inspected).
+- **Validation:** Population shares within one hour (8.9% cannot reach care within 1 h with motorised transport, 43.3% on foot).
+- **Reimplementability:** S1 2; S2 1; S3 1 – code location stated but not verified; S4 2; S5 2 – open output rasters → **8, B**. Assessed from: full text.
+- **Relevance to ca-geo:** MOV-03 "emergency service reach". The walking-only friction surface is a ready input for a CZ demo of time to hospital on foot or by car.
+
+### ronchi2013process — The Process of Verification and Validation of Building Fire Evacuation Models (round 2)
+- **Citation:** Ronchi, E., Kuligowski, E.D., Reneke, P.A., Peacock, R.D., Nilsson, D. (2013). The Process of Verification and Validation of Building Fire Evacuation Models. NIST Technical Note 1822. DOI: 10.6028/nist.tn.1822 (verified: Crossref)
+- **Access:** OA (NIST). Round 2: test list checked in the full text.
+- **Content:** A suite of verification tests for evacuation models, many adapted from the IMO tests (for example exit-route allocation, maximum flow rates, demographic parameters), plus validation procedures and convergence criteria for stochastic runs.
+- **Reimplementability:** n/a. A benchmark source: the tests are geometry-plus-expected-behaviour checks that a browser FFCA can be run against. Porzycki et al. (2014, `porzycki2014application`, DOI 10.1007/978-3-319-11520-7_46, metadata only) applied it to CA crowd models.
+- **Relevance to ca-geo:** MOV-01 test suite; complements the Kirchner evacuation-time curves.
+
+### vanetten2017gdistance — R Package gdistance: Distances and Routes on Geographical Grids (round 2)
+- **Citation:** van Etten, J. (2017). R Package gdistance: Distances and Routes on Geographical Grids. *Journal of Statistical Software* 76(13). DOI: 10.18637/jss.v076.i13 (verified: Crossref)
+- **Content:** Software paper for the cost-distance package used by Weiss 2018/2020 and Nelson 2019 (transition matrices, accumulated cost, least-cost paths, random-walk distances on grids). OA.
+- **Reimplementability:** n/a (software reference). Documents the transition-matrix formulation.
+- **Relevance to ca-geo:** MOV-03 algorithm reference for a JavaScript port.
+
+### potuzak2026benchmark — Benchmark of road network division methods for distributed or parallel road traffic simulation (round 2)
+- **Citation:** Potuzak, T. (2026). Benchmark of road network division methods for distributed or parallel road traffic simulation. *The Journal of Supercomputing* 82. DOI: 10.1007/s11227-026-08542-1 (verified: Crossref)
+- **Access:** OA (CC BY). Round 2: full text checked.
+- **Content:** University of West Bohemia (ZČU Plzeň). A benchmark for dividing road networks into sub-networks before distributed simulation, run on four public test networks (Transportation Networks for Research). Uses static traffic assignment flows; no cellular automaton. Tool RONDIBET on GitLab (https://gitlab.com/tpotuzak/rondibet, checked 200).
+- **Reimplementability:** n/a (not a CA).
+- **Relevance to ca-geo:** Closes the round-1 lead: the ZČU traffic work is about distributed simulation infrastructure, not CA rules. Possible local contact for traffic-simulation questions.
+
 ## Most reimplementable (top picks)
 
 1. **nagel1992cellular (A, 9).** Four-line rule, standard parameters, analytical checks. The baseline for MOV-02 on OSM links.
-2. **biham1992selforganization (A, 9).** A 2D grid traffic CA with a sharp jamming transition. An ideal browser demo and test case.
-3. **kirchner2002simulation (B, 8).** The canonical FFCA with full parameters and evacuation-time curves. The reference for MOV-01.
-4. **kirchner2003friction (B, 8).** Adds one parameter (μ) for realistic clogging at bottlenecks.
-5. **knospe2000towards (B, 8).** Complete parameter set, calibrated against empirical motorway data.
-6. **chowdhury1999selforganization (B, 8).** The minimal signalised city-network CA with parameters.
-7. **rickert1996two (B, 8).** Explicit two-lane rules with parameters.
-8. **weiss2018global (B, 7).** Not a CA, but an open friction raster and a reference output for MOV-03.
+2. **biham1992selforganization (A, 9).** A 2D grid traffic CA with a sharp jamming transition; round 2 confirmed from the full text. An ideal browser demo and test case.
+3. **nelson2019suite (A, 9; round 2, not a CA).** Open R code and open output rasters for travel time over a friction surface. The benchmark for a MOV-03 front.
+4. **kirchner2002simulation (B, 8).** The canonical FFCA with full parameters and evacuation-time curves. The reference for MOV-01.
+5. **kirchner2003friction (B, 8).** Adds one parameter (μ) for realistic clogging at bottlenecks.
+6. **wood2012anisotropic (B, 8; round 2 up from 6).** Complete anisotropic evacuation-time recipe: Tobler slope function, land-cover speed table, direction reversal, base speed. The static field for MOV-01 on a DEM.
+7. **knospe2000towards (B, 8).** Complete parameter set, calibrated against empirical motorway data.
+8. **chowdhury1999selforganization (B, 8)** and **rickert1996two (B, 8).** Signalised city network and two-lane rules with parameters.
+9. **korcek2012evolutionary (B, 7; round 2, CZ).** Extended NaSch calibrated on Czech road detector data.
+10. **weiss2020global (B, 8)** and **weiss2018global (B, 7).** Open friction surfaces (including walking-only) and reference travel-time maps.
 
-For geographic evacuation (MOV-01 on real maps), no single verified paper scores B or
-better. The practical route is to combine the FFCA rules (kirchner2002/2003) with a static
-field computed as an anisotropic cost-distance on a DEM and land cover (the
-wood2012anisotropic / duff2015using mechanism), plus hazard-driven extra floor fields
-(zheng2019simulation).
+For geographic evacuation (MOV-01 on real maps), there is still no verified CA paper that scores B or
+better. The practical route is unchanged but better documented: FFCA rules (kirchner2002/2003)
+with a static field computed as an anisotropic cost distance on a DEM and land cover
+(wood2012anisotropic, now fully specified), hazard-driven extra floor fields
+(zheng2019simulation) and speed factors for smoke or gas (liu2023cellular), checked against
+the NIST TN 1822 tests (ronchi2013process).
 
 ## Gaps and unverified leads
 
-- **Tooling problem:** OpenAlex was rate-limited (daily budget exhausted) for most of the
-  round, and publisher pages blocked automated reads. Re-run the OpenAlex queries in round
-  2 for citation counts and OA links. Read the full texts of nowak2012quantitative,
-  barlovic1998metastable, nagel1998twolane, chopard1996cellular and nagel2001parallel
-  (all on arXiv or OA) to raise their provisional scores.
+- **Tooling problem:** OpenAlex was still rate-limited in round 2. Bot checks blocked HAL
+  (NaSch original), ScienceDirect and the U. Twente repository (Weiss 2018); we did not try to
+  get past them. The arXiv full texts of nowak2012quantitative, barlovic1998metastable,
+  nagel1998twolane and nagel2001parallel and the UNIGE copy of chopard1996cellular were not
+  read in round 2 (priority went to geography-bound items); they remain cheap upgrades.
 - **Metadata-only entries** (blue2001cellular, muramatsu1999jamming, guo2008mobile,
-  guo2013modeling, varas2007cellular, lovreglio2015calibrating) need at least their
-  abstracts checked.
-- **True CA evacuation on real geography (tsunami, flood, wildfire) is rare.** Tsunami and
-  flood evacuation studies found are mainly least-cost-distance or agent-based (e.g.
-  MATSim). Leads not yet verified: Soga, Comfort, Zhao, Lorusso, Soysal (2021) UC
-  Berkeley ITS report coupling a CA fire-spread model with spatial-queue evacuation
-  traffic for Paradise and Bolinas, CA (no DOI found in Crossref); Kita et al. 2014 IEEE
-  CANDAR "Traffic Network Design for Disaster Evacuation by Cellular Automata Simulation"
-  (DOI 10.1109/candar.2014.31, seen in Crossref but not assessed); Lämmel, Rieser, Nagel
-  2009 "Large Scale Microscopic Evacuation Simulation" (PED 2008, DOI
-  10.1007/978-3-642-04504-2_48, queue-based, not CA).
-- **Review with an implementation guide:** Toprakli (2024), "A Review and Implementation
-  Guide for Basic Cellular Automata Models in Pedestrian Evacuation Simulation", Gazi
-  University Journal of Science Part B. Seen on the web, **not found in Crossref**, so
-  unverified.
-- **Code:** no author-published open FFCA or lattice-gas code was found. Vadere (GPLv3,
-  gitlab.lrz.de/vadere/vadere, verified 200; paper DOI 10.17815/cd.2019.21) implements
-  optimal-steps, gradient-navigation and social-force models; no CA was confirmed.
-  JuPedSim (github.com/PedestrianDynamics/jupedsim, verified 200) is not CA-based.
-  TRANSIMS source (SourceForge) could not be verified (HTTP 403).
-- **CZ/EU:** No Czech CA traffic or evacuation paper was found. T. Potuzak (ZČU Plzeň)
-  publishes on distributed road traffic simulation and network division (e.g. DOI
-  10.1109/ds-rt55542.2022.9932112). Check in round 2 whether his traffic model is
-  NaSch-based. EU items: esser1997microscopic (Duisburg) and the Duisburg/NRW online
-  traffic simulation (Wahle et al. 1998, DOI 10.1007/978-1-4471-1281-5_17; Santen et al.
-  1998, DOI 10.1016/b978-008043430-8/50029-0), not assessed.
-- **Further families for round 2:** Kretz & Schreckenberg F.A.S.T. model (DOI
-  10.1007/11861201_85, multi-speed FFCA); Nishinari et al. extended FFCA (DOI
-  10.1007/3-540-28091-x_40); Daganzo 2006 "In traffic flow, cellular automata = kinematic
-  waves" (DOI 10.1016/j.trb.2005.05.004, OA); synchronized-flow CA review Tian et al.
-  2020 (DOI 10.1080/23249935.2020.1810820); Adamatzky 1996 shortest path in CA (DOI
-  10.1016/0895-7177(96)00006-4) as theory for MOV-03; Tobler's hiking function as a
-  slope–speed rule (find a citable, verifiable source).
+  guo2013modeling, varas2007cellular, lovreglio2015calibrating, porzycki2014application)
+  still need at least their abstracts checked.
+- **True CA evacuation on real geography (tsunami, flood, wildfire) is still rare.** Round 2
+  searches (tsunami, flood, earthquake shelter, OSM city scale) found nothing beyond round 1
+  except arai2011cellular (vehicle evacuation, weakly specified). Leads not verified or not
+  assessed: Soga, Comfort, Zhao, Lorusso, Soysal (2021) UC Berkeley ITS report coupling a CA
+  fire-spread model with spatial-queue evacuation traffic (no DOI found); Kita et al. 2014 IEEE
+  CANDAR (DOI 10.1109/candar.2014.31, verified, not assessed); Li, Cova & Dennison (2018),
+  wildfire evacuation triggers by coupling fire and traffic simulation, *Fire Technology* 55,
+  617–642, DOI 10.1007/s10694-018-0771-6 (verified, not assessed; probably not CA); Lämmel,
+  Rieser, Nagel 2009 (DOI 10.1007/978-3-642-04504-2_48, queue-based, not CA); Carneiro et al.
+  2013, crowd evacuation CA in a soccer stadium (DOI 10.1109/svr.2013.29, verified, not
+  assessed); Schadschneider et al. 2011, towards a calibration of the FFCA (PED 2010, DOI
+  10.1007/978-1-4419-9725-8_50, verified, not assessed).
+- **Toprakli (2024)**, "A Review and Implementation Guide for Basic Cellular Automata Models in
+  Pedestrian Evacuation Simulation", *Gazi University Journal of Science Part B* 12(3),
+  517–530. Still **not in Crossref** (three query variants). Listed on the Gazi University
+  research portal (https://avesis.gazi.edu.tr/yayin/b23b7dc5-ce12-4b57-91c0-a3a427d9b539/a-review-and-implementation-guide-for-basic-cellular-automata-models-in-pedestrian-evacuation-simulation,
+  checked 200). Covers FFCA and social-force CA with an implementation workflow. Kept as an
+  unverified lead until a DOI is found.
+- **Code:** no author-published open FFCA or lattice-gas code was found (round 1 and a quick
+  round-2 GitHub check). Vadere and JuPedSim are not CA-based (see round 1).
+- **CZ/EU:**
+  - Resolved: the ZČU lead (T. Potuzak) is distributed-simulation infrastructure, not CA
+    (`potuzak2026benchmark`).
+  - New CZ CA traffic work at VUT Brno: `korcek2011scalable`, `korcek2012evolutionary`, and a
+    travel-time calibration paper (Korček, Sekanina & Fučík 2012, LNCS, DOI
+    10.1007/978-3-642-33350-7_84, verified, not assessed). Grey literature, no DOI: VUT
+    software result "Microscopic CA-based traffic simulator" (Korček & Fülöp, NaSch-based,
+    version 2 in 2016, licence required; https://www.fit.vutbr.cz/research/view_product.php?id=314,
+    checked 200); Hodaňová (2010), bachelor thesis on CA traffic modelling with a Java NaSch
+    simulator, VUT FIT (http://hdl.handle.net/11012/56081, checked 200).
+  - Central Europe (PL): AGH Kraków crowd CA group (`lubas2016cellular`, `bazior2020using`,
+    `porzycki2014application`; also Wąs & Lubaś 2014, *Neurocomputing* 146, 199–209, DOI
+    10.1016/j.neucom.2014.04.057, and Wąs et al. 2016, *Acta Phys. Pol. B Proc. Suppl.* 9,
+    133, DOI 10.5506/aphyspolbsupp.9.133, both verified, not assessed); Płaczek
+    (`placzek2010fuzzy`).
+  - EU items from round 1 (esser1997microscopic; Wahle et al. 1998; Santen et al. 1998) still
+    not assessed.
+- **Further families (from round 1, not yet done):** Kretz & Schreckenberg F.A.S.T. (DOI
+  10.1007/11861201_85); Nishinari et al. extended FFCA (DOI 10.1007/3-540-28091-x_40); Daganzo
+  2006 (DOI 10.1016/j.trb.2005.05.004, OA); Tian et al. 2020 (DOI
+  10.1080/23249935.2020.1810820); Adamatzky 1996 (DOI 10.1016/0895-7177(96)00006-4).
+  **Tobler's hiking function:** the formula is now available from a verified source
+  (`wood2012anisotropic`, eq. 1). The original (Tobler 1993, NCGIA technical report) has no
+  DOI; Goodchild (2020), "Beyond Tobler's Hiking Function", *Geographical Analysis* 52,
+  558–569, DOI 10.1111/gean.12253 (verified, not assessed) discusses it.
 - **Overlaps:** `fire` (duff2015using, guo2013modeling, liu2023cellular, WUI fire–evacuation
   coupling); `hyd` (zheng2019simulation, flood → evacuation chain L12); `gen`
-  (lovreglio2015calibrating calibration, dang2021chain visualisation,
-  maerivoet2005cellular as a CA methods review); `eco` (front over a cost raster also used
-  for animal dispersal, ECO-04).
+  (lovreglio2015calibrating calibration, dang2021chain visualisation, maerivoet2005cellular as
+  a CA methods review, vanetten2017gdistance); `eco` (front over a cost raster also used for
+  animal dispersal, ECO-04; wildlife–vehicle collisions, below).
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| wood2012anisotropic | 6, C (provisional) | 8, B | Full text read: complete cost model and SCV table (S1, S2 1 → 2). |
+| biham1992selforganization | 9, A | 9, A | Full text read; scores confirmed, "assessed from" updated. |
+| liu2023cellular | 5, C (provisional) | 5, C | Full text read; speed-coupling formulas added, score unchanged. |
+| nagel1992cellular, weiss2018global, zheng2019simulation | unchanged | unchanged | Full text attempted, no access. |
+| nelson2019suite | – | 9, A (new) | Open code and outputs for travel-time fronts. |
+| weiss2020global | – | 8, B (new) | Healthcare travel time; walking-only friction surface. |
+| korcek2012evolutionary | – | 7, B (new) | CZ-calibrated CA traffic model. |
+| placzek2010fuzzy, bazior2020using | – | 5, C (new, provisional) | Central European CA traffic / crowd variants. |
+| korcek2011scalable, arai2011cellular | – | 4, C (new) | CZ scalable CA traffic; hazard evacuation traffic. |
+| lubas2016cellular | – | 3, D (new, provisional) | Stadium crowd CA (mass events). |
+| ronchi2013process, porzycki2014application, vanetten2017gdistance, potuzak2026benchmark | – | n/a (new) | Benchmark suite, its CA application, software reference, CZ lead closed. |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Crowd flows at mass events (ingress / egress) | Pedestrians entering or leaving a stadium, festival ground or square through gates and streets, in normal operation rather than emergency; bottlenecks and waiting times. | Same FFCA engine as MOV-01, but a different, everyday question (gate capacity, crowd density); high-density CA variants exist. | Football stadiums, festivals, Christmas markets and New Year crowds in Prague and other cities. | `lubas2016cellular` (D, provisional), `bazior2020using` (C, provisional); test suite `ronchi2013process` (n/a) | Close to MOV-01, which is framed as evacuation only. |
+| Wildlife–vehicle collisions | Animals moving across a landscape raster meet traffic on roads; collision risk per road segment depends on animal movement, traffic volume and speed. | Couples ECO-04 (animal movement) with MOV-02 (traffic); clear map output (roadkill hot-spots). | High: wildlife collisions are frequent on Czech roads. | `benard2023biologically` (n/a; individual-based model, bioRxiv preprint, not CA) | No CA found. A CA version (random walk on a habitat raster crossing a NaSch road) would be our own design. |

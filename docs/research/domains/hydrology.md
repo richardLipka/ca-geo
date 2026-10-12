@@ -1,6 +1,6 @@
 # Hydrology and floods — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 
 Domain code `hyd`. Longlist items covered: HYD-01, HYD-02, HYD-03, HYD-04, URB-02, LND-03
 (evaluated together as `WAT` / `water-flow-flooding`), plus HYD-05 (erosion) context.
@@ -54,6 +54,30 @@ Barnes 2021, Douvinet 2014 (partly), Hunter 2008 (White Rose eprint) and the Yu 
 discussion preprint (nhess-2024-131). Everything else is assessed from the abstract or metadata,
 and those scores are provisional.
 
+### Round 2
+
+Crossref only (OpenAlex still quota-blocked), ≥1 s between requests. Full texts were fetched
+through Semantic Scholar `openAccessPdf` links and publisher/repository PDFs with `curl`;
+Elsevier, IWA, MDPI, De Gruyter and Exeter ORE still refused automated access (403/202/401).
+PDFs were stored only in the agent scratchpad and deleted right after text extraction.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| openAccessPdf for 10 round-1 DOIs (WCA2D, Bates 2010, Coulthard 2013, Ghimire 2012, Cirbus 2013, …) | Semantic Scholar API | 10 | Cirbus 2013 green PDF read in full; WCA2D/Ghimire OA links blocked (403) |
+| caflood | GitHub repository search | 8 | **AlbertChenExeter/caflood** (co-author's repo, WCA2D `.ca` rule files), WaterDesk/caflood (MIT), FluiditLtd/caddies-caflood |
+| Guidolin "weighted cellular automata 2D inundation model" pdf | WebSearch | 9 | Only ORE handle + REF 2021 records; no readable PDF |
+| LISFLOOD-FP 8.0 Shaw | Crossref | 141 k | Shaw et al. 2021 (GMD, OA) – restates the local inertial (ACC) scheme, EA Tests 4 and 5 |
+| improving the stability … shallow water equations 2-D flood modeling de Almeida | Crossref | 376 k | de Almeida et al. 2012 (WRR); green OA copy at Southampton returned 401 |
+| LISFLOOD-FP / CAESAR-Lisflood | Zenodo API | 10 | LISFLOOD-FP v8.2 software (10.5281/zenodo.13121102, GPL-2.0), v7.1, CAESAR-Lisflood 1.9b (10.5281/zenodo.321820) |
+| gov.uk benchmarking 2D hydraulic flood modelling packages | gov.uk page + report PDF | 1 | SC080035/SR2 (Néelz & Pender 2010) read: Tests 1–8B listed; 2013 update only as zip (LIT 8570) |
+| Wijaya & Yang 2021 (10.3390/w13091311) | Crossref | 1 | Verified; abstract from Crossref, MDPI PDF 403 |
+| celulární automat simulace povodně / odtoku / eroze | WebSearch (Czech) | 10 | Only Cirbus (VŠB thesis + AMIS paper); no other Czech CA flood/runoff work |
+| SMODERP2D erosion model CTU Prague | WebSearch + Crossref | – | Landa et al. 2019 (ISPRS Archives, OA) read in full; GitHub storm-fsv-cvut/smoderp2d (GPL-3.0) |
+| cellular automata runoff Czech Republic catchment | Crossref | 0.9 M | Noise (non-CA Czech catchment models) |
+| cellular automata dam breach flood simulation | Crossref | 1.7 M | No CA breach-development rule; only hydraulic dam-breach papers |
+| cellular automaton river ice jam | Crossref | 1.0 M | No river-ice CA found |
+| Neal 2011 how much physical complexity flood inundation | Crossref | 6.8 M | Verified (10.1002/hyp.8339), green OA link at Birmingham not fetched; not catalogued |
+
 ## Model families
 
 1. **Minimisation-of-differences (MoD) water distribution.** This rule comes from Di Gregorio & Serra's
@@ -66,7 +90,8 @@ and those scores are provisional.
 2. **Exeter CA2D / WCA2D family (weight-based distribution).** Ghimire et al. used a ranking-based
    CA2D. Guidolin et al.'s WCA2D gives each lower neighbour a weight proportional to its available
    storage capacity, part of the transferable volume stays in the central cell, and the velocity
-   and time step are updated each step. The exact formulas were not read this round. It is implemented in the open CADDIES/caflood
+   and time step are updated each step. Round 2: the exact rule was read from the authors' open caflood
+   source (`outflowWCA2Dv2.ca`, see the WCA2D entry). It is implemented in the open CADDIES/caflood
    framework (CPU, OpenMP, OpenCL/GPU) and tested on UK Environment Agency benchmark cases.
    Keys: `ghimire2012formulation`, `guidolin2016weighted`, `gibson2016accuracy`,
    `yang2024convolutional`.
@@ -105,24 +130,28 @@ and those scores are provisional.
 |---|---|---|---|---|---|---|---|---|---|---|
 | barnes2021computing | 2021 | Fill–Spill–Merge | Depression filling and spilling (steady state) | Raster DEM + depression hierarchy (not local CA) / D8 / water volume per depression / det. | 2 2 2 2 2 | 10 | A | GitHub + Zenodo (verified) | OA | full text |
 | callaghan2019computing | 2019 | FlowFill | Runoff routing that floods depressions | Square raster / Moore (D8 steepest) / water depth / det., iterative | 2 2 2 2 1 | 9 | A | GitHub (verified) | OA | full text |
-| guidolin2016weighted | 2016 | WCA2D weighted CA | Pluvial/fluvial inundation | Square raster / von Neumann / depth, level, velocity / det., adaptive Δt | 1 1 1 2 2 | 7 | B | CADDIES/caflood: binaries + framework source (Exeter page) | OA (CC BY), publisher blocked | abstract + secondary (provisional) |
+| guidolin2016weighted | 2016 | WCA2D weighted CA | Pluvial/fluvial inundation | Square raster / von Neumann / depth, level, velocity / det., adaptive Δt | 2 1 2 2 2 | 9 | A | GitHub AlbertChenExeter/caflood (co-author, verified) | OA (CC BY), publisher blocked | open source code + abstract (paper text still unread) |
+| shaw2021lisflood | 2021 | LISFLOOD-FP 8.0 (r2) | Fluvial/pluvial inundation (ACC, FV1, DG2 solvers) | Raster storage cells, staggered fluxes / von Neumann / depth, unit discharge / det., Courant Δt | 1 1 2 2 2 | 8 | B | LISFLOOD-FP (GPL; Zenodo 10.5281/zenodo.13121102 v8.2) | OA | full text (first 60 %) |
+| landa2019smoderp2d | 2019 | SMODERP2D (CZ, CTU) (r2) | Runoff and soil erosion on farmland | Raster / D8 / water level, sheet + rill flow / det., CFL Δt | 1 1 2 2 1 | 7 | B | GitHub storm-fsv-cvut/smoderp2d (GPL-3.0, verified) | OA | full text |
+| dealmeida2012improving | 2012 | Stable local inertial scheme (θ) (r2) | Floodplain inundation | Raster / von Neumann / depth, discharge / det., Courant Δt | 1 1 2 2 1 | 7 | B | LISFLOOD-FP (same group) | green OA (blocked) | metadata only (provisional) |
 | wijaya2023rapid | 2023 | Hybrid Inundation Model (HIM) | Urban pluvial + 1D drainage | Coarse raster CA-4D (Manning) + fine-DEM flat-water fill / von Neumann / det. | 1 2 0 2 2 | 7 | B | not found ("N.A.") | OA | full text |
 | coulthard2013integrating | 2013 | CAESAR-Lisflood | Flood hydrodynamics + landscape evolution | Raster / von Neumann / depth, discharge, sediment / det. | 1 1 2 2 1 | 7 | B | SourceForge (verified) | paywall | abstract (provisional) |
 | barnes2014priority | 2014 | Priority-Flood | Depression filling | Raster / D8 / filled elevation (priority queue, not CA) / det. | 1 1 2 2 1 | 7 | B | GitHub (verified) | paywall | abstract (provisional) |
 | liu2015developing | 2015 | Urban CA (Guangzhou) | Urban pluvial flood | 5 m raster / von Neumann / water surface elevation, depth / det., MoD + Manning Δt | 1 2 0 2 1 | 6 | C | not found | OA | full text |
+| wijaya2021novel | 2021 | HIM origin: CA + DEM hybrid (r2) | Rapid flood assessment | Coarse CA + fine DEM fill / von Neumann / depth / det. | 1 1 0 2 2 | 6 | C | not found | OA (MDPI blocked) | abstract (provisional) |
 | yang2024convolutional | 2024 | CNN-WCA | Urban pluvial flood (Zhengzhou) | Raster / Moore / depth / det. WCA + 1D CNN | 1 1 1 1 2 | 6 | C | on request | OA | full text |
-| bates2010simple | 2010 | LISFLOOD-FP local inertial | Floodplain inundation | Raster storage cells / von Neumann / depth, discharge / det. | 1 1 0 2 1 | 5 | C | not verified this round | paywall | metadata only (provisional) |
+| bates2010simple | 2010 | LISFLOOD-FP local inertial | Floodplain inundation | Raster storage cells / von Neumann / depth, discharge / det. | 1 1 2 2 1 | 7 | B | LISFLOOD-FP (GPL; Zenodo, verified) | paywall | metadata + OA restatement in shaw2021lisflood (provisional) |
 | planchon2002fast | 2002 | Planchon–Darboux filling | Depression filling | Raster / Moore / water-surface elevation / det., iterative | 1 1 0 2 1 | 5 | C | not verified | paywall | metadata only (provisional) |
 | chang2022dynamic | 2022 | Dynamic-wave CA (SWFCA) | Shallow-water flows incl. discontinuities | Square raster / von Neumann / Bernoulli head, depth, velocity / det., CFL Δt | 1 1 0 2 1 | 5 | C | not found | OA (CC BY), publisher blocked | secondary (preprint + web) (provisional) |
 | yu2025high | 2025 | GPU CA flow + pollutant | Pluvial/fluvial flood + solute | Same as SWFCA + solute CA / GPU | 1 1 0 1 2 | 5 | C | not found | OA? (not checked) | discussion preprint full text (provisional) |
 | douvinet2014flash | 2014 | RuiCells flash floods | Flash floods in dry valleys (N France, EU) | Triangular DEM cells / directed links / water height / det., 3 rules | 1 2 0 1 1 | 5 | C | not found | OA (CC BY) | full text (partial read) |
-| gibson2016accuracy | 2016 | CA accuracy and efficiency (caflood) | Urban surface flood | Raster / von Neumann / depth / det. | 1 1 1 1 1 | 5 | C | CADDIES (see WCA2D) | OA | abstract (provisional) |
+| gibson2016accuracy | 2016 | CA accuracy and efficiency (caflood) | Urban surface flood | Raster / von Neumann / depth / det. | 1 1 2 1 1 | 6 | C | caflood (see WCA2D, verified) | OA | abstract (provisional) |
 | parsons2007cellular | 2007 | CA model of surface water flow | Unsteady watershed flood wave | Raster / – / depth / det., Manning + timing delay | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
 | ghimire2012formulation | 2012 | Fast 2D urban pluvial CA (CA2D) | Urban pluvial flood | Raster / von Neumann / depth / det., synchronous | 1 1 0 1 1 | 4 | C | not found | OA (CC BY-NC-ND), publisher blocked | abstract (provisional) |
 | dottori2012testing | 2012 | Simple 2D model, urban lab experiment | Urban flood (physical model) | Raster / von Neumann / depth / det., diffusive | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
 | jamali2019cellular | 2019 | CA-ffé | Max urban flood depth (fast) | Raster / – / depth / det. | 1 1 0 1 1 | 4 | C | not found | OA (bronze), publisher blocked | abstract (provisional) |
 | shao2015runca | 2015 | RunCA | Surface runoff, multi-scale | Raster / – / elevation + depth / det., MoD + Manning | 1 1 0 1 1 | 4 | C | not found | paywall | web abstracts (provisional) |
-| cirbus2013cellular | 2013 | CA flow on Earth surface (CZ) | Water spreading over terrain | Raster / – / depth / det.; slope, roughness, infiltration | 1 1 0 1 1 | 4 | C | not found | OA? (no PDF link) | abstract (provisional) |
+| cirbus2013cellular | 2013 | CA flow on Earth surface (CZ) | River flood spreading (Ostravice) | 10 m raster / Moore, multi-direction / depth / det., Manning + Δt halving, Green–Ampt | 1 1 0 1 2 | 5 | C | not found | green OA (publisher PDF) | full text |
 | chang2021overland | 2021 | Overland–gully–sewer CA | Urban inundation + SWMM | Raster CA 2D + 1D SWMM / det. | 1 1 0 1 1 | 4 | C | not found | green OA (Exeter, blocked) | abstract (provisional) |
 | furnari2024hydrocal | 2024 | HydroCAL | Integrated surface–subsurface hydrology | 2D surface CA + 3D Richards CA (OpenCAL, asynchronous XCA) | 1 1 0 1 1 | 4 | C | not found | green OA, publisher blocked | web abstracts (provisional) |
 | dottori2011developments | 2011 | CA flood inundation model developments | Fluvial inundation | Raster / von Neumann / depth / det. | 1 0 0 1 1 | 3 | D | not found | paywall | metadata only (provisional) |
@@ -135,8 +164,9 @@ and those scores are provisional.
 | caviedesvoullieme2018cellular | 2018 | CA and FV converge | Theory / review | – | n/a | n/a | n/a | – | paywall | abstract |
 | hunter2008benchmarking | 2008 | Glasgow urban benchmark | Benchmark of 6 2D codes | – | n/a | n/a | n/a | – | green OA | full text |
 | bates2022flood | 2022 | Flood inundation prediction | Review | – | n/a | n/a | n/a | – | OA | abstract |
+| neelz2010benchmarking | 2010 | EA 2D benchmark tests 1–8B (r2) | Benchmark (grey literature, no DOI) | – | n/a | n/a | n/a | – | public (gov.uk) | full text |
 
-Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
+Count (after round 2): 36 Crossref-verified publications + 1 grey-literature report. 31 scored: A 3, B 7, C 16, D 5. 6 n/a (incl. the grey-literature benchmark).
 
 ## Entries
 
@@ -170,14 +200,14 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 - **Citation:** Guidolin, M., Chen, A. S., Ghimire, B., Keedwell, E. C., Djordjević, S., Savić, D. A. (2016). A weighted cellular automata 2D inundation model for rapid flood analysis. *Environmental Modelling & Software* 84, 378–394. DOI: 10.1016/j.envsoft.2016.07.008 (verified: Crossref)
 - **Access:** OA (CC BY, hybrid), but the publisher site blocked our fetch. Exeter ORE handle 10871/22670 also blocked.
 - **Phenomenon and study area:** 2D pluvial and fluvial inundation. Tested against an analytical solution, four hypothetical cases and one real-world case. The wider literature reports UK Environment Agency benchmark cases for WCA2D.
-- **Model (from abstract and secondary descriptions in Yang 2024 and Wijaya 2023):** Square grid. Lower neighbours receive water in proportion to weights derived from their available storage (water-level difference to the central cell). Part of the transferable volume stays in the central cell, which reduces oscillation. The total outflow is limited by a velocity criterion, and the time step adapts to the flow. Updates are synchronous and parallel. The exact formulas were not read in this round.
+- **Model (round 2: read from the authors' caflood source, `outflowWCA2Dv2.ca`, `velocityWCA2Dv1.ca`, `Setup.cpp`):** Square grid, von Neumann neighbourhood, synchronous update. Cells with depth below `ignore_wd` are skipped. For each neighbour k the available level drop is ΔL_k = min(WL_0 − WL_k, d_0). Neighbours with ΔL_k above a tolerance get a weight w_k = ΔL_k·A_k (storage volume); the smallest such weight w_min is added to the total W = Σw_k + w_min, so this share is the volume that stays in the centre cell. The total outflow is the smallest of (i) w_min plus the inflow of the previous step, (ii) a velocity limit V_max·W/w_max with V_max = v·d_0·Δt·Δx, where v = min(20 m/s, Manning velocity on the steepest-drop edge), and (iii) the water in the cell. Each neighbour gets the outflow × w_k/W. A separate velocity step (every "update DT") takes the minimum of the flux-derived velocity, the Manning velocity and the critical velocity. Δt is adapted from these velocities with a factor α between "Min DT" and "Max DT". Code defaults: tolerance 0.001 m, slope tolerance 0.1 %, ignore depth 0.001 m.
 - **Inputs:** DEM, rainfall or inflow hydrograph, roughness.
-- **Parameters:** Manning n, tolerance, time-step limits (values not read).
-- **Code:** CADDIES framework page https://www.exeter.ac.uk/research/centres/cws/resources/caddies/ (HTTP 200). It offers caflood Windows binaries (simple/OpenMP/OpenCL), CADDIES base and CA-API source zips, a manual and examples. The stated licence is inconsistent (MIT vs GPL). The caflood application source itself is listed without a link, and git.exeter.ac.uk did not respond. Hence S3 = 1 for now.
+- **Parameters:** Manning n per case, tolerance, slope tolerance, α, min/max/update Δt. Defaults are in the code; the values used in the paper's test cases were not read.
+- **Code:** https://github.com/AlbertChenExeter/caflood (HTTP 200; owner A. S. Chen is a co-author; C++ host code plus `.ca` rule kernels for WCA2Dv1/v2 and a diffusive variant). The LICENSE file says MIT, but the `.ca` file headers carry a GPL-3 notice (cafloodpro), so the licence is still inconsistent. Mirrors: https://github.com/WaterDesk/caflood (MIT, HTTP 200) and FluiditLtd/caddies-caflood. Binaries and examples on the Exeter CADDIES page https://www.exeter.ac.uk/research/centres/cws/resources/caddies/ (HTTP 200).
 - **Validation:** Analytical solution plus comparison of depth and velocity with a commercial 2D model. Up to 8× faster in the real-world case.
-- **Reimplementability:** S1 1 (abstract cap; the rules are reportedly fully given); S2 1; S3 1; S4 2 – EA benchmark data are public; S5 2 – analytical and benchmark comparisons → 7, B (provisional, likely A after full-text read).
+- **Reimplementability:** S1 2 – the complete rule, edge cases and Δt logic are readable in the authors' open kernels; S2 1 – defaults in code, per-case values not read; S3 2; S4 2 – EA benchmark data are public; S5 2 – analytical and benchmark comparisons (per abstract) → 9, A. Round 2: re-assessed from open source code — S 2 1 2 2 2 (was 1 1 1 2 2). The paper text is still unread (Elsevier and ORE block automated access).
 - **Browser fit:** Excellent. Von Neumann stencil, explicit and GPU-native. Adaptive Δt needs a global min-reduction.
-- **Relevance to ca-geo:** **Primary WAT candidate** for HYD-01/02/03 and URB-02. Round 2 must read the full text (the formulas are known to be in the paper) and check the caflood examples.
+- **Relevance to ca-geo:** **Primary WAT candidate** for HYD-01/02/03 and URB-02. The kernel is about 60 lines and maps directly to a WebGL/WebGPU fragment or compute shader. Remaining step: read the paper for the test-case parameters.
 
 ### wijaya2023rapid — A rapid flood inundation model for urban flood analyses
 - **Citation:** Wijaya, O. T., Yang, T.-H., Hsu, H.-M., Gourbesville, P. (2023). A rapid flood inundation model for urban flood analyses. *MethodsX* 10, 102202. DOI: 10.1016/j.mex.2023.102202 (verified: Crossref)
@@ -199,8 +229,8 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 - **Model:** The LISFLOOD-FP simplified (local inertial) 2D flow scheme replaces CAESAR's steady flow routing. Explicit flux updates between raster cells, coupled with sediment transport.
 - **Inputs:** DEM, rainfall/hydrograph, grain sizes.
 - **Parameters:** Many (hydrology, sediment). Defaults ship with the software.
-- **Code:** https://sourceforge.net/projects/caesar-lisflood/ (HTTP 200).
-- **Validation:** Not read (abstract only).
+- **Code:** https://sourceforge.net/projects/caesar-lisflood/ (round-1 HTTP 200; blocks bots in round 2). Round 2: also verified on Zenodo – CAESAR-Lisflood 1.9b (10.5281/zenodo.321820) and a dataset of parameter listings for existing applications (10.5281/zenodo.6594745).
+- **Validation:** Not read (abstract only). Round 2: no OA copy found (Semantic Scholar: closed); score unchanged.
 - **Reimplementability:** S1 1; S2 1; S3 2; S4 2; S5 1 → 7, B (provisional).
 - **Browser fit:** The hydrodynamic part is feasible. The full LEM is heavy.
 - **Relevance to ca-geo:** WAT and HYD-05 (erosion), overlap with `geo`. The open code is a reference implementation of the inertial flux rule.
@@ -244,8 +274,9 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 - **Citation:** Bates, P. D., Horritt, M. S., Fewtrell, T. J. (2010). *Journal of Hydrology* 387(1–2), 33–45. DOI: 10.1016/j.jhydrol.2010.03.027 (verified: Crossref)
 - **Access:** paywall.
 - **Model:** Raster storage-cell model. Inter-cell discharge is updated explicitly with a local-inertia term and friction, and the time step is CFL-limited. Conceptually a deterministic CA with a von Neumann stencil (context, not labelled CA by its authors). Details not read.
-- **Code:** LISFLOOD-FP has open releases according to the wider literature, but no URL was verified in this round.
-- **Reimplementability:** S1 1; S2 1; S3 0; S4 2; S5 1 → 5, C (metadata only, provisional; about 1000 citations).
+- **Code:** Round 2: LISFLOOD-FP releases on Zenodo verified through the Zenodo API: v7.1 (10.5281/zenodo.4268656) and v8.2 (10.5281/zenodo.13121102, GPL-2.0). Documentation for v8.0 at https://www.seamlesswave.com/LISFLOOD8.0 (HTTP 200). The github.com/LISFLOOD-FP organisation is still not considered official.
+- **Rule (secondary, from shaw2021lisflood, OA):** depth update from the net face discharges; face discharge updated from its previous value minus a gravity term driven by the water-surface gradient, divided by a semi-implicit Manning friction factor using the flow depth at the face; Δt from a Courant condition (default 0.7 in v8.0). The θ-weighted stabilisation is in dealmeida2012improving.
+- **Reimplementability:** S1 1 (paper still unread); S2 1; S3 2 – authors' group code; S4 2; S5 1 → 7, B. Round 2: re-assessed from OA restatement + verified code — S 1 1 2 2 1 (was 1 1 0 2 1). Still provisional.
 - **Browser fit:** Excellent (two flux arrays and one depth array).
 - **Relevance to ca-geo:** WAT HYD-02 (fluvial). Probably the strongest physics-based local rule. Round 2: read the full text and verify the open LISFLOOD-FP code.
 
@@ -292,7 +323,7 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 - **Citation:** Gibson, M. J., Savic, D. A., Djordjevic, S., Chen, A. S., Fraser, S., Watson, T. (2016). *Procedia Engineering* 154, 801–810. DOI: 10.1016/j.proeng.2016.07.409 (verified: Crossref)
 - **Access:** OA (gold). The publisher blocked our fetch.
 - **Model:** Exeter CA flood model on a regular grid, applied to burst or surcharge flows from pipes over lidar terrain.
-- **Reimplementability:** S1 1; S2 1; S3 1 – CADDIES; S4 1; S5 1 → 5, C (abstract).
+- **Reimplementability:** S1 1; S2 1; S3 2 – caflood source now verified (see WCA2D); S4 1; S5 1 → 6, C (abstract). Round 2: S3 1→2 only.
 - **Relevance to ca-geo:** URB-02 (water main burst scenario idea). Accuracy and efficiency figures for caflood.
 
 ### parsons2007cellular — A cellular automata model of surface water flow
@@ -332,11 +363,16 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 
 ### cirbus2013cellular — Cellular Automata for the Flow Simulations on the Earth Surface, Optimization Computation Process
 - **Citation:** Cirbus, J., Podhoranyi, M. (2013). *Applied Mathematics & Information Sciences* 7(6), 2149–2158. DOI: 10.12785/amis/070605 (verified: Crossref)
-- **Access:** publisher page without a PDF link. A VŠB-TUO DSpace record exists (handle 10084/101852, not checked).
-- **Phenomenon and study area:** Spreading of water over terrain, Czech Republic (VŠB – Technical University of Ostrava). Exact study area not read.
-- **Model:** CA rules with slope, roughness and infiltration, plus three optimisation methods to reduce run time on large areas. Results reported as close to measurements.
-- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C (abstract).
-- **Relevance to ca-geo:** **CZ** precedent for WAT. Round 2: get the full text from VŠB DSpace. Its run-time optimisations (active-cell lists) matter for the browser.
+- **Access:** green OA – publisher PDF via Semantic Scholar (naturalspublishing.com), read in full in round 2. A related VŠB master's thesis by the first author (in Slovak) is listed at https://dspace.vsb.cz/items/5584cc47-558b-4716-a44e-0b50684f8587 (seen in search, not opened).
+- **Phenomenon and study area:** Flood spreading along a 1.5 × 1.5 km reach of the **Ostravice river** (Czech Republic; VŠB – Technical University of Ostrava, IT4Innovations), 10 m photogrammetric DEM (2007).
+- **Model:** Pre-processing builds a slope layer (8-neighbour finite differences) and a multi-direction flow-direction layer (all lowest neighbours, bit-coded). A roving window visits all cells; a temporary grid makes the update effectively synchronous. Water moves from a cell to its lower neighbours when the cell is "flooded". Velocity v = d^(2/3)·s^(1/2)/n (Manning, with terrain slope); transfer time T = Δx/v; volume moved per iteration W = d·Δx·v·Δt. Δt starts at 1 s and is halved whenever the condition T > Δt is violated. Infiltration by Green–Ampt; absorbing boundaries. How the volume is split among several lower neighbours is not fully specified.
+- **Inputs:** DEM, source cells (river inflow as a fixed water column), optional roughness and infiltration rasters.
+- **Parameters:** n = 0.04 for the whole area, zero infiltration, no rain; source 0.7 m over 3 cells (plus 0.2 m and 0.3 m tributary sources in the second run); 6 h simulated.
+- **Code:** not found (Python implementation mentioned).
+- **Validation:** 11 surveyed water levels every 200 m between two gauges (Q = 154 m³/s) vs simulated levels (table): Pearson r 0.556 without and 0.976 with the two tributaries.
+- **Optimisations:** elevation mask (cells above the source level are excluded), watershed mask, raster caching plus multiprocessing; large reductions of the 2 h 50 min base run time are reported.
+- **Reimplementability:** S1 1 – main equations and order given, distribution among several receivers unclear; S2 1 – values for the case only; S3 0; S4 1 – DEM not public (DMR 5G would be a substitute); S5 2 – tabulated measured vs simulated levels → 5, C. Round 2: re-assessed from full text — S 1 1 0 1 2 (was 1 1 0 1 1).
+- **Relevance to ca-geo:** **CZ** precedent for WAT (HYD-02) with a small published check table. The elevation-mask optimisation (skip cells that can never be reached) is directly useful in the browser.
 
 ### chang2021overland — Overland-gully-sewer (2D-1D-1D) urban inundation modeling based on cellular automata framework
 - **Citation:** Chang, T.-J., Yu, H.-L., Wang, C.-H., Chen, A. S. (2021). *Journal of Hydrology* 603, 127001. DOI: 10.1016/j.jhydrol.2021.127001 (verified: Crossref)
@@ -417,24 +453,96 @@ Count: 32 verified publications. 27 scored: A 2, B 4, C 16, D 5. 5 n/a.
 - **Content:** Review of inundation physics, simplified numerical schemes, HPC, big data and global flood models.
 - **Reimplementability:** n/a. Value: an entry point placing CA and simplified schemes among other inundation models.
 
+### shaw2021lisflood — LISFLOOD-FP 8.0: the new discontinuous Galerkin shallow-water solver for multi-core CPUs and GPUs (round 2)
+- **Citation:** Shaw, J., Kesserwani, G., Neal, J., Bates, P., Sharifian, M. K. (2021). LISFLOOD-FP 8.0: the new discontinuous Galerkin shallow-water solver for multi-core CPUs and GPUs. *Geoscientific Model Development* 14(6), 3577–3602. DOI: 10.5194/gmd-14-3577-2021 (verified: Crossref)
+- **Access:** OA (CC BY).
+- **Phenomenon and study area:** Fluvial and pluvial inundation. EA benchmark Tests 4 (slow wave over a flat floodplain) and 5 (valley flooding), and a 2500 km² rain-on-grid run of Storm Desmond (Eden catchment, UK).
+- **Model:** Compares three solvers in one code: ACC (the Bates/de Almeida local inertial scheme: explicit depth update from face discharges, discharge update from the water-surface gradient with a semi-implicit Manning friction term, staggered C-grid), FV1 (first-order finite volume) and DG2 (second-order discontinuous Galerkin). The ACC equations are restated; the Δt formula is only described (Courant number 0.7) in the part read.
+- **Inputs:** DEM, inflow hydrographs or rainfall, Manning n.
+- **Parameters:** Manning n and Courant number per test given.
+- **Code:** LISFLOOD-FP, GPL; documentation https://www.seamlesswave.com/LISFLOOD8.0 (HTTP 200); software releases on Zenodo (v8.2: 10.5281/zenodo.13121102, verified); simulation results on Zenodo (10.5281/zenodo.4661888, verified).
+- **Validation:** Water levels and velocities at EA gauge points against the other solvers; run times and multi-core scaling (ACC ≈ 7× on 16 cores).
+- **Reimplementability:** S1 1 – ACC equations given but Δt and wet/dry details are in earlier papers; S2 1; S3 2; S4 2 – EA tests public; S5 2 – quantitative point comparisons and published outputs → 8, B. Assessed from: full text (first ~60 % of the HTML).
+- **Browser fit:** ACC is the cheapest physically based rule (one depth and two flux arrays), very GPU-friendly.
+- **Relevance to ca-geo:** HYD-02 and URB-02. The best open, citable restatement of the local inertial rule, with outputs on public benchmarks that a WebGPU port can be checked against.
+
+### landa2019smoderp2d — SMODERP2D soil erosion model entering an open source era with GPU-based parallelization (round 2)
+- **Citation:** Landa, M., Jeřábek, J., Pešek, O., Kavka, P. (2019). SMODERP2D soil erosion model entering an open source era with GPU-based parallelization. *ISPRS Archives* XLII-4/W14, 143–149. DOI: 10.5194/isprs-archives-XLII-4-W14-143-2019 (verified: Crossref)
+- **Access:** OA (CC BY).
+- **Phenomenon and study area:** Event-based surface runoff and soil erosion on agricultural land and small catchments. **CZ** (Czech Technical University in Prague, Dept. of Landscape Water Conservation); performance tests on a 0.5 km² monitored Czech catchment.
+- **Model:** Raster cell-by-cell mass balance: storage change = inflow (effective rain + inflow from upslope neighbours) − outflow (infiltration, outflow, surface retention). Flow directions by D8. Surface flow is split into sheet flow q = X·I^Y·h^b (empirical X, Y, b; I = slope) and rill flow by Manning once a critical sheet-flow depth is exceeded. Δt limited by the CFL criterion. Stream routing on a predefined polyline network. The paper does not call it a CA, but the rule is a local neighbour exchange on a grid.
+- **Inputs:** DEM, soil and land-use maps (parameter tables per class), rainfall.
+- **Parameters:** Empirical sheet-flow coefficients and soil parameters come from the model's parameter database (manual); not listed in this paper.
+- **Code:** https://github.com/storm-fsv-cvut/smoderp2d (HTTP 200, GPL-3.0, active 2026); project page https://smoderp.fsv.cvut.cz/ (seen in search).
+- **Validation:** Only CPU/GPU run-time tests in this paper; hydrological validation is in other SMODERP publications (not verified).
+- **Reimplementability:** S1 1 – core equations given, details in the reference manual; S2 1; S3 2; S4 2 – generic DEM, soil and land-use layers (Czech soil data exist); S5 1 → 7, B. Assessed from: full text.
+- **Browser fit:** Good (D8 stencil, explicit, CFL-limited Δt).
+- **Relevance to ca-geo:** HYD-01 and HYD-05 (muddy floods on Czech farmland). The only open Czech raster runoff–erosion code found; its parameter database could feed a ca-geo erosion demo. Overlap with `geo` (erosion).
+
+### dealmeida2012improving — Improving the stability of a simple formulation of the shallow water equations for 2-D flood modeling (round 2)
+- **Citation:** de Almeida, G. A. M., Bates, P., Freer, J. E., Souvignet, M. (2012). Improving the stability of a simple formulation of the shallow water equations for 2-D flood modeling. *Water Resources Research* 48(5). DOI: 10.1029/2011wr011570 (verified: Crossref)
+- **Access:** green OA copy listed by Semantic Scholar (eprints.soton.ac.uk) returned HTTP 401; publisher closed.
+- **Model:** Adds a θ-weighted spatial averaging of neighbouring discharges to the Bates 2010 local inertial update, which damps the checkerboard oscillations at low friction. This is the version used in current LISFLOOD-FP ACC.
+- **Code:** LISFLOOD-FP (same group; see bates2010simple).
+- **Reimplementability:** S1 1; S2 1; S3 2; S4 2; S5 1 → 7, B. Assessed from: metadata only (provisional).
+- **Relevance to ca-geo:** HYD-02. Needed for a stable inertial WAT rule in shallow, low-friction areas.
+
+### wijaya2021novel — A Novel Hybrid Approach Based on Cellular Automata and a Digital Elevation Model for Rapid Flood Assessment (round 2)
+- **Citation:** Wijaya, O. T., Yang, T.-H. (2021). A Novel Hybrid Approach Based on Cellular Automata and a Digital Elevation Model for Rapid Flood Assessment. *Water* 13(9), 1311. DOI: 10.3390/w13091311 (verified: Crossref)
+- **Access:** OA (MDPI), but the PDF returned 403 to our tools; abstract from Crossref.
+- **Model:** The original HIM: a CA computes the temporal flood evolution on a coarse grid; a DEM-based fill step downscales the result onto a fine grid. The CA-4D equations are restated in wijaya2023rapid.
+- **Validation:** Three UK EA benchmark tests and an observed event (depth RMSE 0.388–0.400 m).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 2; S5 2 – EA benchmarks plus RMSE → 6, C. Assessed from: abstract (provisional).
+- **Relevance to ca-geo:** URB-02, HYD-02. Companion to wijaya2023rapid.
+
+### neelz2010benchmarking — Benchmarking of 2D Hydraulic Modelling Packages (round 2)
+- **Citation:** Néelz, S., Pender, G. (2010). *Benchmarking of 2D Hydraulic Modelling Packages*. Environment Agency Science Report SC080035/SR2, Bristol, ISBN 978-1-84911-190-4. Grey literature, no DOI. PDF: https://assets.publishing.service.gov.uk/media/5a75765c40f0b6360e4744dd/scho0510bsno-e-e.pdf (HTTP 200, read in round 2), listed on https://www.gov.uk/government/publications/benchmarking-the-latest-generation-of-2d-hydraulic-flood-modelling-packages (HTTP 200).
+- **Content:** Eight test cases with specified inputs and the results of many 2D packages: Test 1 flooding a disconnected water body; 2 filling of floodplain depressions; 3 momentum conservation over a small obstruction; 4 speed of flood propagation over an extended floodplain; 5 valley flooding; 6A/6B dam break (laboratory scale and ×20 scale, after Soares-Frazão & Zech 2002); 7 river and floodplain linking; 8A rainfall and point source surface flow in urban areas; 8B surface flow from a surcharging sewer. The 2013 update (Néelz & Pender, SC120002, report LIT 8570) is offered on the same page as a 7.6 MB zip together with the model data (not downloaded).
+- **Reimplementability:** n/a (benchmark). Value: the standard quantitative S5 source for any WAT implementation. Test 2 checks ponding (HYD-01), Tests 4–5 fluvial spreading (HYD-02), Test 6 a dam break (HYD-04), Test 8A urban pluvial flow (URB-02).
+
 ## Most reimplementable (top picks)
 
 1. **callaghan2019computing (FlowFill), A 9.** A local, mass-conserving water rule (move half the difference to the steepest neighbour) with open code. The ideal first WAT ponding demo.
 2. **barnes2021computing (Fill–Spill–Merge), A 10.** Not a CA, but open, tested code. Use it as the reference steady-state solution to check ca-geo ponding results.
-3. **guidolin2016weighted (WCA2D), B 7, likely A after a full-text read.** The de facto standard fast flood CA. GPU-native. Framework source and binaries are open, and it can be checked against the public EA benchmark tests. Primary candidate for the dynamic WAT model.
+3. **guidolin2016weighted (WCA2D), A 9 (round 2).** The de facto standard fast flood CA. The complete rule is now readable in the co-author's open caflood kernels (GitHub), it is GPU-native and can be checked against the public EA benchmark tests (`neelz2010benchmarking`). Primary candidate for the dynamic WAT model.
 4. **wijaya2023rapid (HIM / CA-4D), B 7.** Explicit Manning-flux CA with metrics on EA Test 8A. The coarse-plus-fine downscaling idea is useful for the browser.
 5. **liu2015developing (MoD + Manning), C 6.** The most complete open description of the minimisation-of-differences rule with rain, infiltration and drain sinks. A good template if WCA2D details are unavailable.
-6. **coulthard2013integrating / bates2010simple.** The local-inertial (LISFLOOD-FP) rule with open CAESAR-Lisflood code. Best physics per line of code for fluvial HYD-02. Full text still needed.
+6. **shaw2021lisflood / bates2010simple / dealmeida2012improving (B 8/7/7).** The local-inertial (LISFLOOD-FP ACC) rule, restated in an OA paper, with open LISFLOOD-FP and CAESAR-Lisflood code on Zenodo and published outputs for EA Tests 4 and 5. Best physics per line of code for fluvial HYD-02.
+7. **landa2019smoderp2d (SMODERP2D), B 7 — CZ.** Open Czech raster runoff–erosion code (CTU Prague) with a soil-parameter database; the best CZ anchor for HYD-01/HYD-05.
+8. **cirbus2013cellular, C 5 — CZ.** Czech (Ostrava) water-spreading CA with a small published check table (11 surveyed water levels).
 
 ## Gaps and unverified leads
 
-- **Full texts not read** (publisher 403): Guidolin 2016, Ghimire 2012, Jamali 2019, Chang 2022, Gibson 2016 (all OA). Round 2 should get them through an OA mirror or with the user's help. The WCA2D formulas (weights, tolerance, velocity limit, Δt) are the most important missing piece.
-- **CADDIES/caflood code:** Check git.exeter.ac.uk/caddies (it timed out) for the caflood application source and licence (the page states both MIT and GPL). The examples zip probably contains EA test inputs.
-- **UK EA benchmark (Néelz & Pender 2013, SC120002):** grey literature, not in Crossref. The gov.uk page https://www.gov.uk/government/publications/benchmarking-the-latest-generation-of-2d-hydraulic-flood-modelling-packages was verified (HTTP 200) and offers a technical report plus a "Benchmarking model data" zip. These are the standard test cases. Test 8A (urban rainfall plus surcharge) is confirmed through Wijaya 2023. The other test numbers and contents are not yet verified from the report itself. This is the best source of quantitative S5 checks for any ca-geo WAT implementation. The earlier 2010 report SC080035 is also mentioned on gov.uk.
-- **LISFLOOD-FP open code** (LISFLOOD-FP 8.0, reportedly on Zenodo) was not verified this round. The github.com/LISFLOOD-FP organisation found is not the official one (it only contains placeholder repos).
-- **Wijaya & Yang 2021** (Water 13, 1311, DOI 10.3390/w13091311) holds the full CA-4D/HIM equations. It was seen in OpenAlex results but its Crossref metadata was not fetched, and MDPI blocked the full text. Add in round 2.
-- **CZ studies:** Only Cirbus & Podhoranyi 2013 (VŠB Ostrava) was found. Floreon+ (Svatoň et al. 2017, LNGC; appeared in Crossref results, metadata not fetched) is a web flood platform with non-CA hydraulics. Round 2: search Czech repositories (dspace.vsb.cz, theses.cz) for CA runoff theses, and check DIBAVOD/ZABAGED inputs.
-- **Pond cascade / dike breach (HYD-04):** No CA paper with a breach-development rule was found. Yu & Chang use a levee-breach hydrograph as input only. Candidate approach: a breach hydrograph plus WCA2D or a dynamic-wave CA.
+- **Full texts not read** (publisher 403, still in round 2): Guidolin 2016, Ghimire 2012, Jamali 2019, Chang 2022, Gibson 2016 (all OA), Wijaya & Yang 2021 (MDPI). The WCA2D rule is now covered by the open code (round 2); the paper's test-case parameters are still missing. Manual download by the user would close this.
+- **caflood licence:** round 2 found the source on GitHub (AlbertChenExeter/caflood), but LICENSE (MIT) and file headers (GPL-3) disagree. Ask the authors before reusing code; a clean-room reimplementation from the rule description avoids the issue.
+- **UK EA benchmark:** round 2 read the 2010 report (now entry `neelz2010benchmarking`, Tests 1–8B). The 2013 update (SC120002, LIT 8570) and the model-data zip were not downloaded (data download not allowed in this phase); confirm the 2013 test list and data format before implementation.
+- **LISFLOOD-FP code:** verified on Zenodo in round 2 (v7.1, v8.2). The github.com/LISFLOOD-FP organisation is still not the official one.
+- **CZ studies:** round 2 found no further Czech CA flood/runoff paper (Crossref and Czech-language web search). Added the open CTU code SMODERP2D (`landa2019smoderp2d`, raster but not labelled CA). Leads not followed: the first author's VŠB thesis (dspace.vsb.cz item above), Floreon+ (non-CA), SMODERP validation papers. ZČU and ČVUT CA flood work was not found.
+- **Pond cascade / dike breach (HYD-04):** round 2 searches again found no CA breach-development rule. Usable pieces: EA Test 6 dam break (`neelz2010benchmarking`) as a check, a breach hydrograph as inflow, and WCA2D or a dynamic-wave CA (`chang2022dynamic`) for the spreading.
+- **River ice:** no CA for ice jams or ice-jam floods was found (Crossref); only hydraulic models (e.g. Lindenschmidt 2024 book chapter, seen, not catalogued).
 - **Other leads seen in results but not catalogued:** Dai et al. 2018 (J. Hydrol., CA rainfall-runoff plus NPS pollution), Yao et al. 2021 (WRM, CA rainfall-runoff under land uses), Feng et al. 2023 (J. Hydrol., urban CA hydrological model), Issermann et al. 2020 (Water, motion-cost fields), Tavakolifar et al. 2020 (1D–2D CA), Zhang & Che 2023 (overland flow plus sediment CA, overlap `geo`), Li & Willems 2020 (WRR, hybrid probabilistic pluvial), Bermúdez et al. 2018 (surrogates), Ma et al. 2009 (hillslope runoff and erosion CA), Wang et al. 2023 (CA solute transport, Water 16, 129), Armal & Al-Suhili 2019 (urban CA), Nkwunonwo et al. 2019 (CA plus semi-implicit FD). Most are verified in Crossref or OpenAlex search results but not assessed.
 - **Ownership caveat:** A web search mentioned an unofficial Python "WeightedCA" reimplementation hosted on IPFS. It was not checked and is not a citable source.
+- **Neal et al. 2011** (Hydrol. Process., 10.1002/hyp.8339, verified) compares simplified and full shallow-water models on benchmarks; green OA (Birmingham) not fetched. Useful to justify the choice of rule.
 - **Overlaps:** `geo` (MoD rule from SCIARA/SCIDDICA, CAESAR-Lisflood, sediment and erosion CA), `atm` (pollutant transport in floods, groundwater/HydroCAL, cold-air drainage reusing water routing), `gen` (CADDIES/OpenCAL frameworks, GPU CA).
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| guidolin2016weighted | 1 1 1 2 2 = 7 B | 2 1 2 2 2 = 9 A | Complete rule read in the co-author's open caflood kernels (GitHub); paper text still blocked |
+| bates2010simple | 1 1 0 2 1 = 5 C | 1 1 2 2 1 = 7 B | LISFLOOD-FP code verified on Zenodo; rule restated in OA shaw2021lisflood |
+| cirbus2013cellular | 1 1 0 1 1 = 4 C | 1 1 0 1 2 = 5 C | Full text read (CZ, Ostravice): equations, parameters and a measured-vs-simulated table |
+| gibson2016accuracy | 1 1 1 1 1 = 5 C | 1 1 2 1 1 = 6 C | caflood source verified |
+| coulthard2013integrating | 7 B | 7 B (unchanged) | Zenodo releases and parameter listings verified; still no full text |
+| shaw2021lisflood (new) | – | 1 1 2 2 2 = 8 B | OA, open code, EA tests |
+| landa2019smoderp2d (new, CZ) | – | 1 1 2 2 1 = 7 B | OA, open GPL code |
+| dealmeida2012improving (new) | – | 1 1 2 2 1 = 7 B | metadata only, provisional |
+| wijaya2021novel (new) | – | 1 1 0 2 2 = 6 C | abstract only |
+| neelz2010benchmarking (new) | – | n/a | grey-literature benchmark (Tests 1–8B) |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Mining subsidence and flooded subsidence troughs | Growth of a ground-surface subsidence basin above longwall mining, followed by water filling the depression | Couples a geotechnical CA with the existing WAT ponding rule; strong local link | High: Ostrava–Karviná coalfield (subsidence lakes), North Bohemian lignite basin; extends LND-03 | `chen2020dynamic` (geomorphology.md) C 4 | Only an abstract-level CA source; filling part reuses FlowFill / WCA2D |
+| River-ice jams | Ice accumulation at constrictions and backwater flooding | Winter flood type not covered by HYD-02 | Medium (ice floods on Czech rivers in cold winters) | none found | No CA found in round 2; keep as gap |

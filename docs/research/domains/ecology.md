@@ -1,6 +1,6 @@
 # Ecology and forestry — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 
 ## Search log
 
@@ -25,6 +25,28 @@ Date of all searches: 2026-10-12. The OpenAlex free daily budget for our shared 
 | abstract and OA-copy lookups (Prasad, Fahse, Potterf, Thiéry, Bone, Kautz, Kéfi, LANDIS-II, Seidl 2014, Nehrbass) | web search | — | used only to find OA copies and abstracts |
 
 Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and ScienceDirect returned HTTP 403 to automated fetches, so those papers were assessed from abstracts unless another OA copy was found.
+
+### Round 2
+
+Date: 2026-10-12. OpenAlex was still quota-blocked, so discovery used Crossref `query.bibliographic`, web search, Semantic Scholar (`openAccessPdf`) and Europe PMC. Every new item was verified by Crossref `/works/<DOI>`. PDFs were fetched only into the agent scratchpad, converted to text and deleted.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| OA status for 16 round-2 targets | Semantic Scholar API | 16 | OA PDFs: Schneider & Kéfi 2016 (Springer), Pietzsch 2023 (Springer); Wiley "pdfdirect" links (Nobis, Engler 2012, Dullinger) returned HTML (blocked); Fahse 2011, Bone 2006 closed |
+| Kéfi 2007 TPB / Nature full text | WUR repository, Europe PMC | 0 | repository record without file; read the rule via Schneider & Kéfi 2016 instead |
+| Bone 2005 MSc thesis (basis of `bone2006fuzzy`) | SFU Summit | 1 PDF | full text read (Chapter 3 = CA model) |
+| MigClim user guide; KISSMig C++ source | GitHub CRAN mirrors | 2 | `inst/doc/MigClim_userGuide.pdf` (full algorithm); `src/kissmig_c.cpp` |
+| IPS-UPS repository code (neighbour rule) | GitHub | 1 | `Upscaling.R` neighbour rule = 8-neighbourhood |
+| cellular automaton treeline dynamics alpine | Crossref | noisy | Zeng & Malanson 2006, Dullinger et al. 2004 |
+| cellular automata windthrow forest storm damage spread | Crossref + web | 0 relevant | only fire CA; **no windthrow CA found** |
+| cellular automata seed dispersal forest regeneration landscape | Crossref | 0 relevant | covered by TreeMig (`lischke2006treemig`) and treeline models |
+| cellular automata Ips typographus Bohemian Forest; Šumava bark beetle spatial model (Hlásny, Jakuš, Modlinger) | Crossref + web | 3 | TANABBO (Duračiová et al. 2020, ČZU co-authors, Bohemian Forest validation); TANABBO II 2024 (not assessed); ŠUMLAND project page (no publication found) |
+| Kautz IPS model; Pietzsch IPS-SPREADS | Crossref + web + Europe PMC | 2 | Kautz 2014, Kautz 2016 (OA, PMC4832482); IPS-SPREADS paper not found in Crossref |
+| ash dieback / Hymenoscyphus spread model Europe | web + Crossref | 3 | Fritsch et al. 2026 (arXiv full text), Grosdidier et al. 2018 (kernel source); Leeds thesis (grey, not catalogued) |
+| pine processionary moth spread model | Crossref | 2 | Robinet et al. 2014 (abstract elided; lead only) |
+| cellular automaton invasive plant / knotweed spread Czech | web | 0 relevant | Dunn & Majer 2007 hierarchical patch CA (concept); no Czech CA |
+| beaver dam cellular automata wetland; beaver population expansion model | Crossref + web | 4 | no CA of beaver wetlands; beaver colonisation models listed in `epidemics.md` (EPI-04) |
+| locust / pollen / bird-stopover CA | web | 0 relevant | nothing verifiable |
 
 ## Model families
 
@@ -66,20 +88,20 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 | Key | Year | Short title | Phenomenon | CA design (grid / neighbourhood / states / det. or stoch.) | S1 S2 S3 S4 S5 | Total | Class | Code | Access | Assessed from |
 |---|---|---|---|---|---|---|---|---|---|---|
 | liu2025multiscale | 2025 | Multiscale stochastic CA for mountain pine beetle | insect outbreak dispersion | hex grid / 6-neighbour + interaction neighbourhoods / density [0,1] / stoch. | 2 2 2 2 1 | 9 | A | GitHub | OA | full text |
-| pietzsch2023nonparametric | 2023 | IBM → Markov-chain metamodel, Ips typographus | bark beetle spread (Saxon Switzerland NP, DE/CZ border) | 250 m grid / neighbour spread / feature-combination states / stoch. Markov | 1 2 2 2 1 | 8 | B | GitHub | OA | full text (partial) |
+| pietzsch2023nonparametric | 2023 | IBM → Markov-chain metamodel, Ips typographus | bark beetle spread (Saxon Switzerland NP, DE/CZ border) | 250 m grid / Moore neighbour spread / feature-combination states / stoch. Markov | 2 2 2 2 2 | 10 | A | GitHub | OA | full text + code (r2) |
 | seidl2017climate | 2017 | Wind × bark beetle interactions in iLand | windthrow + beetle (Kalkalpen, AT) | 10 m cells, individual trees / 8-neighbour search + kernel / stoch. | 1 1 2 1 2 | 7 | B | iLand GitHub | OA | full text |
 | seidl2014simulating | 2014 | Wind disturbance at tree level (iLand) | windthrow (Sweden) | individual trees on grid / upwind gaps / stoch. iterative storm | 1 1 2 1 2 | 7 | B | iLand GitHub | paywall | abstract (provisional) |
 | kubo1996forest | 1996 | Forest gap expansion CA | canopy gap dynamics | square lattice / neighbour-gap-dependent death / 2 states / stoch. | 1 1 1 2 1 | 6 | C | caspr (3rd party) | paywall | code documentation (provisional) |
 | rademacher2004reconstructing | 2004 | BEFORE beech forest model | beech mosaic cycle, storms (Central Europe) | 14.29 m cells, 54×54 / wind-ordered neighbour light & windfall / 4 height compartments / stoch. | 2 2 0 2 1 | 7 | B | not found | paywall (ODD OA) | third-party ODD (full) |
 | thiery1995model | 1995 | Banded vegetation genesis CA | tiger bush, Niger | square grid / 9×3 slope-asymmetric kernel / binary / det. | 1 2 0 2 2 | 7 | B | not found | OA copy (IRD) | full text |
-| schneider2016spatially | 2016 | Spatially heterogeneous grazing pressure | dryland degradation | lattice / 4-neighbour facilitation + associational resistance / 3 states / stoch. | 1 1 2 2 1 | 7 | B | caspr | paywall | abstract + code docs (provisional) |
+| schneider2016spatially | 2016 | Spatially heterogeneous grazing pressure | dryland degradation | 100×100 torus / von Neumann facilitation + associational resistance / 3 states / stoch., synchronous | 2 2 2 2 1 | 9 | A | GitHub (authors) + caspr | OA (CC BY) | full text (r2) |
 | moenickes2013shapes | 2013 | Giant hogweed matrix model + CA | plant invasion (8 DE sites) | 5 m cells, 200×200 / exponential local kernel + corridors + random LDD / stage densities / stoch. | 2 2 0 1 2 | 7 | B | not found | OA author copy | full text |
-| engler2012migclim | 2012 | MIGCLIM R package | dispersal-limited range shift | SDM raster / kernel + LDD + barriers / occupied-or-not / stoch. | 1 1 2 2 1 | 7 | B | CRAN archive / GitHub mirror | paywall | abstract (provisional) |
-| nobis2014kissmig | 2014 | KISSMig | range dynamics, migration lag | suitability raster / 3×3 spread / binary or quantitative / det. or stoch. | 1 1 2 2 1 | 7 | B | CRAN | OA | abstract + CRAN docs (provisional) |
+| engler2012migclim | 2012 | MIGCLIM R package | dispersal-limited range shift | SDM raster / kernel + LDD + barriers / occupied-or-not / stoch. | 2 1 2 2 1 | 8 | B | CRAN archive / GitHub mirror | paywall | package user guide (full algorithm) (r2) |
+| nobis2014kissmig | 2014 | KISSMig | range dynamics, migration lag | suitability raster / 3×3 spread / binary or quantitative / det. or stoch. | 2 1 2 2 1 | 8 | B | CRAN | OA | abstract + source code (r2) |
 | bocedi2021rangeshifter | 2021 | RangeShifter 2.0 | range expansion, connectivity | habitat raster / IBM dispersal (kernel or SMS) / individuals / stoch. | 1 1 2 2 1 | 7 | B | GitHub | OA | abstract (provisional) |
 | pascual2002cluster | 2002 | Cluster size distributions (predator–prey CA) | predator–prey, disturbance–recovery | lattice / 4-neighbour / 3 states / stoch. | 1 1 1 2 1 | 6 | C | caspr (3rd party) | OA (PMC) | abstract + code docs (provisional) |
 | scheller2007design | 2007 | LANDIS-II | forest succession + disturbance | raster cells with species-age cohorts / seed dispersal & disturbance spread / stoch. | 1 1 2 1 1 | 6 | C | GitHub | paywall | abstract (provisional) |
-| kefi2007local | 2007 | Local facilitation, bistability (TPB) | dryland vegetation | lattice / 4-neighbour facilitation / 3 states / stoch. | 1 1 1 2 1 | 6 | C | derived variant in caspr | paywall | abstract (provisional) |
+| kefi2007local | 2007 | Local facilitation, bistability (TPB) | dryland vegetation | lattice / 4-neighbour facilitation / 3 states / stoch. | 2 1 1 2 1 | 7 | B | derived variant in caspr | paywall | rule + base parameters restated in schneider2016spatially full text (r2) |
 | kefi2007spatial | 2007 | Patterns and imminent desertification (Nature) | dryland degradation (ES, GR, MA) | as kefi2007local + grazing / stoch. | 1 1 1 1 2 | 6 | C | derived variant in caspr | paywall | abstract (provisional) |
 | pitt2009predicting | 2009 | Argentine ant spread (MDiG) | invasive insect, NZ | GIS raster / local + human-assisted LDD / occupancy / stoch. | 1 1 2 1 1 | 6 | C | MDiG GitHub | paywall | abstract (provisional) |
 | engler2009migclim | 2009 | MigClim | plant dispersal under climate change (W Swiss Alps) | SDM raster / kernel + LDD / binary / stoch. | 1 1 2 1 1 | 6 | C | CRAN archive | paywall | abstract (provisional) |
@@ -87,14 +109,23 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 | harati2020integrating | 2020 | Neighbourhood effect + ML for MPB | MPB outbreak (BC, CA) | raster / weighted neighbourhood + GLM/RF transition / binary / prob. | 1 1 0 1 2 | 5 | C | not found | OA | abstract (provisional) |
 | nehrbass2007simulation | 2007 | Hogweed IBM, long-distance dispersal | plant invasion (Slavkovský les, CZ) | 5 m cells, 140×140 / Moore + random LDD / individuals / stoch. | 1 1 0 1 2 | 5 | C | not found | OA archive copy | full text |
 | he1999spatially | 1999 | LANDIS fire and succession | forest landscape fire + succession | raster / seed dispersal + fire spread / cohorts / stoch. | 1 1 1 1 1 | 5 | C | successor open (LANDIS-II) | paywall | metadata + secondary (provisional) |
-| bone2006fuzzy | 2006 | Fuzzy-constrained CA of insect infestation | MPB (central BC) | tree-level raster / neighbourhood + fuzzy susceptibility / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall (thesis OA) | thesis abstract (provisional) |
-| fahse2011simulation | 2011 | SAMBIA stand-level outbreak model | Ips typographus (Bavarian Forest NP) | spatially explicit agent-based, trees + beetles / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
+| bone2006fuzzy | 2006 | Fuzzy-constrained CA of insect infestation | MPB (central BC) | 1 m raster / 500×500 dispersal + 25×25 attack windows, threshold function of fuzzy susceptibility / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall (thesis OA) | underlying thesis, full text (r2) |
+| fahse2011simulation | 2011 | SAMBIA stand-level outbreak model | Ips typographus (Bavarian Forest NP) | spatially explicit agent-based, trees + beetles / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional; r2: no OA copy found) |
 | anderson2016geosimulation | 2016 | Geosimulation of EAB, data-scarce | emerald ash borer, hypothetical landscapes | GIS-MCE-CA / neighbourhood / stoch. | 1 1 0 1 1 | 4 | C | not found | OA | abstract (provisional) |
 | moykkynen2014modelling | 2014 | Siberian moth spread in Europe | invasive defoliator (EU) | 1 km grid / exp. flight kernel + transport / host-tree counts / stoch. | 1 1 0 1 1 | 4 | C | not found | OA | full text |
 | prasad2010modeling | 2010 | EAB risk of spread, cellular model (SHIFT) | emerald ash borer (Ohio) | cells / insect flight + gravity-model human transport / risk / stoch. | 1 1 0 1 1 | 4 | C | not found | OA copy (USFS) | abstract + outline (provisional) |
 | balzter1998cellular | 1998 | CA models for vegetation dynamics (STMC) | lawn species dynamics | lattice / spatio-temporal Markov chain / species / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall (figshare copy listed) | abstract (provisional) |
 | wadsworth2000simulating | 2000 | Riparian weed spread and control (MIGRATE) | Impatiens, Heracleum (Co. Durham, UK) | GIS grid / multiple dispersal mechanisms / demographic / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
 | kramerschadt2004fragmented | 2004 | Lynx dispersal and road mortality | habitat connectivity (DE, CZ border) | habitat raster / IBM step rules / individuals / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
+| duraciova2020bark | 2020 | TANABBO spot initiation / spreading predictor (r2) | Ips typographus, Bohemian Forest (CZ) | 30 m raster / cost distance to last year's spots (max 228 m) + logistic regression / susceptibility [0,1] / one-step, iterable | 1 2 0 1 2 | 6 | C | not found | OA (CC BY-NC) | full text |
+| kautz2016dispersal | 2016 | IPS individual-based beetle dispersal (r2) | Ips typographus dispersal, virtual stand | tree positions / perceptual range 15 m, neighbour-tree moves / beetles + tree states / stoch. | 2 2 1 2 1 | 8 | B | supplement (ODD + model version) | OA (PMC) | full text (keyword-guided) |
+| kautz2014individual | 2014 | IPS model, individual traits (r2) | Ips typographus dispersal and infestation | IBM on virtual stand / stoch. | 1 1 1 2 1 | 6 | C | via kautz2016 supplement | paywall | secondary (abstract via search) (provisional) |
+| dullinger2004modelling | 2004 | Treeline shift of Pinus mugo (r2) | treeline advance (N. Calcareous Alps, AT) | landscape grid / dispersal kernel + invasibility of resident vegetation / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
+| zeng2006endogenous | 2006 | Alpine treeline CA, fractal dynamics (r2) | treeline ecotone advance | lattice / local positive + negative feedbacks / tree–tundra / stoch. | 1 1 0 2 1 | 5 | C | not found | paywall | abstract (provisional) |
+| lischke2006treemig | 2006 | TreeMig forest-landscape model (r2) | forest dynamics + species migration | 25 m–1 km grid / seed dispersal between cells / height-class densities per species / stoch. or det. | 1 1 0 1 1 | 4 | C | not verified (docs open) | paywall | secondary (project docs) (provisional) |
+| fritsch2026mechanistic | 2026 | Ash dieback expansion, France (r2) | Hymenoscyphus fraxineus spread | 16×16 km quadrats / reaction–diffusion (discretised) + climate + host / leaf and rachis infection / det. + statistical obs. | 2 1 0 1 2 | 6 | C | not found | preprint (arXiv) | full text (preprint, keyword-guided) |
+| dunn2007simulating | 2007 | Hierarchical patch-based weed CA (r2) | weed propagation, SW Western Australia (fictitious data) | irregular hierarchical patches / probabilistic network links / occupancy / stoch. | 1 0 0 1 0 | 2 | D | not found | OA (publisher) | full text |
+| grosdidier2018tracking | 2018 | Ash dieback spore dispersal kernels (r2) | parameter source: H. fraxineus dispersal (France) | empirical | n/a | n/a | n/a | — | paywall | abstract via search |
 | hallas2026assessing | 2026 | Review: Ips typographus risk models | bark beetle models | review | n/a | n/a | n/a | — | OA | full text (searched) |
 | rammer2024individual | 2024 | iLand overview | forest landscape model | framework | n/a | n/a | n/a | iLand GitHub | OA | metadata |
 | genin2018monitoring | 2018 | spatialwarnings R package | spatial early-warning indicators | analysis toolbox | n/a | n/a | n/a | GitHub / CRAN | paywall | abstract |
@@ -128,6 +159,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - → 9, A. Assessed from: full text (read through Section 3 and data statement).
 - **Browser fit:** Very good. Small hex grids and cheap updates. The microscale chain can be replaced by a logistic step.
 - **Relevance to ca-geo:** ECO-01 (bark-beetle outbreak) core dispersal template. A hex-grid option is worth considering.
+- **Round 2:** Confirmed as assessed in round 1 (full text, open code). Unchanged (A 9); S5 remains 1 because there is no map-level benchmark.
 
 ### pietzsch2023nonparametric — Nonparametric upscaling of bark beetle infestations and management from plot to landscape level
 - **Citation:** Pietzsch, B. W., Wudel, C., Berger, U. (2023). Nonparametric upscaling of bark beetle infestations and management from plot to landscape level by combining individual-based with Markov chain models. *European Journal of Forest Research* 142(1), 129–144. DOI: 10.1007/s10342-022-01512-1 (verified: Crossref, OpenAlex)
@@ -141,14 +173,15 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 - **Inputs:** Forest stand polygons (Saxon state forest enterprise) and infestation maps for 2015–2017.
 - **Parameters:** Transition tables derived from simulations, openly provided in the repository.
 - **Code:** https://github.com/bwpietzsch/IPS-UPS (verified 200). It holds the IBM, the metamodel and the data tables.
-- **Validation:** Against observed infestations in 2017 and 2018. Adding neighbour spread improved predictions; the exact metrics were not extracted in this round.
+- **Neighbour rule (round 2):** A cell with spruce whose 8-neighbourhood (checked in `Upscaling.R`) contains at least one cell at the highest infestation level raises its own infestation level by one step per beetle generation (2 or 3 per year by climate scenario), applied simultaneously to all cells before the Markov step. Sanitation felling (0–100 % in 10 % steps) removes infested trees.
+- **Validation:** Against observed infestations in 2017 and 2018, per cell, with the macro-averaged F1 score for four metamodel variants (without/with neighbour spread and spruce dieback) across climate × felling scenarios. Neighbour spread raised agreement substantially; dieback only marginally; 2017 fitted better than 2018. Prediction tables per variant are in the repository (`Kappa/`).
 - **Reimplementability:**
-  - S1 1: flowchart and transition logic given; neighbour-spread details not fully read.
-  - S2 2: tables in the repository.
+  - S1 2: complete flowchart, Markov step and neighbour rule (round 2).
+  - S2 2: transition tables in the repository.
   - S3 2.
   - S4 2: derived cell tables open.
-  - S5 1: metrics not confirmed.
-  - → 8, B. Assessed from: full text (partial, keyword-guided).
+  - S5 2: per-cell F1 scores against observed 2017/2018 infestations, with prediction outputs in the repository.
+  - → 10, A. Round 2: re-assessed from full text + code — S 2 2 2 2 2 (was 1 2 2 2 1, B 8).
 - **Browser fit:** Excellent. It is a lookup-table Markov CA on a coarse grid.
 - **Relevance to ca-geo:** ECO-01 with direct CZ border relevance. The train-a-CA-from-a-detailed-model pattern could also be reused for HAZ-04 (windthrow) to ECO-01 chains (L3).
 
@@ -260,20 +293,24 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 
 ### schneider2016spatially — Spatially heterogeneous pressure raises risk of catastrophic shifts
 - **Citation:** Schneider, F. D., Kéfi, S. (2016). *Theoretical Ecology* 9(2), 207–217. DOI: 10.1007/s12080-015-0289-1 (verified: Crossref)
-- **Access:** paywall
+- **Access:** OA (CC BY, Springer)
 - **Phenomenon and study area:** Dryland degradation under grazing; theoretical.
-- **Model:** Extends the Kéfi three-state CA (vegetated / empty / degraded) with spatially explicit grazing. Plants with vegetated neighbours are protected (associational resistance).
-- **Inputs:** None.
-- **Parameters:** caspr lists the parameters: seed dispersal fraction δ, environmental quality b, global competition c, mortality m0, grazing g, regeneration r, facilitation f, degradation d, protection p.
-- **Code:** caspr `grazing` model (authors Schneider & Kéfi), https://github.com/fdschneider/caspr (verified).
-- **Validation:** Bifurcation diagrams and indicators; qualitative.
+- **Model (round 2, full text):** An interacting-particle CA with three states (vegetated +, empty 0, degraded −) on a 100×100 grid with periodic boundaries; one step = 1 year; synchronous stochastic update (each cell's transition probabilities compared with one uniform draw). Transition probabilities use the global cover ρ+ and the local von Neumann cover q+|i:
+  - regeneration − → 0: r + f·q+|−;
+  - colonisation 0 → +: (δ·ρ+ + (1−δ)·q+|0)·(b − c·ρ+);
+  - degradation 0 → −: d;
+  - mortality + → 0: m0 + g0·(1 − q+|+) (associational resistance; the original Kéfi model has m0 only).
+- **Inputs:** None (initial cover 0.8–0.9, half the rest degraded; or near-desert start for recovery runs).
+- **Parameters:** All given: r = 0.01, f = 0.9, δ = 0.1, c = 0.2, d = 0.1 (inherited from Kéfi et al. 2007 TPB), m0 = 0.05, g0 between 0 and 0.5, b varied as environmental pressure.
+- **Code:** Authors' R code https://github.com/cascade-wp6/2015_schneider_kefi (verified 200; Zenodo 10.5281/zenodo.35034 cited in the paper) and caspr `grazing` model https://github.com/fdschneider/caspr (verified).
+- **Validation:** Steady state when mean cover changes by less than 10⁻⁶ between 200-year periods; outputs are cover, local cover, clustering coefficient, largest patch and patch-size distribution class along g0 and b gradients (figures only).
 - **Reimplementability:**
-  - S1 1.
-  - S2 1.
+  - S1 2: complete rule, neighbourhood, boundaries, update scheme.
+  - S2 2: all values.
   - S3 2.
   - S4 2.
-  - S5 1.
-  - → 7, B. Assessed from: abstract-level metadata + code documentation (provisional).
+  - S5 1: results as bifurcation diagrams and figures; no tables.
+  - → 9, A. Round 2: re-assessed from full text — S 2 2 2 2 1 (was 1 1 2 2 1, B 7).
 - **Browser fit:** Trivial.
 - **Relevance to ca-geo:** ECO-08. It is the cleanest open, parameterised dryland CA.
 
@@ -298,6 +335,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - S5 2.
   - → 7, B. Assessed from: full text.
 - **Browser fit:** Very good. 200×200 cells and 7 steps.
+- **Round 2:** Searched for code (none found). Score unchanged; still the best ECO-03 rule description.
 - **Relevance to ca-geo:** ECO-03 invasive spread. The best template for corridor plus long-distance spread. Hogweed is a relevant CZ invader, and corridors could come from DIBAVOD rivers and road data.
 
 ### engler2012migclim — The MIGCLIM R package – seamless integration of dispersal constraints into projections of species distribution models
@@ -308,14 +346,15 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 - **Inputs:** Any SDM suitability raster series, plus barrier layers.
 - **Parameters:** User-supplied; flexible.
 - **Code:** https://github.com/cran/MigClim (verified; CRAN mirror). The CRAN page https://cran.r-project.org/package=MigClim states the package was archived in 2020 because no maintainer fixed check issues.
-- **Validation:** Not in the abstract.
+- **Algorithm (round 2, from the package user guide `inst/doc/MigClim_userGuide.pdf`):** For each unoccupied suitable target cell, all occupied source cells within the kernel's maximum distance are collected (sources behind a barrier cell are ignored). The target is colonised with probability P_col = (1 − Π_i (1 − P_disp,i · P_prop,i)) · P_inv, where P_disp is a discrete distance kernel, P_prop a discrete function of time since the source was colonised, and P_inv the target's invasibility. Optional long-distance dispersal: from each source with probability lddFreq · P_prop, in a random direction and at a random distance within a range, ignoring barriers. Dispersal steps (usually years) are nested in environmental-change steps; cells that turn unsuitable are cleared after the dispersal stage. A test data set ships with the package.
+- **Validation:** Not in the abstract; the guide contains a hands-on test simulation.
 - **Reimplementability:**
-  - S1 1.
-  - S2 1.
+  - S1 2: full rule in the open user guide.
+  - S2 1: user-supplied; only the test-run values documented.
   - S3 2: source available, though archived.
   - S4 2.
-  - S5 1.
-  - → 7, B. Assessed from: abstract (provisional).
+  - S5 1: no published reference numbers checked.
+  - → 8, B. Round 2: re-assessed from the package user guide — S 2 1 2 2 1 (was 1 1 2 2 1, B 7). Journal full text still blocked (Wiley).
 - **Browser fit:** Good. Binary CA on SDM rasters.
 - **Relevance to ca-geo:** ECO-07 range shift and ECO-03.
 
@@ -354,6 +393,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - S4 2.
   - S5 1.
   - → 7, B. Assessed from: abstract + CRAN description (provisional; S1 is likely 2 once the full text is read).
+- **Round 2:** The journal PDF was blocked (Wiley returned HTML), but the C++ core `src/kissmig_c.cpp` (https://github.com/cran/kissmig, verified) fully defines the rule: per iteration, occupied cells go extinct with probability `pe`; suitable cells are colonised from occupied cells in the 3×3 neighbourhood, with corner neighbours weighted by probability `pc`; the outermost raster ring is ignored; suitability layers are looped over time periods with `it` iterations each. S1 → 2. S2 stays 1 (application values in the paper not seen). → 8, B. Round 2: re-assessed from source code — S 2 1 2 2 1 (was 1 1 2 2 1, B 7).
 - **Browser fit:** Excellent.
 - **Relevance to ca-geo:** ECO-07. The simplest credible range-shift CA for CZ (e.g. tree-line species).
 
@@ -449,6 +489,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - S4 2.
   - S5 1.
   - → 6, C. Assessed from: abstract (provisional; the full text is known to give the complete transition rates, so this score likely rises to B).
+- **Round 2:** Full text still unreachable (Elsevier; the WUR repository record has no file). `schneider2016spatially` (full text) restates the Kéfi et al. 2007 TPB rule — regeneration r + f·q+|−, colonisation (δρ+ + (1−δ)q+|0)(b − cρ+), degradation d, constant mortality m — and quotes the inherited values r = 0.01, f = 0.9, δ = 0.1, c = 0.2, d = 0.1 (von Neumann neighbourhood). S1 → 2 from that secondary full text; S2 stays 1 because m and the b range of the original paper were not seen. → 7, B. Round 2: re-assessed from secondary full text — S 2 1 1 2 1 (was 1 1 1 2 1, C 6).
 - **Browser fit:** Trivial.
 - **Relevance to ca-geo:** ECO-08.
 
@@ -470,6 +511,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - → 6, C. Assessed from: abstract (provisional).
 - **Browser fit:** Trivial.
 - **Relevance to ca-geo:** ECO-08 (EU sites). The patch-size indicator gives an evaluation idea.
+- **Round 2:** No OA full text found (WUR record without file). Score unchanged.
 
 ### pitt2009predicting — Predicting Argentine ant spread over the heterogeneous landscape using a spatially explicit stochastic model
 - **Citation:** Pitt, J. P. W., Worner, S. P., Suarez, A. V. (2009). *Ecological Applications* 19(5), 1176–1186. DOI: 10.1890/08-1777.1 (verified: Crossref)
@@ -549,6 +591,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - → 5, C. Assessed from: full text.
 - **Browser fit:** Very good. Can be converted to cell densities.
 - **Relevance to ca-geo:** ECO-03. A Czech case with historical aerial photos, which could be rebuilt from ČÚZK archival orthophotos.
+- **Round 2:** The companion life-history paper was verified in Crossref — Nehrbass, N., Winkler, E., Pergl, J., Perglová, I., Pyšek, P. (2006), *Perspectives in Plant Ecology, Evolution and Systematics* 7(4), 253–262, DOI 10.1016/j.ppees.2005.11.001 — but no OA copy was found, so S2 stays 1. Unchanged.
 
 ### Further C-class insect-outbreak and pest-spread models
 
@@ -568,6 +611,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - S4 1.
   - S5 1.
   - → 4, C. Assessed from: thesis abstract (provisional). The thesis full text could raise S1 and S2.
+- **Round 2 (thesis full text, Chapter 3):** Two 750×750 m sites, 1 m cells derived from 15 cm imagery. Part I builds a fuzzy susceptibility μ(Su) per pine cell from four fuzzy layers (pine share, distance to deciduous stands, distance to last year's attacks, tree size; membership functions only as figures). Part II: winter mortality removes 98 % (cold winter, −30 °C threshold) or 80 % (mild) of infested trees at random; a dispersal CA with a 500×500-cell window and an attack CA with a 25×25 window turn a tree "attacked" when the share of beetle-containing (or attacked) trees in the window reaches f(μ(Su)), with linear, exponential and power threshold functions tested; the power function (exponent a) was calibrated by mean distance between simulated and observed killed trees and by kills per susceptibility class. Calibration and function choice were mainly visual; membership curves and the number of attack sub-steps are not tabulated. Round 2: re-assessed from thesis full text — S 1 1 0 1 1 (unchanged, C 4). The journal paper itself remains paywalled.
 - **Browser fit:** Good.
 - **Relevance to ca-geo:** ECO-01. The fuzzy susceptibility layer maps naturally onto CZ inputs (spruce share, drought).
 
@@ -589,6 +633,7 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - → 4, C. Assessed from: abstract via search (provisional).
 - **Browser fit:** Moderate.
 - **Relevance to ca-geo:** ECO-01. The roughly 80 % removal threshold is a useful qualitative check for a CA.
+- **Round 2:** Semantic Scholar lists it as closed; no OA copy found. Unchanged. The same ~80 % felling threshold reappears in `pietzsch2023nonparametric` (full text), which makes it a cross-checked target.
 
 #### anderson2016geosimulation — A Geosimulation Approach for Data Scarce Environments: Modeling Dynamics of Forest Insect Infestation across Different Landscapes
 - **Citation:** Anderson, T., Dragicevic, S. (2016). *ISPRS International Journal of Geo-Information* 5(2), 9. DOI: 10.3390/ijgi5020009 (verified: Crossref)
@@ -708,7 +753,113 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 - **Browser fit:** Good. Random walkers on a raster.
 - **Relevance to ca-geo:** ECO-04 and EPI-02 (chain L13). Directly relevant to the Šumava–Bavarian Forest corridor.
 
+### duraciova2020bark — A bark beetle infestation predictive model based on satellite data in the frame of decision support system TANABBO (round 2)
+- **Citation:** Duračiová, R., Muňko, M., Barka, I., Koreň, M., Resnerová, K., Holuša, J., Blaženec, M., Potterf, M., Jakuš, R. (2020). *iForest – Biogeosciences and Forestry* 13(1), 215–223. DOI: 10.3832/ifor3271-013 (verified: Crossref)
+- **Access:** OA (CC BY-NC), PDF at iforest.sisef.org
+- **Phenomenon and study area:** Ips typographus spot initiation and spot spreading in managed forests of the Bohemian Forest (Šumava), Czech Republic, yearly steps 2007–2010. Co-authors from the Czech University of Life Sciences Prague (ČZU) and Slovak institutes.
+- **Model:**
+  - **Grid and inputs:** 30 m raster from Landsat-based vegetation-change time series (beetle-killed spots per year), a 30 m DEM (solar radiation) and forest stand data (age structure, spruce share).
+  - **Spot spreading:** Cost distance from the previous year's spots (distance 0 → 1, rescaled), NDVI, solar radiation and stand attributes enter a logistic regression giving a susceptibility value per cell. Cells beyond 228 m from existing spots are excluded from spreading.
+  - **Spot initiation:** A separate logistic model without the distance term; spot size from a linear regression.
+  - **Time:** One-year forecast; iterating it year by year would turn it into a simple data-driven CA (not done in the paper).
+- **Parameters:** Regression coefficients per year in Tab. 3 (logistic) and Tab. 4 (linear spot size); Gini importance of factors in Tab. 1.
+- **Code:** Implemented in TANABBO v. 1.9 (Python); no public repository found.
+- **Validation:** ROC/AUC per year and module, 0.75–0.82 (Tab. 5), against observed infestations.
+- **Reimplementability:**
+  - S1 1: regression structure clear; susceptibility-to-infestation conversion and iteration not specified.
+  - S2 2: coefficient tables.
+  - S3 0.
+  - S4 1: Landsat and DEM open; the stand database (forest management plans) not open.
+  - S5 2: AUC table.
+  - → 6, C. Assessed from: full text.
+- **Browser fit:** Excellent (one logistic surface per year).
+- **Relevance to ca-geo:** ECO-01. **The only verified bark-beetle spread model with a Czech study area found so far.** Its 228 m spreading limit and AUC values are direct targets for a Šumava demo; its coefficients can be used as a data-driven transition rule.
+
+### kautz2016dispersal — Dispersal variability and associated population-level consequences in tree-killing bark beetles (round 2)
+- **Citation:** Kautz, M., Imron, M. A., Dworschak, K., Schopf, R. (2016). *Movement Ecology* 4(1), 9. DOI: 10.1186/s40462-016-0074-9 (verified: Crossref)
+- **Access:** OA (PMC4832482)
+- **Phenomenon and study area:** Dispersal of Ips typographus in a virtual Norway spruce stand with resistant, susceptible or scattered host susceptibility.
+- **Model:** The IPS (Infestation Pattern Simulation) individual-based model in NetLogo. One dispersal wave from a source; beetles move between neighbouring trees with a movement angle, sense host attractiveness within a perceptual range, spend energy, aggregate, and colonise a tree when enough beetles overcome its defence (tree carrying capacity and susceptibility). A detailed ODD and the model version are in Additional file 1.
+- **Parameters:** Table 1 lists beetle and tree parameters with sources (e.g. perceptual range 15 m, moving angle 45°, energy level 10 abstract units, consumption efficiency from an exponential distribution).
+- **Code:** Supplementary material (model version) per the paper; not downloaded, no public repository found.
+- **Validation:** Model experiments only (success rates, infestation counts, distance to source).
+- **Reimplementability:**
+  - S1 2: ODD available.
+  - S2 2: Table 1.
+  - S3 1: code only as journal supplement (not verified).
+  - S4 2: virtual stands.
+  - S5 1.
+  - → 8, B. Assessed from: full text (keyword-guided via Europe PMC XML).
+- **Browser fit:** Moderate (individual beetles; one dispersal wave is small).
+- **Relevance to ca-geo:** ECO-01. Mechanistic background for a CA dispersal kernel; the "scattered susceptibility" result is a qualitative check for a cell-level model. Bavarian Forest group (Kautz 2011 data).
+
+### kautz2014individual — Individual traits as drivers of spatial dispersal and infestation patterns in a host–bark beetle system (round 2)
+- **Citation:** Kautz, M., Schopf, R., Imron, M. A. (2014). *Ecological Modelling* 273, 264–276. DOI: 10.1016/j.ecolmodel.2013.11.022 (verified: Crossref)
+- **Access:** paywall
+- **Phenomenon and study area:** Introduces the IPS model (see `kautz2016dispersal`) for Ips typographus: dispersal, host selection, aggregation, colonisation or rejection, from a single source in a virtual stand.
+- **Validation:** One-factor-at-a-time sensitivity of success rate, number of infestations and maximum infestation distance; host recognition and attack synchrony parameters were most sensitive (from search-engine abstract).
+- **Reimplementability:** S1 1; S2 1; S3 1 (model version in the 2016 supplement); S4 2; S5 1 → 6, C. Assessed from: secondary (abstract via search; provisional).
+- **Relevance to ca-geo:** ECO-01, parameter sensitivity for a beetle CA.
+
+### dullinger2004modelling — Modelling climate change-driven treeline shifts: relative effects of temperature increase, dispersal and invasibility (round 2)
+- **Citation:** Dullinger, S., Dirnböck, T., Grabherr, G. (2004). *Journal of Ecology* 92(2), 241–252. DOI: 10.1111/j.0022-0477.2004.00872.x (verified: Crossref)
+- **Access:** paywall (Wiley "bronze" link returned HTML to automated fetch)
+- **Phenomenon and study area:** Upslope spread of the shrubby pine *Pinus mugo* at the treeline, Northern Calcareous Alps, Austria.
+- **Model:** A temporally and spatially explicit plant-spread model, parameterised from field data, with sensitivity to the climate trend, the spatial distribution of recruits around seed sources (dispersal curve) and the resistance of resident non-woody vegetation to invasion. 1000-year runs; pine cover rose from 10 % to 24–59 % of the landscape (abstract, Europe PMC).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract (provisional).
+- **Browser fit:** Good (landscape grid, yearly steps).
+- **Relevance to ca-geo:** ECO-07 (treeline shift). Alpine analogue for Krkonoše / Hrubý Jeseník dwarf-pine belt; shows that dispersal and invasibility matter as much as warming.
+
+### zeng2006endogenous — Endogenous Fractal Dynamics at Alpine Treeline Ecotones (round 2)
+- **Citation:** Zeng, Y., Malanson, G. P. (2006). *Geographical Analysis* 38(3), 271–287. DOI: 10.1111/j.1538-4632.2006.00686.x (verified: Crossref)
+- **Access:** paywall
+- **Phenomenon and study area:** Advance of trees into alpine tundra; generic (field-study-based rules).
+- **Model:** A cellular automaton with nonlinear local positive and negative feedbacks in tree establishment and mortality. Fourier analysis shows fractal spatial and temporal patterns; landscape-scale correlations between pattern and advance rate emerge from local rules (Crossref abstract). A related dissertation (Zeng, University of Iowa, DOI 10.17077/etd.8n8tphn6, Crossref record seen) may contain the full rule set.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 2 (generic lattice, could sit on a DEM); S5 1 → 5, C. Assessed from: abstract (provisional).
+- **Browser fit:** Trivial.
+- **Relevance to ca-geo:** ECO-07. The only explicit treeline CA found; a DEM-driven variant for Czech mountains is straightforward.
+
+### lischke2006treemig — TreeMig: A forest-landscape model for simulating spatio-temporal patterns from stand to landscape scale (round 2)
+- **Citation:** Lischke, H., Zimmermann, N. E., Bolliger, J., Rickebusch, S., Löffler, T. J. (2006). *Ecological Modelling* 199(4), 409–420. DOI: 10.1016/j.ecolmodel.2005.11.046 (verified: Crossref)
+- **Access:** paywall (abstract elided by publisher)
+- **Phenomenon and study area:** Forest dynamics and tree species migration; Swiss applications (e.g. Holocene runs in Valais on a 1 km grid, per project pages).
+- **Model (from WSL project pages):** A grid of linked cells (25 m to 1 km); in each cell a multi-species, height-structured forest model (density per height class, light attenuation, growth, competition, mortality, reproduction); seeds disperse between cells. A model documentation PDF is online: https://treemig.wsl.ch/fileadmin/user_upload/WSL/Microsite/TreeMig/TreeMigDocu_23_Model.pdf (verified 200; not read).
+- **Code:** An R package and GUI are described on https://treemig.wsl.ch (verified 200); no download or licence confirmed.
+- **Reimplementability:** S1 1; S2 1; S3 0 (availability not verified); S4 1; S5 1 → 4, C. Assessed from: secondary (project documentation pages; provisional). The open documentation PDF could raise S1/S2.
+- **Browser fit:** Moderate (several species × height classes per cell).
+- **Relevance to ca-geo:** ECO-02 and ECO-07; the main verified **seed-dispersal grid model** for Central European forests.
+
+### fritsch2026mechanistic — Mechanistic-statistical model for the expansion of ash dieback (round 2)
+- **Citation:** Fritsch, C., Grosdidier, M., Gégout-Petit, A., Marçais, B. (2026). *Theoretical Population Biology* 171, 1–21. DOI: 10.1016/j.tpb.2026.06.006 (verified: Crossref). Preprint arXiv 2409.06273.
+- **Access:** preprint (arXiv, read)
+- **Phenomenon and study area:** Spread of *Hymenoscyphus fraxineus* (ash dieback) across France, 2008–2023.
+- **Model:** A reaction–diffusion equation for leaf infection (diffusion coefficient D) coupled with a rachis (leaf-litter) colonisation stage, modulated by summer temperature (best index: number of days above 28 °C), spring rainfall and ash density; an Allee term was tested and found unnecessary. Discretised on 16×16 km quadrats; an observation model links simulated infection to presence reports, with Bayesian estimation (AMIS).
+- **Parameters:** Five estimated parameters with priors in Table 2 and posterior ranges in figures; correlations in Table 3.
+- **Code:** Not found.
+- **Validation:** Likelihood and RMSE per year (Table 4) for 2008–2019, with forecasts for later years.
+- **Reimplementability:**
+  - S1 2: equations and discretisation given.
+  - S2 1: posterior values mainly as figures.
+  - S3 0.
+  - S4 1: French forest-health reports and meteorology described, not redistributed.
+  - S5 2: RMSE table.
+  - → 6, C. Assessed from: full text (preprint, keyword-guided).
+- **Browser fit:** Very good (coarse quadrat grid, explicit finite-difference step = a CA).
+- **Relevance to ca-geo:** **ECO-09 (ash dieback)** — the best verified European ash-dieback spread model; ash dieback is widespread in CZ. Kernel values from `grosdidier2018tracking`.
+
+### dunn2007simulating — Simulating Weed Propagation Via Hierarchical, Patch-Based Cellular Automata (round 2)
+- **Citation:** Dunn, A. G., Majer, J. D. (2007). In: *Lecture Notes in Computer Science* (ICCS 2007), 762–769. DOI: 10.1007/978-3-540-72584-8_101 (verified: Crossref)
+- **Access:** OA (publisher PDF, read)
+- **Phenomenon and study area:** Environmental weed spread (bird- and human-dispersed) on fictitious GIS data framed on south-west Western Australia.
+- **Model:** An irregular, hierarchical CA: GIS patches at several granularities form a network; each link carries a probability set from patch states and distance; each synchronous step a breadth-first search over the network yields dispersal likelihoods, mimicking short and long-distance dispersal.
+- **Reimplementability:** S1 1; S2 0; S3 0; S4 1; S5 0 → 2, D. Assessed from: full text.
+- **Relevance to ca-geo:** ECO-03 concept only: irregular patch cells built from land-cover polygons as an alternative to a raster.
+
 ### Reviews, frameworks, tools and parameter sources (not scored)
+
+#### grosdidier2018tracking — Tracking the invasion: dispersal of Hymenoscyphus fraxineus airborne inoculum at different scales (round 2)
+- **Citation:** Grosdidier, M., Ioos, R., Husson, C., Cael, O., Scordia, T., Marçais, B. (2018). *FEMS Microbiology Ecology* 94(5), fiy049. DOI: 10.1093/femsec/fiy049 (verified: Crossref)
+- **Value:** Spore-trap and symptom data from France. Most inoculum stays within about 50 m of infected ash, yet spores were detected 50–100 km ahead of the symptom front; two Bayesian-fitted kernels (best: inverse power law) with mean dispersal of about 1.4 km (local) and 2.6 km (regional) (from search-engine abstract). Parameter source for an ECO-09 ash-dieback CA. Reimplementability: n/a.
 
 #### hallas2026assessing — Assessing disturbance risks of the European spruce bark beetle under climate change: a review of model approaches and future perspectives
 - **Citation:** Hallas, T., Hoch, G., Kirisits, T., Netherer, S. (2026). *European Journal of Forest Research* 145(2), 23. DOI: 10.1007/s10342-025-01841-x (verified: Crossref, OpenAlex)
@@ -751,13 +902,16 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
 
 ## Most reimplementable (top picks)
 
-1. **liu2025multiscale (A, 9).** Full equations, parameter tables and a GitHub repo for a stochastic dispersal CA; the closest thing to a drop-in ECO-01 core.
-2. **pietzsch2023nonparametric (B, 8).** Open code and data. A 250 m Markov CA with neighbour spread, calibrated on an Ips typographus outbreak right at the Czech border.
-3. **moenickes2013shapes (B, 7).** A complete rule and parameter description with corridor and long-distance dispersal on 5 m cells, and quantitative efficiency targets (0.94 / 0.89). The best ECO-03 template.
-4. **rademacher2004reconstructing (B, 7).** A full open ODD for a Central European beech mosaic-cycle CA with wind-ordered neighbour interactions (ECO-02, HAZ-04).
-5. **thiery1995model (B, 7).** A tiny anisotropic-kernel CA with quantitative band statistics. Easy to tie to DEM aspect (ECO-08).
-6. **nobis2014kissmig / engler2012migclim (B, 7).** Open, simple SDM-plus-CA range-shift models (ECO-07).
-7. **schneider2016spatially (B, 7) + kubo1996forest, pascual2002cluster (C, 6 — third-party code).** Minimal stochastic CAs with an open R reference implementation in caspr, giving ready test oracles for ECO-08, ECO-02 and ECO-06.
+Updated in round 2.
+
+1. **pietzsch2023nonparametric (A, 10; was B 8).** 250 m Markov CA with an 8-neighbour spread rule, open transition tables and code, and per-cell F1 validation on the 2017/2018 Ips typographus outbreak at the Czech border. Now the strongest ECO-01 reference.
+2. **liu2025multiscale (A, 9).** Full equations, parameter tables and a GitHub repo for a stochastic hex-grid dispersal CA; drop-in ECO-01 dispersal core.
+3. **schneider2016spatially (A, 9; was B 7).** Complete three-state dryland CA (rule, all parameters, periodic boundaries, synchronous update) with the authors' R code; the best ECO-08 test oracle. `kefi2007local` (B 7) is its parent rule.
+4. **engler2012migclim / nobis2014kissmig (B, 8; were B 7).** Range-shift CAs whose full rules are in open package documentation or source (ECO-07).
+5. **kautz2016dispersal (B, 8, new).** ODD-documented beetle IBM; mechanistic basis for ECO-01 kernels.
+6. **moenickes2013shapes (B, 7).** Corridor plus long-distance spread with efficiency targets (ECO-03).
+7. **rademacher2004reconstructing, thiery1995model (B, 7).** Open ODD beech mosaic CA; anisotropic banded-vegetation kernel.
+8. **duraciova2020bark (C, 6, new) — CZ.** Data-driven spot-spreading predictor validated in the Bohemian Forest (AUC 0.75–0.82, 228 m spreading limit); calibration target and alternative rule for a Šumava ECO-01 demo.
 
 ## Gaps and unverified leads
 
@@ -785,8 +939,37 @@ Full-text access: Springer OA pages and Europe PMC worked. MDPI, Wiley and Scien
   - No verified CA for beaver wetlands (ECO-05) or treeline/alpine shifts specific to CZ.
   - Seed-dispersal CA is covered only inside the invasion and range-shift models.
   - Windthrow is covered only by iLand (tree level) and the BEFORE and Kubo gap rules. A raster windthrow CA from the geomorphology/hazard side may exist (overlap with `atm`/`geo`).
-- **Full-text priorities for round 2:** Kéfi TPB 2007 (rule table), Fahse & Heurich 2011, Bone 2006 (or the thesis), Prasad 2010 (USFS PDF), Kautz 2011, Doležal 2016 (OA at EJE; our fetch failed on encoding).
+- **Round 2 gap-search results:**
+  - **Treeline / range shift:** two treeline models added (`zeng2006endogenous` CA, `dullinger2004modelling` Austrian Alps), both abstract-only; no Czech treeline CA found.
+  - **Windthrow CA:** still none found (Crossref and web return only wildfire CA). HAZ-04 remains covered by iLand / BEFORE / Kubo; a simple edge-exposure rule would be our own variant.
+  - **Seed dispersal:** `lischke2006treemig` (grid forest-landscape model with inter-cell seed dispersal) added; no dedicated seed-dispersal CA found.
+  - **Central European bark beetle, CZ authors:** `duraciova2020bark` (ČZU co-authors, Bohemian Forest validation). ŠUMLAND project (Institute of Botany CAS, landscape simulation of Šumava with wind and beetle modules, 2010–2014; seen only as a web-search hit, the project page did not respond to our check) — no peer-reviewed model paper found; unverified lead. TANABBO II (Pirtskhalava-Karpova et al. 2024, *Ecol. Model.* 496, 110814, DOI 10.1016/j.ecolmodel.2024.110814, verified; abstract elided) — phenology + drought risk, not assessed.
+  - **Beaver / wetland (ECO-05):** no CA of dam building or wetland formation found. Beaver colonisation models along river networks are listed in `epidemics.md` (EPI-04: `chaputbardy2017network`, `graham2022monitoring`); Czech parameter source `john2010habitat` (Morava basin).
+  - **ECO-09 plant pests and pathogens:** ash dieback — `fritsch2026mechanistic` (C 6, France) and kernel source `grosdidier2018tracking`; pine processionary moth — Robinet, Rousselet & Roques (2014), *Ann. For. Sci.* 71(2), 149–160, DOI 10.1007/s13595-013-0287-7 (verified; abstract elided, not assessed). Grey literature: a Leeds PhD thesis on ash-dieback R0 maps for Great Britain (White Rose eTheses 31356; not catalogued).
+- **Round 2 full-text status:** reached for `pietzsch2023nonparametric`, `schneider2016spatially`, `bone2006fuzzy` (thesis), and rule-level open material for `engler2012migclim` (user guide) and `nobis2014kissmig` (source). Still blocked: `fahse2011simulation`, `kefi2007local`/`kefi2007spatial` originals, Nobis/Engler journal PDFs (Wiley), `nehrbass2007simulation` companion paper.
+- **Full-text priorities (after round 2):** Fahse & Heurich 2011, Kéfi TPB 2007 original, Prasad 2010 (USFS PDF), Kautz 2011, Doležal 2016 (OA at EJE), TreeMig documentation PDF, Zeng (Iowa) dissertation, Duračiová 2020 TANABBO code availability (ask authors).
 - **Overlaps with other domains:**
   - Pine-wilt and pest CA (Huang 2012, Liu & Zhang 2022 CA–Markov) belong to `epi`.
   - LANDIS fire, Kéfi grazing and Balzter STMC touch `fire` and `lu`.
   - Kramer-Schadt lynx links to EPI-02 wild boar spread (connectivity).
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| pietzsch2023nonparametric | 8 B | 10 A | Neighbour rule read in paper + `Upscaling.R` (Moore); per-cell F1 validation (S1 1→2, S5 1→2) |
+| schneider2016spatially | 7 B | 9 A | OA full text: complete rule, all parameters, boundaries, update; authors' GitHub code (S1, S2 1→2) |
+| kefi2007local | 6 C | 7 B | Rule and base parameters restated in schneider2016 full text (S1 1→2); original still unread |
+| engler2012migclim | 7 B | 8 B | Full algorithm in open package user guide (S1 1→2) |
+| nobis2014kissmig | 7 B | 8 B | Full rule in open C++ source (S1 1→2) |
+| bone2006fuzzy | 4 C | 4 C | Thesis full text read; rule clearer but functions only in figures, visual calibration (no change) |
+| fahse2011simulation | 4 C | 4 C | No OA copy found (no change) |
+| liu2025multiscale, moenickes2013shapes, nehrbass2007simulation, kefi2007spatial | — | unchanged | Re-checked; no new material (companion paper of Nehrbass verified but closed) |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Airborne long-range spore incursion | Wind-borne transport of pathogen spores from infected regions into disease-free areas, ahead of the visible front | Explains jumps 50–100 km ahead of symptoms; couples ECO-09 with ATM-01 dispersion | Ash dieback is widespread in CZ; Czech airborne-inoculum studies exist (e.g. Dvořák et al. 2015, *Forests* 7(1), 1, DOI 10.3390/f7010001, verified in Crossref, not assessed) | `grosdidier2018tracking` (n/a, parameter source) | Probably a variant of ECO-09 + ATM-01 rather than a separate item; no CA found |
+
+Treeline advance, seed dispersal and ash dieback were met but are already covered by ECO-07, ECO-02 and ECO-09. No verifiable CA for pollen dispersal, locusts or bird-migration stopovers was found.

@@ -1,6 +1,6 @@
 # Land use and urban growth — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 
 ## Search log
 
@@ -43,6 +43,31 @@ are not meaningful. Only the top 3–8 results were screened.
 | GitHub repository search: "land use cellular automata", "urban growth cellular automata", "SLEUTH urban", "PLUS land use simulation", "molusce", "SIMLANDER", "Metronamica" | GitHub API | 30 / 15 / 11 / 4 / 11 / 2 / 4 | code links checked individually (HTTP 200) |
 
 n/m = not meaningful (Crossref relevance total).
+
+### Round 2
+
+OpenAlex still quota-blocked; search via Crossref `query.bibliographic`, web search, GitHub API and
+Semantic Scholar (OA links only). Full texts tried through publisher links, Semantic Scholar
+`openAccessPdf`, Europe PMC and institutional repositories; SAGE, Clark Digital Commons, WUR and
+ScienceDirect author manuscripts returned HTTP 403/503 to automated access.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| SLEUTH documentation pages (growth rules, coefficients, self-modification, applications repository) | NCGIA Gigalopolis site | – | pseudocode-level rule spec found (gwCoef.htm, gwSelfMod.htm); applications list has no CZ / Central-European case |
+| OA full text for white1993 / white1997 / silva2002 / rienow2015 / bastosmoroz2024 / hewitt2019 | Semantic Scholar, SAGE, OSF, Mendeley Data | – | all closed or 403; SIMLANDER PDF again unreadable (font encoding) |
+| PLUS repositories (HPSCIL PLUS, mcPLUS, openplus) | GitHub API | 3 | mcPLUS ships the Wuhan input rasters (LULC 2003–2013 + 14 drivers) and Linux binaries; still no source |
+| cellular automata urban growth Czech Republic / Prague / Brno / Ostrava | Crossref, web | n/m | no peer-reviewed CZ CA; Brno bachelor thesis (VUT FIT 2011, grey); MUGPCEE project (Prague CA, CORDIS) |
+| Stanilov Prague / West London CA | Crossref, web | n/m | Stanilov & Batty 2011 (West London, Metronamica) verified; Prague model publication not found |
+| celulární automaty suburbanizace / využití území (Czech) | web | ~9 | only the Brno thesis |
+| land use change simulation Czechia / Slovakia scenarios | web, Crossref | n/m | Pazúr & Bolliger 2017 (Slovakia, 20 m enhanced CLC + scenarios); Van Rompaey 2007 (CZ sediment scenarios, context) |
+| farmland abandonment / forest regrowth cellular automata (Europe, mountains) | Crossref, web | n/m | no CA for European abandonment verified; Alpine regrowth CA conference paper (2003, HAL, no DOI); Rutherford 2008 (Swiss, statistical); Volařík & Hédl 2013 (CZ fir expansion on abandoned land); Gomes 2019 (farmers' intentions CA, Portugal) |
+| shrub encroachment cellular automata | Crossref | n/m | CATGraSS shrub-encroachment CA (US semi-arid, eco domain) — not catalogued here |
+| CORINE-based CA EU (Estonia, Thessaloniki, Wallonia) | Crossref, Semantic Scholar | – | Mozaffaree Pour 2020, Lagarias 2015 (metadata only), Rienow 2021 (abstract) |
+| deforestation cellular automata | Crossref, web | n/m | Zagros CA (ISPRS 2013, OA full text) |
+| segregation / gentrification cellular automata real city | Crossref | n/m | Crossref noise; Benenson et al. 2002 (Yaffo) verified (key from `nw`) |
+| cellular automata photovoltaic adoption diffusion | web, Crossref | ~10 | no CA found; empirical neighbour-effect study Graziano & Gillingham verified |
+| urban CA settlement development Vienna | Crossref | – | Koenig & Mueller 2011 (InTech, OA full text) |
+| GitHub: "cellular automata urban growth javascript", "land use simulation browser", "sleuth javascript", "cellular automata leaflet / maplibre / geotiff" | GitHub API | 1 / 3 / 18 / 1 / 0 / 0 | no browser SLEUTH / land-use CA engine found (see general.md for browser CA) |
 
 ## Model families
 
@@ -91,7 +116,7 @@ n/m = not meaningful (Crossref relevance total).
 
 | Key | Year | Short title | Phenomenon | CA design (grid / neighbourhood / states / det. or stoch.) | S1 S2 S3 S4 S5 | Total | Class | Code | Access | Assessed from |
 |---|---|---|---|---|---|---|---|---|---|---|
-| clarke1997selfmodifying | 1997 | Self-modifying CA, SF Bay (SLEUTH origin) | urban growth | square / Moore + road search / urban–non-urban (+LU via deltatron) / stochastic, Monte Carlo | 1 2 2 2 2 | 9 | A | C source (Gigalopolis, verified) | paywall | abstract + official docs |
+| clarke1997selfmodifying | 1997 | Self-modifying CA, SF Bay (SLEUTH origin) | urban growth | square / Moore + road search / urban–non-urban (+LU via deltatron) / stochastic, Monte Carlo | 2 2 2 2 2 | 10 | A | C source (Gigalopolis, verified) | paywall | abstract + official docs (rule pseudocode, r2) |
 | clarke1998loose | 1998 | Loose-coupling CA and GIS, SF & Washington/Baltimore | urban growth | as SLEUTH | 1 1 2 1 1 | 6 | C | SLEUTH code | paywall | abstract (TLDR) |
 | silva2002calibration | 2002 | SLEUTH calibration Lisbon & Porto | urban growth (EU) | as SLEUTH | 1 1 2 1 1 | 6 | C | SLEUTH code | paywall | metadata only (provisional) |
 | dietzel2007toward | 2007 | Optimal calibration of SLEUTH (OSM metric) | calibration | as SLEUTH | 1 1 2 1 1 | 6 | C | SLEUTH code | paywall | abstract (provisional) |
@@ -109,7 +134,7 @@ n/m = not meaningful (Crossref relevance total).
 | hamad2018predicting | 2018 | CA-Markov scenarios, Kurdistan NP | LULC change | CA-Markov | 1 1 0 1 1 | 4 | C | not found | OA | abstract |
 | kamusoko2015simulating | 2015 | RF-CA urban growth | urban growth | RF potential + CA | 1 1 0 1 2 | 5 | C | not found | OA | abstract |
 | liu2017future | 2017 | FLUS model | multi-LU scenarios | ANN suitability + inertia + roulette CA | 1 1 1 1 1 | 5 | C | binary software (site unreachable) | paywall | abstract (TLDR) |
-| liang2021understanding | 2021 | PLUS model, Wuhan | multi-LU change | 30 m / 3×3 Moore / 7 LU / stochastic patch seeds | 1 2 1 1 2 | 7 | B | Windows binary on GitHub (verified) | preprint (arXiv) | full text |
+| liang2021understanding | 2021 | PLUS model, Wuhan | multi-LU change | 30 m / 3×3 Moore / 7 LU / stochastic patch seeds | 1 2 1 2 2 | 8 | B | Windows binary + mcPLUS Linux binary with Wuhan data (verified) | preprint (arXiv) | full text + repos (r2) |
 | soaresfilho2002dinamica | 2002 | DINAMICA, Amazon frontier | deforestation / landscape | stochastic CA, expander/patcher | 1 1 1 1 1 | 5 | C | Dinamica EGO (free, closed) | paywall | abstract (TLDR) |
 | meentemeyer2013futures | 2013 | FUTURES patch-growing | urban–rural growth | stochastic patch growing on logistic potential | 1 1 2 1 1 | 6 | C | GRASS add-on r.futures (verified) | paywall | metadata + GRASS manual |
 | petrasova2016open | 2016 | FUTURES in GRASS GIS (open source) | urban growth | 30 m, patch growing, demand by subregion | 1 2 2 2 1 | 8 | B | r.futures (verified) | OA | full text |
@@ -125,6 +150,17 @@ n/m = not meaningful (Crossref relevance total).
 | indrova2015land | 2015 | Prague suburban LU prediction (LCM vs Dyna-CLUE) | suburbanisation (CZ) | LCM (MLP + Markov) / Dyna-CLUE allocation | 0 1 1 1 1 | 4 | C | commercial / free closed | OA | full text |
 | pokojska2019simulating | 2019 | Dyna-CLUE, Warsaw metropolitan area | suburbanisation (EU) | Dyna-CLUE allocation | 0 1 1 1 1 | 4 | C | free closed | OA | abstract |
 | muhammad2022spatiotemporal | 2022 | CA-ANN in QGIS MOLUSCE, Linyi | LULC change | MOLUSCE CA-ANN | 1 1 2 1 1 | 6 | C | qgis_molusce GPL-2 (verified) | OA | abstract |
+| stanilov2011exploring | 2011 | West London historical growth, Metronamica (r2) | urban land use (EU) | constrained CA, high-res, multi-LU | 1 1 1 1 1 | 5 | C | closed (Metronamica) | paywall | abstract |
+| koenig2011cellularautomatabased | 2011 | Vienna settlement development CA (r2) | population density / settlement (EU) | 50 m, 649×519 / potential field / density / stochastic roulette, GA calibration | 1 1 0 1 1 | 4 | C | Delphi program, not published | OA | full text |
+| rienow2021modeling | 2021 | RF vs SVM for CA, Wallonia (r2) | urban LU change (EU) | ML potential + CA | 1 1 0 1 1 | 4 | C | not found | OA (CC BY-NC-ND; blocked) | abstract |
+| mozaffareepour2020simulation | 2020 | CORINE-based urban CA, Estonia (r2) | urban expansion (EU) | CA on CLC | 1 0 0 1 1 | 3 | D | not found | paywall | metadata only (provisional) |
+| lagarias2015exploring | 2015 | CA policy scenarios, Thessaloniki (r2) | urban sprawl (EU) | CA (details unknown) | 1 0 0 1 1 | 3 | D | not found | paywall | metadata only (provisional) |
+| gomes2019modelling | 2019 | Farmers' intentions + CA scenarios (r2) | agricultural change / abandonment (EU) | CA with scenario demand | 1 1 0 1 1 | 4 | C | not found | OA (author ms, blocked) | abstract |
+| naghdizadegan2013spatial | 2013 | Deforestation CA, Central Zagros (r2) | deforestation | logistic × n×n density (3×3–7×7) × random / binary | 1 1 0 1 1 | 4 | C | not found | OA | full text |
+| pazur2017enhanced | 2017 | Enhanced CLC + 2040 scenarios, Slovakia (r2) | LU scenarios (Central EU) | non-CA allocation (demand + suitability + conversion settings) | 0 1 0 1 1 | 3 | D | not found | OA (CC BY) | full text (data paper) |
+| volarik2013expansion | 2013 | Silver fir expansion on abandoned land, White Carpathians (r2) | forest regrowth on abandoned land (CZ) | empirical (historical maps), no model | n/a | – | n/a | – | OA (green, Europe PMC) | abstract |
+| graziano2014spatial | 2014 | Neighbour effects in PV adoption (r2) | PV adoption diffusion | empirical spatial econometrics, no CA | n/a | – | n/a | – | paywall | metadata |
+| benenson2002entitybased | 2002 | Entity-based residential dynamics, Yaffo (r2) | ethnic residential segregation | entity / agent-based on buildings | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (key from `nw`) |
 | sante2010cellular | 2010 | Review: urban CA for real-world processes | review | – | n/a | – | n/a | – | paywall | abstract (TLDR) |
 | verburg2004land | 2004 | Land use change modelling: practice & priorities | review | – | n/a | – | n/a | – | OA (green) | metadata |
 
@@ -139,7 +175,8 @@ n/m = not meaningful (Crossref relevance total).
 - **Parameters:** five coefficients (0–100) plus self-modification constants in a scenario file. Brute-force calibration (coarse → fine → final) against historical urban extents, using a set of fit statistics, is documented on the project site.
 - **Code:** SLEUTH 3.0 C source, tarball https://www.ncgia.ucsb.edu/projects/gig/Dnload/SLEUTH3.0beta_p01.tar.gz (HTTP 200, about 4.8 MB, not downloaded). Also SLEUTH-3r at https://egscbeowulf.er.usgs.gov/geninfo/downloads (200). The Python wrapper sostenibilidad-unam/sleuth_automation is on GitHub.
 - **Validation:** fit to historical maps. The distribution includes the `demo200` test scenario with expected outputs for checking an installation (https://www.ncgia.ucsb.edu/projects/gig/Imp/imVerTestResults.htm).
-- **Reimplementability:** S1 1 – the paper (paywalled) is not fully specified, but the open C code plus web documentation define the rules, so S1 would be 2 if the code is taken as the specification. S2 2 – calibration procedure fully documented. S3 2 – open source. S4 2 – generic layers (urban extent, roads, slope, exclusion) plus demo data. S5 2 – demo reference outputs and calibration statistics → 9, A. Assessed from: abstract + official documentation.
+- **Reimplementability:** S1 2 – the paper itself is still paywalled, but the official documentation gives the rules at pseudocode level (see Round 2 note); S2 2 – calibration procedure fully documented. S3 2 – open source. S4 2 – generic layers (urban extent, roads, slope, exclusion) plus demo data. S5 2 – demo reference outputs and calibration statistics → 10, A. Assessed from: abstract + official documentation.
+- **Round 2:** re-assessed from the official documentation (paper full text still not accessible) — S1 2 (was 1), total 10 A (was 9 A). The Gigalopolis pages https://www.ncgia.ucsb.edu/projects/gig/About/gwCoef.htm and .../gwSelfMod.htm (HTTP 200) define how each coefficient becomes an applied value: dispersion → number of random spontaneous-growth trials as a fraction of the image diagonal and road-trip length; breed → probability that a spontaneous cell becomes a spreading centre and number of road trips; spread → edge-growth probability for cells of a cluster (more than 2 urban cells in the 3×3 window); slope → exponent-type lookup table with a critical slope above which growth is impossible; road gravity → maximum road-search radius as a fraction of (rows + cols)/16, searched in growing rings. Self-modification multiplies dispersion, breed and spread by BOOM (>1) or BUST (<1) when the yearly growth rate crosses CRITICAL_HIGH / CRITICAL_LOW. Together with the open C code this is a complete specification. The SLEUTH applications repository on the same site lists no Czech or Central-European case (European cases: Lisbon, Porto, Bilbao, Helsinki, several Italian cities, the Netherlands).
 - **Browser fit:** very good. Binary grid, simple local rules; a few hundred thousand cells × 30–50 years × 10–100 Monte Carlo runs is feasible in JS / WebGL. Brute-force calibration would have to be offline or reduced.
 - **Relevance to ca-geo:** LND-01 (urban growth / suburbanisation) primary candidate. Inputs map well to CZ data: urban extent from CORINE / Urban Atlas, roads, a DEM-derived slope, exclusion from protected areas and water. Also feeds chain L8.
 
@@ -219,7 +256,8 @@ n/m = not meaningful (Crossref relevance total).
 - **Validation:** not checked.
 - **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: metadata only (provisional).
 - **Browser fit:** SVM inference on precomputed rasters is fine; training would be offline.
-- **Relevance to ca-geo:** LND-01; a possible German (EU) SLEUTH precedent. Verify in round 2.
+- **Relevance to ca-geo:** LND-01; a possible German (EU) SLEUTH precedent.
+- **Round 2:** still closed (Semantic Scholar: CLOSED; abstract elided); study area not confirmed; score unchanged. The same first author's later Wallonia CA study is added as `rienow2021modeling`.
 
 ### white1993cellular — Cellular Automata and Fractal Urban Form
 - **Citation:** White, R., Engelen, G. (1993). Cellular Automata and Fractal Urban Form: A Cellular Modelling Approach to the Evolution of Urban Land-Use Patterns. *Environment and Planning A: Economy and Space*, 25(8), 1175–1199. DOI: 10.1068/a251175 (verified: Crossref)
@@ -244,6 +282,7 @@ n/m = not meaningful (Crossref relevance total).
 - **Code:** no open code; this lineage is implemented in commercial Metronamica (closed).
 - **Validation:** visual realism and sensitivity analysis (from the abstract).
 - **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: abstract (provisional). The same rule structure is fully written out in roodposhti2020towards and hewitt2019cellular.
+- **Round 2:** full text still not accessible (SAGE bronze PDF returned HTTP 403); score unchanged. A readable restatement of the constrained-CA potential exists in `hagenzanker2008neutral` (general.md, read in full): potential per class and cell = f(random term, neighbourhood effect, suitability, accessibility, zoning), usually a product; the neighbourhood effect is the sum over cells within a radius of a weight that depends on distance and on the pair of land-use classes; allocation satisfies exogenous class demands.
 - **Browser fit:** good; a 113-cell kernel per class is fine on GPU.
 - **Relevance to ca-geo:** LND-01 and LND-02 (multi-class competition: urban vs agriculture vs forest vs abandonment). The conceptual core for a multi-land-use demo.
 
@@ -373,7 +412,8 @@ n/m = not meaningful (Crossref relevance total).
 - **Parameters:** 3×3 Moore neighbourhood, patch-seed threshold 0.1, decay factor 0.9, demand step 500, RF with 50 trees and 5 % sampling. Set by trial and error.
 - **Code:** https://github.com/HPSCIL/Patch-generating_Land_Use_Simulation_Model (verified). It contains a Windows executable, test data and tutorials, but no source code. A third-party "clean-room Python approximation" exists (ranielZhang/openplus-landuse-python, not assessed).
 - **Validation:** figure of merit (FoM) 0.2642 for PLUS vs FLUS and two reduced variants; landscape metrics.
-- **Reimplementability:** S1 1 – equations given but some update details unclear; S2 2 – all parameters listed; S3 1 – binary only; S4 1 – the land-use product is not openly linked (drivers mostly open); S5 2 – FoM values → 7, B. Assessed from: full text (arXiv preprint).
+- **Reimplementability:** S1 1 – equations given but some update details unclear; S2 2 – all parameters listed; S3 1 – binary only; S4 2 – the Wuhan inputs are published in the mcPLUS repository (see Round 2); S5 2 – FoM values → 8, B. Assessed from: full text (arXiv preprint) + repositories.
+- **Round 2:** re-assessed from full text + repositories — S4 2 (was 1), total 8 B (was 7 B). The HPSCIL repository https://github.com/HPSCIL/mcPLUS (HTTP 200, no licence file) contains a parallel Linux version of LEAS and CARS (binaries only, parameter files) together with the Wuhan land-use rasters 2003/2005/2010/2013 and the 14 driver rasters, so a JS reimplementation can be checked on the original data against the published FoM. The main PLUS repository still has only the Windows executable (V1.4.2), test data and tutorials; no source code. The third-party openplus-landuse-python is a single-file approximation (not assessed).
 - **Browser fit:** CA part feasible (a few million cells, roulette wheel). RF probabilities would be precomputed offline.
 - **Relevance to ca-geo:** LND-01 and LND-02. Its patch-seed mechanism gives realistic new settlements and forest patches. A candidate for a multi-class CORINE demo, with CORINE 2000/2006 for calibration and 2012/2018 for validation.
 
@@ -426,6 +466,7 @@ n/m = not meaningful (Crossref relevance total).
 - **Code:** project site https://simlander.wordpress.com/ (200). It links SIMLANDER v2.1.1 and v2.0 zip files (R scripts, demo data, README); the download link answered HTTP 303 (redirect to file). License not stated. The related multi-class model APoLUS is at https://simlander.wordpress.com/apolus/.
 - **Validation:** not checked.
 - **Reimplementability:** S1 1; S2 1; S3 2; S4 2; S5 1 → 7, B. Assessed from: abstract + project site. The PDF text could not be extracted because of font encoding.
+- **Round 2:** the OSF download was retried (PDF, 19 pages); text extraction again yields only glyph garbage, so no full-text reading and no score change. The equations remain available through roodposhti2020towards. The general.md copy of this entry was harmonised to 7 B.
 - **Browser fit:** very good; the rules are elementwise products plus one kernel sum.
 - **Relevance to ca-geo:** LND-01. The most compact open template of the White–Engelen logic. APoLUS (multi-class) is worth checking for LND-02.
 
@@ -512,7 +553,8 @@ n/m = not meaningful (Crossref relevance total).
 - **Validation:** not checked.
 - **Reimplementability:** S1 1; S2 1; S3 2; S4 1; S5 1 → 6, C. Assessed from: metadata + data repository page.
 - **Browser fit:** probably good.
-- **Relevance to ca-geo:** LND-01. Its finding on which input urban map to use matters for choosing CORINE vs Urban Atlas vs GHSL vs the Czech building footprint data. **Priority to read in round 2.**
+- **Relevance to ca-geo:** LND-01. Its finding on which input urban map to use matters for choosing CORINE vs Urban Atlas vs GHSL vs the Czech building footprint data.
+- **Round 2:** still closed (no abstract in Crossref or Semantic Scholar); the Mendeley Data page (v2, CC BY 4.0, Universität Potsdam, DFG NatRiskChange) gives no study area or file list without a download. Score unchanged; a manual read remains a priority.
 
 ### yang2023simulating — Simulating urban expansion using cellular automata model with spatiotemporally explicit representation of urban demand
 - **Citation:** Yang, J., Tang, W., Gong, J., Shi, R., Zheng, M., Dai, Y. (2023). Simulating urban expansion using cellular automata model with spatiotemporally explicit representation of urban demand. *Landscape and Urban Planning*, 231, 104640. DOI: 10.1016/j.landurbplan.2022.104640 (verified: Crossref)
@@ -552,6 +594,7 @@ n/m = not meaningful (Crossref relevance total).
 - **Reimplementability:** S1 0; S2 1; S3 1; S4 1; S5 1 → 4, C. Assessed from: full text.
 - **Browser fit:** the area is small (about 2 000 ha), so it is ideal as a demo extent.
 - **Relevance to ca-geo:** **LND-01 CZ anchor**. Defines a realistic study area along the D1 motorway, a driver set and planning constraints. A CA from this survey (SIMLANDER / FUTURES / SLEUTH) could be run on the same area for comparison.
+- **Round 2:** no change (already full text). Round-2 searches found no peer-reviewed CA for any Czech area, so this remains the only CZ modelling reference. Context for the same process (verified in Crossref, not catalogued as models): Ouředníček (2003), The Suburbanisation of Prague, *Czech Sociological Review*, DOI 10.13060/00380288.2003.39.2.06; Sýkora & Posová (2007), new housing construction in the Prague metropolitan region, *Geografie*, DOI 10.37040/geografie2007112030334. Both describe where and when suburban housing appeared, which helps choose calibration periods.
 
 ### pokojska2019simulating — Simulating land use change in the southern part of Warsaw Metropolitan Area with application of Dyna-CLUE model
 - **Citation:** Pokojska, P. (2019). Simulating land use change in the southern part of Warsaw Metropolitan Area with application of Dyna-CLUE model. *Geografie*, 124(1), 57–82. DOI: 10.37040/geografie2019124010057 (verified: Crossref)
@@ -593,14 +636,137 @@ n/m = not meaningful (Crossref relevance total).
 - **Reimplementability:** n/a (review). Entry point for the CA vs allocation-model distinction (Dyna-CLUE in indrova2015land and pokojska2019simulating).
 - **Relevance to ca-geo:** framing for LND-01 / LND-02.
 
+### stanilov2011exploring — Exploring the Historical Determinants of Urban Growth Patterns through Cellular Automata (round 2)
+- **Citation:** Stanilov, K., Batty, M. (2011). Exploring the Historical Determinants of Urban Growth Patterns through Cellular Automata. *Transactions in GIS*, 15(3), 253–271. DOI: 10.1111/j.1467-9671.2011.01254.x (verified: Crossref)
+- **Access:** paywall.
+- **Phenomenon and study area:** historical growth of a section of West London at high spatial and temporal resolution.
+- **Model:** the constrained-CA system METRONAMICA adapted to fine land-use morphology. Main finding (abstract): the spatial relations between land uses and the physical environment stay remarkably stable across historical periods.
+- **Inputs:** detailed historical land-use data for West London (not open).
+- **Parameters:** not checked.
+- **Code:** closed (Metronamica).
+- **Validation:** not checked.
+- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: abstract.
+- **Browser fit:** as constrained CA.
+- **Relevance to ca-geo:** LND-01. The same author led the EU project MUGPCEE (2008–2010). Its reporting on CORDIS (https://cordis.europa.eu/project/id/220151, HTTP 200; grey literature, no DOI) states that a second model was built for post-1989 suburban growth of **metropolitan Prague**, on a 1989–2008 high-resolution database, while the CA itself was calibrated on the West London data. No peer-reviewed Prague CA publication was found (unverified lead).
+
+### koenig2011cellularautomatabased — Cellular-Automata-Based Simulation of the Settlement Development in Vienna (round 2)
+- **Citation:** Koenig, R., Mueller, D. (2011). Cellular-Automata-Based Simulation of the Settlement Development in Vienna. In *Cellular Automata – Simplicity Behind Complexity*, InTech. DOI: 10.5772/16014 (verified: Crossref)
+- **Access:** OA (InTech chapter PDF).
+- **Phenomenon and study area:** population-density development of Vienna, 1888–2001 (snapshots 1888, 1918, 1945, 1971, 2001). Central European.
+- **Model:** 649 × 519 grid of 50 m cells. A potential field derived from neighbouring population density, plus weighted indicators (public-transport stops within 750 m, technical-infrastructure routes within 1 000 m), gives benefit and cost curves; their difference is the probability of moving into or out of a cell. Settler "agents" choose cells by roulette-wheel selection; a beta-distribution assessment curve reduces the control parameters to four. A simple genetic algorithm (32 individuals) calibrates them per period, first on coarse grids (up to 20 × 20 aggregation), then on finer ones.
+- **Inputs:** historical population density and infrastructure maps of Vienna (from a dissertation; not open).
+- **Parameters:** indicator weightings tabulated per period (Tables 1–2); optimal control parameters shown only in figures.
+- **Code:** stand-alone Delphi program for Windows; not published.
+- **Validation:** population differences in concentric rings around the centre of mass; "model quality" mostly above 85 % on coarser grids, 75–90 % at 50 m.
+- **Reimplementability:** S1 1 – equations given, some steps only verbal; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: full text.
+- **Browser fit:** good (~340 000 cells); GA calibration would be offline or reduced.
+- **Relevance to ca-geo:** LND-01; the only historical Central-European city CA found. Ring-based validation and coarse-to-fine calibration are simple ideas for a demo.
+
+### rienow2021modeling — Modeling urban regions: Comparing random forest and support vector machines for cellular automata (round 2)
+- **Citation:** Rienow, A., Mustafa, A., Krelaus, L., Lindner, C. (2021). Modeling urban regions: Comparing random forest and support vector machines for cellular automata. *Transactions in GIS*, 25(3), 1625–1645. DOI: 10.1111/tgis.12756 (verified: Crossref)
+- **Access:** OA (hybrid, CC BY-NC-ND per Semantic Scholar); automated PDF access blocked (HTTP 403).
+- **Phenomenon and study area:** urban land-use change in Wallonia (Belgium, EU).
+- **Model:** CA whose transition potential comes from RF or SVM; sensitivity to sample size (5 000 vs 15 000) and number of inputs, with and without zoning.
+- **Inputs:** Wallonia land use, drivers, zoning.
+- **Parameters:** not checked.
+- **Code:** not found.
+- **Validation:** RF reproduces the observed pattern better than SVM, especially with small samples; zoning helps SVM but hardly RF (abstract).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract.
+- **Browser fit:** fine with precomputed probability rasters.
+- **Relevance to ca-geo:** LND-01; practical guidance for training a potential surface on CZ data with few observed changes.
+
+### mozaffareepour2020simulation — Simulation of Urban Expansion in Estonia for 2046 Using a CA Model Based on CORINE (round 2)
+- **Citation:** Mozaffaree Pour, N., Oja, T. (2020). Simulation of Urban Expansion in Estonia for 2046 Using Cellular Automata Model Based on the CORINE Land Cover Database. In *Proceedings of the 2020 3rd International Conference on Geoinformatics and Data Analysis*, 14–18. DOI: 10.1145/3397056.3397057 (verified: Crossref)
+- **Access:** paywall (ACM).
+- **Phenomenon and study area:** urban expansion of Estonia (University of Tartu), projection to 2046, on CORINE.
+- **Model / inputs / parameters / validation:** no abstract available; not checked.
+- **Code:** not found.
+- **Reimplementability:** S1 1; S2 0; S3 0; S4 1; S5 1 → 3, D. Assessed from: metadata only (provisional).
+- **Relevance to ca-geo:** LND-01; a national-scale CORINE CA for a small EU country.
+
+### lagarias2015exploring — Exploring land use policy scenarios with a CA-based model: Thessaloniki (round 2)
+- **Citation:** Lagarias, A. (2015). Exploring land use policy scenarios with the use of a cellular automata-based model: urban sprawl containment and sustainable development in Thessaloniki. *Geocarto International*, 1–19 (online first). DOI: 10.1080/10106049.2015.1013066 (verified: Crossref)
+- **Access:** paywall.
+- **Phenomenon and study area:** urban sprawl and containment-policy scenarios, Thessaloniki (Greece, EU).
+- **Model / inputs / parameters / validation:** no abstract in Crossref; not checked.
+- **Code:** not found.
+- **Reimplementability:** S1 1; S2 0; S3 0; S4 1; S5 1 → 3, D. Assessed from: metadata only (provisional).
+- **Relevance to ca-geo:** LND-01; EU sprawl-containment scenario precedent (green-belt style constraint layers).
+
+### gomes2019modelling — Modelling future land use scenarios based on farmers' intentions and a cellular automata approach (round 2)
+- **Citation:** Gomes, E., Abrantes, P., Banos, A., Rocha, J. (2019). Modelling future land use scenarios based on farmers' intentions and a cellular automata approach. *Land Use Policy*, 85, 142–154. DOI: 10.1016/j.landusepol.2019.03.027 (verified: Crossref)
+- **Access:** author manuscript listed on ScienceDirect (blocked to automated access).
+- **Phenomenon and study area:** land-use change driven by farmers' stated intentions under four 2025 scenarios (current trend, intensified agriculture, reduced agriculture, more urban demand); Portugal (exact area not confirmed).
+- **Model:** CA allocation with scenario demand derived from farmers' intentions (abstract).
+- **Inputs:** land-use maps, survey-based scenario demand.
+- **Parameters:** not checked.
+- **Code:** not found.
+- **Validation:** not checked.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract.
+- **Browser fit:** good.
+- **Relevance to ca-geo:** **LND-02** — the only verified CA found that includes an explicit "reduced agricultural production" (abandonment) scenario; template for scenario-driven demand.
+
+### naghdizadegan2013spatial — Spatial deforestation modelling using cellular automata, Central Zagros (round 2)
+- **Citation:** Naghdizadegan, M., Behifar, M., Mirbagheri, B. (2013). Spatial Deforestation Modelilng Using Cellular Automata (Case Study: Central Zagros Forests). *ISPRS Archives*, XL-1/W3, 289–293. DOI: 10.5194/isprsarchives-xl-1-w3-289-2013 (verified: Crossref; title typo as registered)
+- **Access:** OA.
+- **Phenomenon and study area:** forest loss in the Central Zagros Mountains (Iran).
+- **Model:** binary forest / deforested grid. Global probability from logistic regression on drivers (distance to roads strongest); neighbourhood term = share of deforested cells in an n×n window (3×3, 5×5, 7×7 tested); a stochastic disturbance term. Neighbourhood, suitability and stochastic term calibrated.
+- **Inputs:** land cover from high-resolution imagery, drivers.
+- **Parameters:** regression coefficients from data; not all values given.
+- **Code:** not found.
+- **Validation:** accuracy against a satellite image.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: full text.
+- **Browser fit:** trivial.
+- **Relevance to ca-geo:** new-phenomenon candidate (deforestation). The logistic × neighbourhood × random template is the same as for LND-01, and the same engine run "in reverse" gives forest regrowth for LND-02.
+
+### pazur2017enhanced — Enhanced land use datasets and future scenarios of land change for Slovakia (round 2)
+- **Citation:** Pazúr, R., Bolliger, J. (2017). Enhanced land use datasets and future scenarios of land change for Slovakia. *Data in Brief*, 14, 483–488. DOI: 10.1016/j.dib.2017.07.066 (verified: Crossref)
+- **Access:** OA (CC BY; read via Europe PMC full-text XML).
+- **Phenomenon and study area:** national land-use maps of Slovakia for 2006 and 2012 and five 2040 scenarios (trend + four IPCC-style storylines).
+- **Model:** data paper. CORINE refined with the Copernicus soil-sealing High-Resolution Layer, Urban Atlas and the HR water layer to 20 m. Scenarios come from a spatial allocation model with policies/restrictions, conversion settings, demand and local suitability; settings are documented in the companion paper Pazúr & Bolliger (2017), *Applied Geography*, DOI 10.1016/j.apgeog.2017.05.009 (verified, not read). Not a CA.
+- **Inputs:** CLC, HRL soil sealing, Urban Atlas.
+- **Parameters:** in the companion paper.
+- **Code:** not found.
+- **Validation:** not in the data paper.
+- **Reimplementability:** S1 0; S2 1; S3 0; S4 1; S5 1 → 3, D. Assessed from: full text (data paper).
+- **Browser fit:** n/a.
+- **Relevance to ca-geo:** LND-01 / LND-02 Central-European neighbour. The **CLC + HRL + Urban Atlas refinement to 20 m** is directly reusable for CZ input preparation (same Copernicus products).
+
+### volarik2013expansion — Expansion to abandoned agricultural land forms an integral part of silver fir dynamics (round 2)
+- **Citation:** Volařík, D., Hédl, R. (2013). Expansion to abandoned agricultural land forms an integral part of silver fir dynamics. *Forest Ecology and Management*, 292, 39–48. DOI: 10.1016/j.foreco.2012.12.016 (verified: Crossref)
+- **Access:** OA (green, Europe PMC PMC6136641).
+- **Phenomenon and study area:** silver-fir forest expansion onto abandoned farmland, 7 045 ha in the northern White Carpathians, **Czech Republic**, reconstructed from historical maps and palaeoecological data.
+- **Model:** none (empirical landscape history).
+- **Reimplementability:** n/a. Context only.
+- **Relevance to ca-geo:** **LND-02 CZ evidence**: a documented case of abandonment followed by forest regrowth, with historical maps usable as qualitative validation of a regrowth CA.
+
+### graziano2014spatial — Spatial patterns of solar photovoltaic system adoption (round 2)
+- **Citation:** Graziano, M., Gillingham, K. (2014). Spatial patterns of solar photovoltaic system adoption: The influence of neighbors and the built environment. *Journal of Economic Geography*, 15(4), 815–839. DOI: 10.1093/jeg/lbu036 (verified: Crossref; online 2014, issue 2015)
+- **Access:** paywall.
+- **Content:** empirical study (Connecticut) of spatial clustering of rooftop PV and of the influence of nearby earlier installations, which decays with distance and time (from search-result summaries; no abstract in Crossref).
+- **Reimplementability:** n/a (no CA). Listed only as the evidence base for the new-phenomenon candidate "PV adoption diffusion".
+
+### benenson2002entitybased — Entity-Based Modeling of Urban Residential Dynamics: The Case of Yaffo, Tel Aviv (round 2)
+- **Citation:** Benenson, I., Omer, I., Hatna, E. (2002). Entity-Based Modeling of Urban Residential Dynamics: The Case of Yaffo, Tel Aviv. *Environment and Planning B*, 29(4), 491–512. DOI: 10.1068/b1287 (verified: Crossref; key shared with `nw`)
+- **Access:** paywall.
+- **Phenomenon and study area:** Arab–Jewish residential distribution in Yaffo, simulated on real buildings.
+- **Model:** householders as entities whose relocation depends on surrounding infrastructure and neighbours (Schelling-type rules on real geometry); several interaction scenarios compared with observed data.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract.
+- **Relevance to ca-geo:** reference for the new-phenomenon candidate "residential segregation in a real city". Ethically sensitive for a public demo.
+
 ## Most reimplementable (top picks)
 
 1. **roodposhti2020towards (10, A)**: SIMLANDER constrained CA with every equation and value printed, an openly downloadable R base model and open global inputs. The fastest route to a calibrated CZ urban-growth demo.
-2. **clarke1997selfmodifying / SLEUTH (9, A)**: open C source, demo dataset with expected outputs and a documented calibration. The classic "urban growth" demo, with self-modification as an attractive visual feature.
+2. **clarke1997selfmodifying / SLEUTH (10, A; r2)**: open C source, rule pseudocode on the official site, demo dataset with expected outputs and a documented calibration. The classic "urban growth" demo, with self-modification as an attractive visual feature.
 3. **petrasova2016open / FUTURES (8, B)**: open GRASS implementation with tutorial data and a demand → potential → patch-growth workflow. Realistic patch-shaped suburban development.
 4. **zhou2019highresolution (8, B)**: SLEUTH at global scale with open scripts and a published probability dataset that covers Czechia, usable as a reference layer.
-5. **liang2021understanding / PLUS (7, B)**: complete parameter set and FoM results for multi-class patch-generating CA. The binary is closed, but the equations suffice for a JS re-implementation. MUSE (yang2023simulating, open Python) is an open alternative for patch engines.
+5. **liang2021understanding / PLUS (8, B; r2)**: complete parameter set and FoM results for multi-class patch-generating CA; the original Wuhan inputs are now known to be public (mcPLUS repo), so a JS re-implementation can be checked against the published FoM. MUSE (yang2023simulating, open Python) is an open alternative for patch engines.
 6. **hewitt2019cellular / SIMLANDER (7, B)**: the base script with demo data behind pick 1. APoLUS adds multiple land-use classes for LND-02.
+
+Round-2 additions did not produce a new A/B model. The most useful new items are contextual:
+`koenig2011cellularautomatabased` (Vienna, full text, C), `gomes2019modelling` (only CA with an
+abandonment scenario, C), `pazur2017enhanced` (CLC + HRL + Urban Atlas refinement recipe for
+Central Europe) and `volarik2013expansion` (CZ evidence for LND-02).
 
 ## Gaps and unverified leads
 
@@ -618,8 +784,37 @@ n/m = not meaningful (Crossref relevance total).
 - **Metronamica / MOLAND:** closed software. JRC's later LUISA platform (EU-wide, CORINE-based) was not searched. Worth a round-2 query, since it is the main EU-wide land-use allocation model.
 - **SIMLANDER preprint PDF:** text could not be extracted (font encoding), so the full rule description was taken from roodposhti2020towards.
 - **Not covered in depth:** CLUE-S / Dyna-CLUE as a non-CA alternative; deep-learning CA (ConvLSTM-CA etc.); vector / irregular CA (Pinto et al. 2017, DOI 10.1016/j.compenvurbsys.2017.05.005, found in Crossref, not assessed).
+- **Round 2 status of the gaps above:**
+  - Still paywalled / blocked after round 2: white1993cellular, white1997use, silva2002calibration, rienow2015supporting, bastosmoroz2024spatial, li2002neuralnetworkbased, wu2002calibration, liu2017future, meentemeyer2013futures, barredo2003modelling. SAGE "bronze" PDFs and Elsevier author manuscripts return HTTP 403 to automated access; a manual read is the only route.
+  - SIMLANDER preprint: still unreadable (font encoding). Reading the R script in the SIMLANDER zip would settle S1, but downloading code was out of scope for this round.
+  - Czech CA: still none peer-reviewed. Leads: (a) MUGPCEE project, Prague post-1989 growth model by K. Stanilov (CORDIS https://cordis.europa.eu/project/id/220151; publications not identified); (b) Brigant, V. (2011), *Evoluční návrh simulátoru založeného na celulárních automatech* (Evolutionary design of a CA-based simulator), bachelor thesis, VUT Brno FIT — CA with regression-derived rules tuned by evolutionary algorithms, applied to urban growth of **Brno**; grey literature, no DOI, record https://invenio.nusl.cz/record/701917 (content retrieved 2026-10-12; later returned HTTP 502), full text at http://hdl.handle.net/11012/55740 (not read). (c) Van Rompaey, Krasa & Dostál (2007), CZ land-cover scenarios for sediment delivery, *Land Use Policy*, DOI 10.1016/j.landusepol.2005.10.003 (verified, context: argues that the spatial pattern of change matters more than its amount).
+  - Farmland abandonment CA (LND-02): no European CA verified. Leads: Toillier, Delcros & Berger (2003), a CA of forest regrowth on abandoned steep farmland for rockfall protection (conference paper, HAL https://hal.inrae.fr/hal-02583885v1, no DOI, no PDF); Rutherford et al. (2008), statistical transition model agriculture → overgrown → forest in the Swiss Alps, *Ecological Modelling*, DOI 10.1016/j.ecolmodel.2007.10.050 (verified, not CA, not catalogued); Gelabert et al. (2022), abandonment probability in the Spanish Pyrenees, *Landscape and Urban Planning*, DOI 10.1016/j.landurbplan.2022.104487 (verified, method not checked). Practical route: build LND-02 from the eco-domain succession CA plus a logistic abandonment probability (remoteness, slope, soil quality — in CZ the BPEJ classes).
+  - CORINE-based EU CA: Mozaffaree Pour & Oja 2020 and Lagarias 2015 now catalogued, metadata only.
+  - JRC LUISA and MOLAND → Urban Atlas mapping: not searched again (time budget).
 - **Overlaps with other domains:**
   - Farmland abandonment and forest regrowth (LND-02) overlaps with eco (succession).
   - DINAMICA overlaps with eco (deforestation).
   - Calibration methods (Straatman, Newland, Roodposhti, Dietzel) and review papers overlap with gen.
   - Urban growth feeding pluvial flooding and heat island (chain L8) overlaps with hyd and atm.
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| clarke1997selfmodifying | 9, A | 10, A | S1 1→2: official Gigalopolis documentation gives every growth rule, coefficient mapping and self-modification rule at pseudocode level (paper itself still paywalled) |
+| liang2021understanding | 7, B | 8, B | S4 1→2: the original Wuhan land-use and driver rasters are public in the HPSCIL mcPLUS repository |
+| white1997use | 5, C | 5, C | full text still blocked; constrained-CA equations now available via hagenzanker2008neutral (general.md) |
+| hewitt2019cellular | 7, B | 7, B | full text still unreadable (font encoding); unchanged |
+| rienow2015supporting | 5, C | 5, C | still closed; unchanged |
+| bastosmoroz2024spatial | 6, C | 6, C | still closed; data page gives no extra detail |
+| indrova2015land | 4, C | 4, C | unchanged; CZ context references added |
+| new: 11 entries | – | see catalogue (r2) | 5 × C models, 3 × D (metadata-only or non-CA), 1 × C entity model (shared key), 2 × n/a context |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Deforestation / forest clearing | binary forest → cleared cells, probability from drivers (roads, slope) × share of cleared neighbours × random term | the same engine as urban growth, so cheap to add; shows human pressure on forest | low for clearing (CZ forest area grows); could be reframed as historical clearing or as the inverse of LND-02 regrowth | naghdizadegan2013spatial (C), soaresfilho2002dinamica (C) | close to LND-02 mechanics; DINAMICA expander/patcher already catalogued |
+| Residential segregation on a real city | households relocate when the share of unlike neighbours exceeds a tolerance (Schelling-type), on real buildings or cells | classic social CA; strong visual emergence from mild preferences | moderate (Roma segregation, gentrification of Prague districts) but data and ethics are sensitive | benenson2002entitybased (C) | agent/entity rather than pure CA; would need anonymised census grids (ČSÚ 1 km grid) |
+| PV adoption diffusion | cells (buildings) adopt rooftop PV with probability rising with the number of nearby earlier adopters, decaying with distance and time | innovation-diffusion CA with policy levers (subsidy pulses); empirical neighbour effect documented | high (CZ "solar boom" 2009–2010 and post-2022 household PV wave; RÚIAN buildings) | graziano2014spatial (n/a, empirical only) | no CA found in the literature — would be our own model; validation data in CZ unclear (to be verified) |
+| Population-density / settlement redistribution | population moves between cells according to density-dependent benefit/cost curves and accessibility | links land use to people; historical city growth story | moderate (historical Prague / Brno growth) | koenig2011cellularautomatabased (C) | close to LND-01; could be merged as a population layer of the urban-growth demo |

@@ -1,6 +1,6 @@
 # Epidemics and populations — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 Domain code: `epi`. BibTeX keys as in the `epi` fragment (scratchpad `bib/epi.bib`, to be merged into `/references.bib`).
 
 **Verification note.** The first OpenAlex queries in this round worked. After that the shared
@@ -41,6 +41,21 @@ Date of all searches: 2026-10-12.
 | title look-ups for ~40 candidate papers | Crossref | — | DOI verification; see entries |
 | abstracts / PMC IDs for ~35 DOIs | Europe PMC REST | — | abstracts where Crossref had none |
 | code: GitHub search API ("Geography-Based SEIRDS", "Sahul cellular automaton", "DISPERSCA") | GitHub | — | repos verified with HTTP 200 |
+
+### Round 2
+
+Date: 2026-10-12. OpenAlex still quota-blocked; Crossref, web search, Semantic Scholar, Europe PMC and GitHub API used. All new items verified by Crossref `/works/<DOI>`.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| Xylella model code (parameters ρ, a) | GitHub `drsmwhite/Xylella-spread-model` | 1 | `Xylella_Spread_Model_With_Control.m`: all parameters in code (a = 0, Gompertz 3 / 14.069, kernel mean 0.1 km, jump threshold 0.2); olive map replaced by a random map |
+| PoPS equations | GitHub `pops-core` README | 1 | no separate equation document; equations only in C++ source |
+| rabies code URL (Smith 2002) | Wayback availability API | — | HTTP 429; not resolved |
+| African swine fever wild boar Czech Republic Zlín spatial model | web + Crossref | 0 new | only EFSA IBM reports (already listed) and ČZU fence trials (no model paper) |
+| cellular automata avian influenza poultry farms spread | Crossref | 1 | Dorigatti et al. 2010 (farm-level kernel SEIR, Italy) |
+| wolf recolonisation Central Europe spatially explicit simulation | web + Crossref | 1 | Marucco & McIntire 2010 (Italian Alps IBM); German wolf studies are habitat models, not dynamic |
+| Eurasian beaver population expansion simulation river network | web + Crossref | 4 | Chaput-Bardy et al. 2017 (Loire), Graham et al. 2022 (River Otter), Hartman 1995 (Sweden), John et al. 2010 (Morava basin, CZ) |
+| cellular automaton West Nile virus Europe | Crossref | 0 new | no European CA; `cisse2024modeling` remains the template |
 
 ## Model families
 
@@ -112,15 +127,21 @@ Reviews: `wang2022simulation` (COVID-19 spatio-temporal models, including CA) an
 | kleczkowski1997scaling | 1997 | Plant–pathogen scaling | soil-borne plant disease | plant lattice / contact process / S-I / stoch. | 1 1 0 1 1 | 4 | C | no | paywall (archive) | secondary description (provisional) |
 | martins2000cellular | 2000 | CA for citrus variegated chlorosis | CVC in orange groves, São Paulo | L=200 lattice, null boundary / Lévy-flight vectors / 2 binary vars / stoch. | 2 2 0 1 2 | 7 | B | no | preprint (arXiv) | full text (preprint) |
 | meentemeyer2011epidemiological | 2011 | Sudden oak death, California | Phytophthora ramorum | 250 m host raster, weekly / dispersal kernel / S-I host units / stoch. | 1 1 2 1 1 | 6 | C | r.spread.sod → PoPS | OA (Ecosphere) | secondary descriptions (provisional) |
-| white2017modelling | 2017 | Xylella spread and control, Apulia | X. fastidiosa in olives | 1 km² cells, annual / exp. kernel + long-distance jumps / infected fraction / stoch. | 2 1 2 1 2 | 8 | B | GitHub + Zenodo (MIT) | OA (PMC) | full text |
+| white2017modelling | 2017 | Xylella spread and control, Apulia | X. fastidiosa in olives | 1 km² cells, annual / exp. kernel + long-distance jumps / infected fraction / stoch. | 2 2 2 1 2 | 9 | A | GitHub + Zenodo (MIT) | OA (PMC) | full text + code (r2) |
 | jones2021iteratively | 2021 | PoPS forecasting platform | pests and pathogens (SLF, SOD) | host raster / kernels + weather / S-I hosts / stoch. | 1 2 2 1 2 | 8 | B | GitHub (PoPS Core, rpops, r.pops.spread) | OA (PMC) | full text |
 | fort2012modelling | 2012 | Neolithic transition model | demic diffusion, Near East–Europe | grid / dispersal + sea travel / population / det. | 1 1 0 1 1 | 4 | C | reimpl. in dispeRse | paywall | abstract (provisional) |
 | bradshaw2021stochastic | 2021 | Stochastic peopling of Sahul | human colonisation, Sahul | 0.5° grid (86×87) / adjacent emigration + long-distance / abundance (Ricker) / stoch. | 2 2 2 2 2 | 10 | A | GitHub (GPL-3) | OA (PMC) | full text |
 | bradshaw2023directionally | 2023 | Directionally supervised Sahul CA | human colonisation, Sahul | as bradshaw2021 + superhighway weights | 1 1 2 2 1 | 7 | B | GitHub + Zenodo | preprint (OSF) | abstract + repo (provisional) |
 | gregoriodesouza2021reassessing | 2021 | Tupi expansion CA | farmer expansion, S. America | biome raster / density-dependent emigration / population / stoch. | 2 2 2 1 2 | 9 | A | Zenodo (Python + R) | OA (PMC) | full text |
 | hewitt2025modelling | 2025 | DISPERSCA hunter-gatherer mobility | mobility walks, central Iberia | slope raster / square or hex decision neighbourhood / walker position | 1 1 1 2 1 | 6 | C | figshare link (not fully verified) | OA (PMC) | full text (partial) |
+| chaputbardy2017network | 2017 | Beaver and clawed-frog colonisation of the Loire network (r2) | river-network colonisation (FR) | river-network patches / dispersal along network / occupancy / stoch. | 1 1 0 1 1 | 4 | C | not found | OA (accepted manuscript) | abstract (provisional) |
+| graham2022monitoring | 2022 | Beaver territory capacity and growth, River Otter (r2) | beaver population expansion (GB) | river reaches / territory capacity model + logistic growth / territories / det. + removal scenarios | 1 1 0 1 1 | 4 | C | not found | OA (CC BY) | abstract (provisional) |
+| marucco2010predicting | 2010 | Wolf recolonisation of the Italian Alps (r2) | large-carnivore recolonisation + depredation risk | habitat raster / IBM packs and dispersers / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract via search (provisional) |
+| dorigatti2010modelling | 2010 | H7N1 avian influenza between poultry farms (r2) | livestock-farm epidemic (IT) | farm points / spatial transmission kernel / SEIR farms / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
+| john2010habitat | 2010 | Habitat selection of expanding beaver, Morava basin (r2) | parameter source: beaver habitat (CZ) | empirical | n/a | n/a | n/a | — | paywall | metadata only |
+| hartman1995patterns | 1995 | Spread of reintroduced beaver, Sweden (r2) | parameter source: beaver spread along drainages | empirical | n/a | n/a | n/a | — | paywall | abstract |
 
-Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
+Class counts (scored entries) after round 2: A 3, B 10, C 23, D 1; n/a 5 (42 entries total). Round 1: A 2, B 11, C 19, D 1; n/a 3 (36).
 
 ## Entries
 
@@ -162,6 +183,7 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Reimplementability:** S1 2 – full equations, neighbourhood, boundary, discretisation; S2 2 – all values; S3 0; S4 2 – synthetic, but it maps directly to a population raster plus a connectivity layer; S5 2 – the threshold table and infection-curve peak times (t=44 von Neumann, t=27 Moore) are checkable → 8, B. Assessed from: full text.
 - **Browser fit:** excellent. Pure local arithmetic, and it scales to national rasters.
 - **Relevance to ca-geo:** EPI-01 core template. Replace N_ij with a population grid (e.g. GEOSTAT 1 km), c with road or rail connectivity, and add long-range commuting.
+- **Round 2:** Re-checked; no code found (S3 = 0 is the only missing point). Unchanged (B 8).
 
 ### zhong2009simulation — Simulation of the spread of infectious diseases in a geographical environment
 - **Citation:** Zhong, S., Huang, Q., Song, D. (2009). Simulation of the spread of infectious diseases in a geographical environment. *Science in China Series D: Earth Sciences* 52(4), 550–561. DOI: 10.1007/s11430-009-0044-9 (verified: Crossref)
@@ -322,6 +344,7 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Validation:** against field data. Nymph infection prevalence simulated 22.5 % vs observed 22.3 %, adult/nymph ratio 0.11 vs 0.10. Fails at 10×10 block level. Log sensitivity indices.
 - **Reimplementability:** S1 2; S2 2; S3 0; S4 2 – runs on any land-cover raster; S5 2 → 8, B. Assessed from: full text.
 - **Browser fit:** good (2 500 cells × several layers, 1 560 steps).
+- **Round 2:** Re-checked; formulae are in Appendix S1 (PLoS supplement) and no code was found, so the score stays at the maximum without code (B 8).
 - **Relevance to ca-geo:** **EPI-03 best fit**. Rules are driven by CORINE/land-cover classes, with tick-borne encephalitis/Lyme as the CZ narrative. It turns the "suitability only" item into a real dynamic CA.
 
 ### benyoussef1999lattice — Lattice three-species models of the spatial spread of rabies among foxes
@@ -342,6 +365,7 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Code:** stated URL (medschool.umaryland.edu/…/dsmith/rabies.html) returns 404.
 - **Validation:** χ² goodness of fit and residual analysis. Rivers improve fit by about 10 %.
 - **Reimplementability:** S1 2; S2 2; S3 1 – dead link; S4 1 – arrival dates are only in the paper's figures; S5 2 → 8, B. Assessed from: full text.
+- **Round 2:** Tried to recover the dead code URL via the Internet Archive availability API (HTTP 429, rate-limited); not resolved. Unchanged (B 8).
 - **Browser fit:** excellent (169 polygons).
 - **Relevance to ca-geo:** EPI-02 analogue. Polygon-CA with barrier-modified rates is exactly the "rivers/fences/motorways as semipermeable barriers" demo. Connects to ECO-04 (L13 chain).
 
@@ -454,6 +478,7 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Code:** https://github.com/drsmwhite/Xylella-spread-model (verified 200, MIT, MATLAB). Zenodo 10.5281/zenodo.192974 (verified).
 - **Validation:** continuous Boyce index 0.951 against positive test locations (10 000 runs, 5-year horizon).
 - **Reimplementability:** S1 2; S2 1; S3 2; S4 1 – olive cover data not open, but CORINE olive class is a proxy; S5 2 → 8, B. Assessed from: full text.
+- **Round 2:** The MATLAB code (`Xylella_Spread_Model_With_Control.m`) sets every parameter left open in the paper: relative carrying capacity of non-olive cells a = 0, Gompertz parameters 3 and 14.069, exponential kernel with mean 0.1 km on a padded FFT domain, stratified-jump threshold 0.2, buffer widths 2 and 13 cells, control efficiency 0.9, 8-year runs. The licensed olive map is replaced in the repository by a random map, so S4 stays 1. S2 → 2. Round 2: re-assessed from full text + code — S 2 2 2 1 2 → 9, A (was 2 1 2 1 2, B 8).
 - **Browser fit:** good. A 1 km grid over a region, FFT or small-kernel convolution, ensembles in a worker.
 - **Relevance to ca-geo:** strong template for "stratified dispersal on a host-cover raster with control buffer zones". It also fits EPI-02-style containment zones.
 
@@ -467,6 +492,7 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Code:** https://github.com/ncsu-landscape-dynamics/PoPS, …/pops-core, …/rpops, …/r.pops.spread (all verified 200). GRASS manual verified. Web interface popsmodel.org (200).
 - **Validation:** hindcasting with quantity and configuration disagreement (Pickard et al.), showing improvement with recalibration.
 - **Reimplementability:** S1 1 – the full equations are in the docs and source, not the paper; S2 2; S3 2; S4 1; S5 2 → 8, B. Assessed from: full text.
+- **Round 2:** The `pops-core` README has no equation document (it points to Meentemeyer 2011 and the papers); the rule exists only in the C++ source and GRASS manual (r.pops.spread manual verified 200). S1 kept at 1. Unchanged (B 8).
 - **Browser fit:** the core loop is simple and portable. ABC calibration is not for the browser.
 - **Relevance to ca-geo:** best open-source reference for crop and forest pest spread CA (ECO-01/ECO-03 overlap). The C++ core is small enough to port to JS.
 
@@ -524,16 +550,65 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Reimplementability:** S1 1; S2 1; S3 1; S4 2; S5 1 → 6, C. Assessed from: full text (partial).
 - **Relevance to ca-geo:** minor for EPI. Overlaps with the movement domain (cost-surface walks).
 
+### chaputbardy2017network — Network analysis for species management in rivers networks: Application to the Loire River (round 2)
+- **Citation:** Chaput-Bardy, A., Alcala, N., Secondi, J., Vuilleumier, S. (2017). *Biological Conservation* 210, 26–36. DOI: 10.1016/j.biocon.2017.04.003 (verified: Crossref)
+- **Access:** accepted manuscript listed as OA (ScienceDirect "am" link per Semantic Scholar; HAL copy blocked by a bot check)
+- **Phenomenon and study area:** Colonisation of the Loire river network (France) by the returning native Eurasian beaver and the invasive African clawed frog.
+- **Model:** A simplified colonisation model with few parameters on the dendritic river network; dispersal behaviour and distances per species were inferred by matching simulated and observed distributions. Network metrics then rank habitat patches for protection or removal (Europe PMC abstract).
+- **Validation:** The model reproduced more than 70 % of the observed ranges (abstract).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract (provisional).
+- **Browser fit:** Excellent (graph CA on a river network, e.g. DIBAVOD).
+- **Relevance to ca-geo:** **EPI-04 / ECO-05** — colonisation restricted to a river network; directly transferable to beaver return along Czech rivers.
+
+### graham2022monitoring — Monitoring, modelling and managing beaver (Castor fiber) populations in the River Otter catchment, Great Britain (round 2)
+- **Citation:** Graham, H. A., Puttock, A., Chant, J., Elliott, M., Campbell-Palmer, R., Anderson, K., Brazier, R. E. (2022). *Ecological Solutions and Evidence* 3(3). DOI: 10.1002/2688-8319.12168 (verified: Crossref)
+- **Access:** OA (CC BY); Wiley blocked the automated full-text fetch.
+- **Phenomenon and study area:** Beaver territory expansion after the first licensed wild release in England (River Otter, Devon), 2015–2021 surveys.
+- **Model:** A spatially explicit model of the catchment's territory capacity (120–183 territories) plus logistic growth of territory numbers (growth rate from observed counts 4 → 18); territory removal scenarios (translocation or culling); more than 3 removals per year predicted possible collapse (Crossref abstract). Habitat inputs follow the authors' Beaver Forage Index / Dam Capacity layers (Graham et al. 2020, *Eur. J. Wildl. Res.* 66(3), DOI 10.1007/s10344-020-01379-w, verified; not catalogued).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract (provisional).
+- **Browser fit:** Excellent.
+- **Relevance to ca-geo:** **EPI-04 / ECO-05.** Carrying capacity from stream and forage layers + logistic growth is the population part of a beaver demo; capacity is the static analogue of `bradshaw2021stochastic`'s K raster.
+
+### marucco2010predicting — Predicting spatio-temporal recolonization of large carnivore populations and livestock depredation risk: wolves in the Italian Alps (round 2)
+- **Citation:** Marucco, F., McIntire, E. J. B. (2010). *Journal of Applied Ecology* 47(4), 789–798. DOI: 10.1111/j.1365-2664.2010.01831.x (verified: Crossref)
+- **Access:** paywall (abstract elided in Crossref and Semantic Scholar; read via search-engine summary of the repository record)
+- **Phenomenon and study area:** Wolf recolonisation of the Italian Alps and resulting livestock depredation risk, 1999–2008.
+- **Model:** A spatially explicit individual-based model built on a 10-year field study (demography, pack structure, behaviour, habitat selection) on a habitat-suitability landscape. It reportedly reproduced pack locations, pack numbers and population size for 1999–2008.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract via search (provisional).
+- **Browser fit:** Good at pack level (a pack-per-cell CA variant is feasible).
+- **Relevance to ca-geo:** **EPI-04** (returning large carnivores — wolf is recolonising CZ) and ECO-04; the depredation-risk layer is an applied output.
+
+### dorigatti2010modelling — Modelling the spatial spread of H7N1 avian influenza virus among poultry farms in Italy (round 2)
+- **Citation:** Dorigatti, I., Mulatti, P., Rosà, R., Pugliese, A., Busani, L. (2010). *Epidemics* 2(1), 29–35. DOI: 10.1016/j.epidem.2010.01.002 (verified: Crossref)
+- **Access:** paywall
+- **Phenomenon and study area:** Between-farm spread of highly pathogenic H7N1 avian influenza, Italy, 1999–2000.
+- **Model:** Farm-level SEIR with a spatial transmission kernel, species-specific susceptibility and actual control measures; simulations of restocking bans and pre-emptive culling (Europe PMC abstract).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract (provisional).
+- **Browser fit:** Good (a few thousand farm points; kernel sums need a cut-off).
+- **Relevance to ca-geo:** New phenomenon candidate "livestock-farm epidemic" (see below). Not a lattice CA; farm points could be gridded.
+
+### Parameter sources (round 2, not scored)
+
+#### john2010habitat — Habitat selection of an expanding beaver (Castor fiber) population in central and upper Morava River basin
+- **Citation:** John, F., Baker, S., Kostkan, V. (2010). *European Journal of Wildlife Research* 56(4), 663–671. DOI: 10.1007/s10344-009-0361-5 (verified: Crossref; no abstract available to us)
+- **Value:** Czech study of an expanding beaver population (Morava basin); candidate source of habitat-preference values for a CZ beaver K-raster. Content not read. Reimplementability: n/a.
+
+#### hartman1995patterns — Patterns of spread of a reintroduced beaver Castor fiber population in Sweden
+- **Citation:** Hartman, G. (1995). *Wildlife Biology* 1(2), 97–103. DOI: 10.2981/wlb.1995.0015 (verified: Crossref)
+- **Value:** Colonisation map of reintroduced beaver in Värmland: fast spread within drainage systems, scattered early colonisation, slowing at watershed divides, very flat front implying long dispersal distances (Crossref abstract). A qualitative check for an EPI-04 river-network CA (watershed divides as barriers). Reimplementability: n/a.
+
 ## Most reimplementable (top picks)
 
 1. `bradshaw2021stochastic` (A, 10) – complete Ricker + emigration CA, open R code and data, quantitative fit. Template for population dispersal and range expansion on a carrying-capacity raster.
 2. `gregoriodesouza2021reassessing` (A, 9) – compact growth/emigration CA with habitat restriction, open Python code, RMSE check.
 3. `white2007modeling` (B, 8) – complete SIR fraction CA with connectivity and vaccination. The cleanest EPI-01 rule, easily put on a CZ population grid.
 4. `li2012consequences` (B, 8) – land-cover-driven tick/Lyme CA with a 24-parameter table and field validation. Turns EPI-03 into a dynamic model.
-5. `white2017modelling` (B, 8) – Xylella host-cover CA with stratified dispersal, control zones, MIT code and Boyce-index validation.
+5. `white2017modelling` (A, 9; was B 8 — round 2) – Xylella host-cover CA with stratified dispersal, control zones, MIT code with every parameter set, and Boyce-index validation. Best ECO-09 template.
 6. `smith2002predicting` (B, 8) – polygon CA with barrier-modified rates and a parameter table. The rivers/fences barrier demo (EPI-02/ECO-04).
 7. `jones2021iteratively` (B, 8) – PoPS, a mature open pest/pathogen spread engine with documented calibration.
 8. `davidson2024methodological` (B, 7) – open geographic Cell-DEVS SEIRDS over real regions with a GeoJSON pipeline. Closest to a municipality-level EPI-01 demo.
+
+Round 2 additions for EPI-04 (all C, abstract only): `chaputbardy2017network` (river-network colonisation, beaver), `graham2022monitoring` (beaver territory capacity + logistic growth), `marucco2010predicting` (wolf recolonisation). None beats `bradshaw2021stochastic` as a template; they supply river-network and returning-species variants.
 
 ## Gaps and unverified leads
 
@@ -544,4 +619,28 @@ Class counts (scored entries): A 2, B 11, C 19, D 1; n/a 3 (36 entries total).
 - **Unverified leads (not found in Crossref):** "Mosquito borne diseases simulated by cellular automata: a review" (Universidad Veracruzana PDF, likely Ortigoza et al.); Medeiros et al. 2011 dengue CA (basis of DengueME); Vshivkova et al. 2013 Ixodes tick CA (Russian, *Problemy Upravleniya*); Souza et al. 2020 PLOS ONE demic-diffusion CA (cited in dispeRse); the Fierro/Liccardo/Porcelli lattice model for Xylella vectors; "Modelling the spatial diffusion of past populations – a cellular automata approach" (SocArXiv 10.31235/osf.io/wqzjb, Crossref hit, not assessed).
 - **Round 2 suggestions:** full texts of Meentemeyer 2011 and Davidson 2024 (likely S1/S2 → 2); score the individual DengueME library models; search avian influenza / poultry CA and bluetongue (vector-borne livestock, EU); rerun the OpenAlex searches once the quota resets, for citation counts and missed foundational papers; look for a ČSÚ commuting-matrix-coupled SIR (EPI-01 long-range links).
 - **Process note:** one WebFetch call on an EFSA report link auto-saved a PDF (about 4 MB) into the Claude tool-results cache (`C:\Users\richa\.claude\projects\C--Users-richa\c2e3fadf-...\tool-results\webfetch-1791800471974-54apu1.pdf`). It was not used and can be deleted.
+- **Round 2 gap-search results:**
+  - **Wild boar / ASF grid models in CZ:** none found beyond the EFSA IBM reports (`lange2021modelling`, which uses CZ 2017 Zlín as a fitting case). ČZU ran fence-reaction field trials and a certified methodology exists, but no model paper was found. The practical EPI-02 route is still a boar-group-per-cell CA from the Lange & Thulke ODD.
+  - **EPI-04 returning species in Central Europe:** beaver (`chaputbardy2017network`, `graham2022monitoring`, CZ parameter source `john2010habitat`, `hartman1995patterns`) and wolf (`marucco2010predicting`, Alps). German wolf studies found (e.g. Fechter & Storch 2014, seen via web search, not verified in Crossref) are static habitat models, not dynamic spread; not catalogued. No golden-jackal or lynx spread CA for CZ found.
+  - **ECO-09 plant pests:** `white2017modelling` raised to A; ash-dieback models are in `ecology.md` (`fritsch2026mechanistic`).
+  - **Livestock / poultry epidemics:** `dorigatti2010modelling` added (farm-kernel model, not a lattice CA).
 - **Overlaps with other domains:** PoPS and sudden oak death (ECO-01 bark beetle, ECO-03 invasive species); Bradshaw/Souza demographic CA (ECO-07 range shift, ECO-04 connectivity); DISPERSCA and Sahul superhighways (movement / accessibility); Xylella and wild boar containment zones (land use / management).
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| white2017modelling | 8 B | 9 A | Code sets all parameters not given numerically in the paper (S2 1→2) |
+| white2007modeling | 8 B | 8 B | Re-checked; still no code |
+| li2012consequences | 8 B | 8 B | Re-checked; formulae in Appendix S1, no code |
+| smith2002predicting | 8 B | 8 B | Dead code link not recoverable (Wayback rate-limited) |
+| jones2021iteratively | 8 B | 8 B | No equation document beyond source code; S1 kept at 1 |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Livestock / poultry farm epidemic | Infection jumps between farms (points or cells with farm counts) via a distance kernel; culling, restocking bans and movement zones as controls | Strong control-zone demo; real outbreak data exist for EU countries | Avian influenza outbreaks in Czech poultry farms recur (to be verified); farm registry data | `dorigatti2010modelling` (C), `doran2005simulating` (C), `ward2009modelling` (C) | Farm-point kernel models rather than lattice CA; would need gridding |
+| Vector-borne disease with migratory hosts (West Nile virus) | Birds, mosquitoes and humans as coupled compartments per cell; birds disperse between cells, mosquito activity seasonal | Multi-layer, seasonal CA with surveillance validation | West Nile virus is present in southern Moravia (to be verified) | `cisse2024modeling` (C) | Distinct from EPI-03 ticks; MATLAB code not shared |
+| Wildlife rabies front and vaccination barrier | Rabies spreads between territories/cells, slowed by rivers or vaccination belts | Classic travelling-wave + barrier demo | Historic fox rabies in CZ, eliminated by oral vaccination (to be verified) | `smith2002predicting` (B), `benyoussef1999lattice` (C) | Could be a scenario of EPI-02 (same barrier mechanics) |
+| River-network colonisation | Spread restricted to a dendritic river graph; watershed divides act as barriers | Graph CA on hydrography; links EPI-04 with HYD data | Beaver return along Czech rivers; DIBAVOD network | `chaputbardy2017network` (C), `hartman1995patterns` (n/a) | Probably a variant of EPI-04 / ECO-05 |

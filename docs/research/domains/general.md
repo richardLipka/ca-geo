@@ -1,6 +1,6 @@
 # Cross-cutting: reviews, frameworks, methods — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 
 Domain code: `gen`. Scope: review papers on geographic / environmental CA, theory of geographic CA
 (relaxed classical assumptions), CA–GIS integration, open-source CA frameworks, parallel / GPU / web
@@ -51,6 +51,28 @@ available.
 | SIMLANDER R cellular automata | web search + Crossref | — | Hewitt et al. (2019) preprint and Roodposhti et al. (2020) |
 | Map Comparison Kit | site check + Crossref | — | mck.riks.nl live; Visser & de Nijs (2006) verified |
 | cellular automata webgl / webgpu / flood javascript / wildfire javascript / land use python | GitHub API | 36 / 19 / 0 / 1 / 3 | only generic (non-geographic) WebGL / WebGPU CA engines; see gaps |
+
+### Round 2
+
+OpenAlex still quota-blocked. Search via Crossref `query.bibliographic`, web search, GitHub API;
+OA status via Semantic Scholar; full texts via author repositories and arXiv. Clark Digital Commons,
+WUR, SAGE and ScienceDirect author manuscripts returned HTTP 403/503 to automated access.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| OA copies for hagen2003, hagenzanker2009, pontius2007, pontius2011death, pontius2011comparison, varga2019 | Semantic Scholar, repositories | 6 | only Hagen-Zanker 2009 (Surrey) readable |
+| fuzzy kappa / figure of merit / map comparison code | GitHub API | 6 / 1 / 0 | ahhz/fuzzy_kappa_matlab (MIT, author's account) |
+| diffeR source (R/ directory) | GitHub API | 13 files | quantity / exchange / shift + multiresolution functions inspected |
+| validation of stochastic CA: path dependence, neutral models, stochastic component, fuzzy accuracy, quantity-exchange-shift | Crossref | 5/5 | Brown 2005, Hagen-Zanker & Lajoie 2008 (OA, read), García 2011, van Vliet 2013, Pontius & Santacruz 2014 |
+| WebGPU geospatial simulation / WebGL flood simulation browser / browser wildfire WebGL | Crossref | n/m | no peer-reviewed client-side geographic CA |
+| web-based CA client-side land use / flood / wildfire | web (extended) | ~10 | only Swii2 (server-side CA) and generic WebGL / WebGPU CA demos |
+| GitHub: wildfire+simulation+webgl, webgpu+flood+simulation, cellular+automata+leaflet / maplibre / geotiff, gpu+cellular+automata+geospatial | GitHub API | 5 / 1 / 1 / 0 / 0 / 0 | yesca (TS, MIT, GPU wildfire on real terrain), deluge-flood-sim (TS, MIT, WebGPU shallow water) — 2026 hobby repos, no paper |
+| web-based cellular automata urban growth platform | Crossref | n/m | Liu & He 2009 (SPIE, metadata only) |
+| GPU cellular automata framework geoscience / differentiable CA | Crossref | n/m | PyTorchFire (EMS 2025, key from `fire`); Yu & Chang 2024 NHESS preprint (coupled flow + solute CA on GPU, belongs to `hyd`) |
+| LUE asynchronous many-task framework | Crossref, GitHub | 3 | de Jong et al. 2021 (EMS, CC BY); repo computationalgeography/lue (MIT, active) |
+| coupled CA cascading hazards / post-fire debris flow CA / multi-hazard CA | web, Crossref | ~9 | no coupled multi-hazard CA framework; Douvinet 2023 (RuiCells, post-fire runoff); SCIDDICA / LLUNPIY lineage (lahars incl. ice melt — `geo`) |
+| interactive / educational CA land-use tool | Crossref | n/m | Hasbani et al. 2011 (InTech chapter, interactive rule creation; not assessed) |
+| framework repositories (Landlab, OpenCAL, PCRaster, LUE, PyTorchFire) | GitHub API | 5 | Landlab MIT, last push 2026-10; PCRaster GPL-3.0, 2026-10; OpenCAL LGPL-3.0, last push 2019-11 (inactive); LUE MIT, 2026-09 |
 
 ## Model families
 
@@ -127,7 +149,7 @@ geographic CA. Main strands:
 | moreno2009implementation | 2009 | Dynamic neighbourhood in vector CA (VecGCA) | land-use change | vector objects / dynamic whole-space neighbourhood / stoch. | 1 1 0 1 1 | 4 | C | not found | paywall | abstract (provisional) |
 | hagen2003fuzzy | 2003 | Fuzzy set map comparison (Fuzzy Kappa) | validation metric | distance-decay neighbourhood, category similarity | 1 1 1 2 1 | 6 | C | MCK (closed) | OA | abstract (provisional) |
 | costanza1989model | 1989 | Multiple-resolution goodness of fit | validation metric | moving windows of growing size | 1 1 0 2 1 | 5 | C | not found | paywall | TLDR (provisional) |
-| hagenzanker2009improved | 2009 | Improved Fuzzy Kappa | validation metric | as above + autocorrelation-aware expectation | 1 1 1 2 1 | 6 | C | MCK (closed) | paywall | abstract (provisional) |
+| hagenzanker2009improved | 2009 | Improved Fuzzy Kappa | validation metric | as above + autocorrelation-aware expectation | 2 2 2 2 1 | 9 | A | MATLAB, MIT (ahhz/fuzzy_kappa_matlab, verified) + MCK | OA (green, Surrey) | full text (r2) |
 | karssenberg2010software | 2010 | PCRaster Python framework | modelling framework | raster map algebra, Monte Carlo, particle filter | n/a | n/a | n/a | yes (GitHub, GPL-3.0) | OA | TLDR |
 | guan2010general | 2010 | pRPL + pSLEUTH | parallel raster / CA library | raster, domain decomposition, MPI | n/a | n/a | n/a | yes (GitHub) | paywall | abstract |
 | sante2010cellular | 2010 | Review of real-world urban CA | review | – | n/a | n/a | n/a | – | paywall | TLDR |
@@ -148,19 +170,28 @@ geographic CA. Main strands:
 | ghosh2017application | 2017 | Review: CA–Markov in environmental modelling | review | – | n/a | n/a | n/a | – | paywall | TLDR |
 | hewitt2017stable | 2017 | Sensitivity analysis / metastability | uncertainty (method) | constrained land-use CA | n/a | n/a | n/a | – | paywall | TLDR |
 | xia2017high | 2017 | Vectorised + parallel urban CA | acceleration | raster 5 m / 3×3 | n/a | n/a | n/a | – | paywall | abstract |
-| hewitt2019cellular | 2019 | SIMLANDER (R) | land-use change | raster / neighbourhood rules + suitability + accessibility + zoning / stoch. | 1 1 1 2 1 | 6 | C | not located | OA (preprint) | abstract (provisional) |
+| hewitt2019cellular | 2019 | SIMLANDER (R) | land-use change | raster / neighbourhood rules + suitability + accessibility + zoning / stoch. | 1 1 2 2 1 | 7 | B | R script + demo data (project site, verified in land-use.md) | OA (preprint) | abstract + project site (harmonised r2) |
 | tong2019review | 2019 | Review of CA assessment methods | review | – | n/a | n/a | n/a | – | paywall | abstract |
 | varga2019intensity | 2019 | Intensity Analysis + FoM components | validation metric | – | 1 2 0 2 1 | 6 | C | not verified | OA (author manuscript) | abstract (provisional) |
 | barnhart2020landlab | 2020 | Landlab v2.0 | modelling framework | as Landlab | n/a | n/a | n/a | yes (GitHub, MIT) | OA | metadata |
-| roodposhti2020towards | 2020 | Automatic calibration of neighbourhood rules | calibration procedure | SIMLANDER CA | 1 1 1 2 1 | 6 | C | supplementary scripts (not verified) | OA | abstract (provisional) |
+| roodposhti2020towards | 2020 | Automatic calibration of neighbourhood rules | calibration procedure | SIMLANDER CA | 2 2 2 2 2 | 10 | A | SIMLANDER (verified) + suppl. script | OA (accepted ms) | full text (harmonised r2 with land-use.md) |
 | derango2021opencal | 2021 | OpenCAL extension | parallel CA library | 2D/3D structured grids, OpenMP/OpenCL/MPI | n/a | n/a | n/a | yes (GitHub, LGPL-3.0) | OA | abstract |
 | antunes2021cellpylib | 2021 | CellPyLib | generic CA library | 1D/2D / Moore, von Neumann / discrete+continuous | n/a | n/a | n/a | yes (GitHub, Apache-2.0) | OA | abstract |
 | addae2022modelling | 2022 | Spherical CA for global urban change | urban land use (global) | geodesic grid on sphere | 1 0 0 1 1 | 3 | D | not found | paywall | metadata only (provisional) |
 | vanduynhoven2024geographic | 2024 | Geographic Automata Tool (ArcGIS Pro) | GIS-embedded CA framework | binary / multi-class CA | n/a | n/a | n/a | not verified | OA | abstract |
+| hagenzanker2008neutral | 2008 | Neutral models of landscape change as benchmarks (r2) | validation method (null models) | random constraint match; growing clusters; multi-scale criteria | 2 2 0 2 1 | 7 | B | not found | OA (green, Surrey) | full text |
+| pontius2014quantity | 2014 | Quantity, exchange and shift components (r2) | validation metric | cross-tabulation | 1 2 2 2 1 | 8 | B | diffeR (R, verified functions) | paywall | metadata + diffeR source (provisional) |
+| vanvliet2013fuzzy | 2013 | Fuzzy accuracy of land-use simulations (r2) | validation metric (fuzzy) | details unknown | 1 1 0 2 1 | 5 | C | not verified | paywall | metadata only (provisional) |
+| brown2005path | 2005 | Path dependence and validation of stochastic land-use models (r2) | validation of stochastic models | – | n/a | n/a | n/a | – | OA (bronze, blocked) | metadata (provisional) |
+| garcia2011analysis | 2011 | Effect of the stochastic component of urban CA (r2) | uncertainty (stochastic term) | urban CA | n/a | n/a | n/a | – | paywall | metadata (provisional) |
+| xia2025pytorchfire | 2025 | PyTorchFire: GPU differentiable wildfire CA (r2) | GPU CA + gradient calibration | raster / Moore 3×3 / burnable-burning-burned / stoch. | 2 2 2 2 2 | 10 | A | GitHub MIT + Zenodo (verified) | OA (CC BY; arXiv) | full text (arXiv, key from `fire`) |
+| dejong2021environmental | 2021 | LUE: asynchronous many-task modelling framework (r2) | modelling framework (map algebra, HPC) | raster, AMT (HPX) | n/a | n/a | n/a | yes (GitHub, MIT) | OA (CC BY) | metadata + repository |
+| liu2009developing | 2009 | Web-based CA for urban growth (r2) | web CA (architecture unknown) | – | n/a | n/a | n/a | – | paywall | metadata only |
+| douvinet2023postfire | 2023 | Post-fire runoff concentration with RuiCells CA (r2) | hazard chain: fire → runoff / debris flow | raster runoff-concentration CA | 1 1 1 1 1 | 5 | C | RuiCells (closed, ©) | OA (IntechOpen) | abstract |
 | netlogo | – | NetLogo | agent / patch modelling environment | patch grid, user rules | n/a | n/a | n/a | yes (GitHub, GPL-2.0) | software, no DOI | website + repository |
 
-Total: 50 verified publications + 1 software item without DOI (NetLogo).
-Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
+Total: 50 verified publications + 1 software item without DOI (NetLogo) after round 1; round 2 adds 9 rows (8 new DOIs + 1 key reused from `fire`), total 59.
+Classes after round 2: A 4, B 5, C 9, D 1, n/a 40 (+ NetLogo, n/a).
 
 ## Entries
 
@@ -391,7 +422,8 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Parameters:** neighbourhood rules calibrated per case.
 - **Code:** a public repository could not be located (GitHub search found only third-party projects using SIMLANDER).
 - **Validation:** not visible in abstract.
-- **Reimplementability:** S1 1 – full description promised but not read; S2 1; S3 1 – code exists, location not verified; S4 2 – generic open layers; S5 1 → 6, C. Assessed from: abstract (provisional).
+- **Reimplementability:** S1 1 – full description promised but not read; S2 1; S3 2 – R script and demo data on the project site https://simlander.wordpress.com/ (verified in land-use.md); S4 2 – generic open layers; S5 1 → 7, B. Assessed from: abstract + project site.
+- **Round 2:** harmonised with land-use.md — S3 1→2, total 7 B (was 6 C). The preprint PDF is still unreadable (font encoding); the full equations are in `roodposhti2020towards`.
 - **Browser fit:** constrained land-use CA on 100 m grids is light.
 - **Relevance to ca-geo:** LND-01; EU origin; open-source alternative to Metronamica-type models.
 
@@ -472,6 +504,7 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Method:** fuzzy comparison of categorical rasters accounting for fuzziness of location (distance-decay neighbourhood) and of category (similarity matrix); yields a per-cell similarity map (0–1) and an overall statistic corrected for expected similarity, the Fuzzy Kappa.
 - **Code:** implemented in the Map Comparison Kit (`visser2006map`), free but closed.
 - **Reimplementability (as algorithm):** S1 1 – defined in paper, not read in full; S2 1 – distance-decay function and halving distance must be chosen; S3 1; S4 2; S5 1 → 6, C. Assessed from: abstract (provisional). Likely 7–8 after reading the OA full text.
+- **Round 2:** full text still not reached (publisher PDF blocked; no repository copy found). Score unchanged. The local-agreement equations of this method are restated in `hagenzanker2009improved` (read in full), so implementation is possible via that paper; the MIT MATLAB code (ahhz/fuzzy_kappa_matlab) implements the 2009 statistic.
 - **Browser fit:** neighbourhood search per cell; fine for 1000×1000 grids.
 - **Relevance to ca-geo:** validation component (partial credit for near-miss fire / flood fronts).
 
@@ -480,8 +513,9 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Access:** paywall.
 - **Method:** keeps the local fuzzy agreement of `hagen2003fuzzy` but recomputes the expected agreement so that it accounts for spatial autocorrelation (expected value zero for uncorrelated maps), removing negative values and bias against autocorrelated maps.
 - **Code:** Map Comparison Kit (closed).
-- **Reimplementability (as algorithm):** S1 1; S2 1; S3 1; S4 2; S5 1 → 6, C. Assessed from: abstract (provisional).
-- **Relevance to ca-geo:** preferred over the 2003 version if Fuzzy Kappa is implemented.
+- **Reimplementability (as algorithm):** S1 2; S2 2; S3 2; S4 2; S5 1 → 9, A. Assessed from: full text (author version, University of Surrey repository).
+- **Round 2:** re-assessed from full text — S1 1→2, S2 1→2, S3 1→2; total 9 A (was 6 C). The paper gives the complete chain: (1) fuzzy membership of a cell to each category of the other map = maximum over categories of similarity matrix value × distance-decay of the nearest-neighbour distance to that category (nearest distances via a Euclidean distance transform); (2) local agreement = minimum of the two memberships; (3) expected agreement derived for maps that are not cross-correlated but are spatially autocorrelated, from the distribution of nearest-neighbour distances per category; (4) K = (P − E)/(1 − E). The decay function and similarity matrix are analyst choices, but the examples fix them (exponential decay, halving distance 2 cells, truncated at radius 4 or untruncated). Validation: 600 comparisons of independent synthetic maps give a mean improved Fuzzy Kappa within ±0.03 of zero, and the classic synthetic map pair of Hagen (2003) is recomputed (values in figures, hence S5 1). Code: the paper says C++ is available on request; the author's account hosts an MIT-licensed MATLAB implementation, https://github.com/ahhz/fuzzy_kappa_matlab (HTTP 200).
+- **Relevance to ca-geo:** preferred over the 2003 version if Fuzzy Kappa is implemented. Browser fit: one distance transform per category plus a histogram — fine for 1000×1000 grids.
 
 ### visser2006map — The Map Comparison Kit
 - **Citation:** Visser, H., de Nijs, T. (2006). *Environmental Modelling & Software* 21(3), 346–358. DOI: 10.1016/j.envsoft.2004.11.013 (verified: Crossref)
@@ -496,6 +530,7 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Code:** not found.
 - **Reimplementability (as algorithm):** S1 1 – metric definitions not read in full; S2 2 – parameter-free; S3 0; S4 2; S5 1 → 6, C. Assessed from: abstract (provisional).
 - **Relevance to ca-geo:** the "three-map" protocol and the null model are essential for honest demo validation (LND-01, ECO-01, HAZ-01).
+- **Round 2:** the WUR repository record returned HTTP 503 (curl and WebFetch); no other OA copy found. Score unchanged. `hagenzanker2008neutral` (read) offers fully specified neutral models that complement the no-change null model used here.
 
 ### pontius2011death — Death to Kappa: birth of quantity disagreement and allocation disagreement for accuracy assessment
 - **Citation:** Pontius, R. G., Millones, M. (2011). *International Journal of Remote Sensing* 32(15), 4407–4429. DOI: 10.1080/01431161.2011.552923 (verified: Crossref, OpenAlex)
@@ -505,6 +540,7 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Reimplementability (as algorithm):** S1 2 – closed-form, computation explicitly shown per abstract; S2 2 – parameter-free; S3 2; S4 2; S5 1 – worked examples not yet read → 9, A. Assessed from: abstract (provisional).
 - **Browser fit:** trivial (one pass over two rasters).
 - **Relevance to ca-geo:** first metric to implement in the shared validation component.
+- **Round 2:** the Clark Digital Commons PDF returned HTTP 403 (also via WebFetch), so the paper is still unread; score unchanged (provisional). The diffeR source on GitHub was inspected instead: `diffTablej` / `differenceMR` compute per-category omission, commission and agreement and split the difference into quantity, **exchange** and **shift** components (overall values halved for double counting), at the original and at successively coarser resolutions (factor 2). That newer three-way split is defined in `pontius2014quantity` (added in round 2); allocation disagreement corresponds to the non-quantity part.
 
 ### pontius2011comparison — Comparison of Three Maps at Multiple Resolutions: A Case Study of Land Change Simulation in Cho Don District, Vietnam
 - **Citation:** Pontius, R. G., Peethambaram, S., Castella, J.-C. (2011). *Annals of the Association of American Geographers* 101(1), 45–62. DOI: 10.1080/00045608.2010.517742 (verified: Crossref, OpenAlex)
@@ -513,6 +549,7 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Code:** diffeR (as above) covers multiple-resolution difference metrics.
 - **Reimplementability (as algorithm):** S1 1 – procedure clear from abstract, formulas not read; S2 2; S3 2; S4 2; S5 1 → 8, B. Assessed from: abstract (provisional).
 - **Relevance to ca-geo:** multiresolution view of disagreement — shows at what scale a demo model is "right".
+- **Round 2:** still paywalled (Semantic Scholar: CLOSED); unchanged. diffeR's `differenceMR` implements the multiple-resolution part (aggregation by factor 2 up to the full extent), confirming S3 2.
 
 ### vanvliet2011revisiting — Revisiting Kappa to account for change in the accuracy assessment of land-use change models
 - **Citation:** van Vliet, J., Bregt, A. K., Hagen-Zanker, A. (2011). *Ecological Modelling* 222(8), 1367–1375. DOI: 10.1016/j.ecolmodel.2011.01.017 (verified: Crossref, OpenAlex)
@@ -529,6 +566,7 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Code:** not verified.
 - **Reimplementability (as algorithm):** S1 1; S2 2; S3 0; S4 2; S5 1 → 6, C. Assessed from: abstract (provisional).
 - **Relevance to ca-geo:** EU (Hungary) example; FoM components are simple to display in a demo.
+- **Round 2:** the ScienceDirect author manuscript returned HTTP 403; unchanged.
 
 ### roodposhti2020towards — Towards automatic calibration of neighbourhood influence in cellular automata land-use models
 - **Citation:** Roodposhti, M. S., Hewitt, R. J., Bryan, B. A. (2020). *Computers, Environment and Urban Systems* 79, 101416. DOI: 10.1016/j.compenvurbsys.2019.101416 (verified: Crossref, OpenAlex)
@@ -539,7 +577,8 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Parameters:** calibrated by the ARD procedure.
 - **Code:** ARD scripts as supplementary material (R / RStudio) — not verified.
 - **Validation:** multiple metrics vs. reference map; grid search slightly better but five times slower.
-- **Reimplementability:** S1 1; S2 1 – procedure is reproducible in principle but details not read; S3 1; S4 2; S5 1 → 6, C. Assessed from: abstract (provisional).
+- **Reimplementability:** S1 2; S2 2; S3 2; S4 2; S5 2 → 10, A. Assessed from: full text (as assessed in land-use.md).
+- **Round 2:** harmonised with the full-text assessment in land-use.md (accepted manuscript, Deakin repository): every equation and parameter value is printed, the SIMLANDER base model is downloadable, inputs are open global data and quantitative metrics are tabulated → 10 A (was 6 C, provisional).
 - **Browser fit:** random-sampling calibration with Web Workers is feasible for small grids; good interactive "calibrate me" demo.
 - **Relevance to ca-geo:** calibration module; LND-01.
 
@@ -569,6 +608,84 @@ Classes: A 1, B 2, C 10, D 1, n/a 36 (+ NetLogo, n/a).
 - **Content:** sensitivity analysis of a constrained urban land-use CA (Madrid context); argues that calibration presupposes metastability, which conflicts with simulating genuinely complex change; output variability may indicate how suitable a model is.
 - **Reimplementability:** n/a. EU case; conceptual caution for the demo narrative ("a calibrated model is not a forecast").
 
+### Round 2 additions
+
+### hagenzanker2008neutral — Neutral models of landscape change as benchmarks in the assessment of model performance (round 2)
+- **Citation:** Hagen-Zanker, A., Lajoie, G. (2008). Neutral models of landscape change as benchmarks in the assessment of model performance. *Landscape and Urban Planning*, 86(3–4), 284–296. DOI: 10.1016/j.landurbplan.2008.04.002 (verified: Crossref)
+- **Access:** OA (green, University of Surrey repository; read in full).
+- **Method:** a model's goodness of fit is judged relative to "neutral models of landscape change" that reach the same class composition as the simulated map while changing as little as possible: (1) *random constraint match* converts randomly chosen cells of over-represented classes (speckled result); (2) *growing clusters* converts cells along edges between over- and under-represented classes (blobby result). Pseudocode for both is in the appendix. Criteria (presence agreement, patch size, fractal dimension, wavelet-based structure) are evaluated at multiple scales (1×1 to 128×128) and normalised against the neutral models. Application: the White–Engelen constrained CA for La Réunion; the CA beats the neutral models on location only at coarse scales but on pattern structure at almost all scales. The paper also restates the constrained-CA potential equation (random term, neighbourhood effect, suitability, accessibility, zoning).
+- **Code:** not found.
+- **Reimplementability (as algorithm):** S1 2 – pseudocode; S2 2 – parameter-free; S3 0; S4 2 – any pair of categorical maps; S5 1 – tables for a non-open case → 7, B. Assessed from: full text.
+- **Browser fit:** both neutral models are single passes over the grid; trivial.
+- **Relevance to ca-geo:** validation component and **ensemble / stochastic CA validation**: a demo can show "our CA vs. a random allocation vs. a growing-clusters allocation" with the same amount of change — a clear, honest benchmark for LND-01, ECO-02 and fire scars.
+
+### pontius2014quantity — Quantity, exchange, and shift components of difference in a square contingency table (round 2)
+- **Citation:** Pontius, R. G., Santacruz, A. (2014). Quantity, exchange, and shift components of difference in a square contingency table. *International Journal of Remote Sensing*, 35(21), 7543–7554. DOI: 10.1080/2150704x.2014.969814 (verified: Crossref)
+- **Access:** paywall.
+- **Method:** splits total difference between two categorical maps into quantity, exchange and shift components (successor of the quantity / allocation split of `pontius2011death`). Definitions read only from the diffeR source (functions `quantityDj`, `exchangeDj`, `shiftDj`, overall values halved for double counting); paper not read.
+- **Code:** R package diffeR (https://github.com/amsantac/diffeR, verified; source inspected).
+- **Reimplementability (as algorithm):** S1 1 – paper not read; S2 2; S3 2; S4 2; S5 1 → 8, B. Assessed from: metadata + diffeR source (provisional).
+- **Relevance to ca-geo:** the current form of the Pontius metrics; port diffeR's functions to JS and test against diffeR outputs.
+
+### vanvliet2013fuzzy — A fuzzy set approach to assess the predictive accuracy of land use simulations (round 2)
+- **Citation:** van Vliet, J., Hagen-Zanker, A., Hurkens, J., van Delden, H. (2013). A fuzzy set approach to assess the predictive accuracy of land use simulations. *Ecological Modelling*, 261–262, 32–42. DOI: 10.1016/j.ecolmodel.2013.03.019 (verified: Crossref)
+- **Access:** paywall (abstract not available in Crossref or Semantic Scholar).
+- **Method:** per the title, a fuzzy-set accuracy measure for land-use simulations; details not checked.
+- **Code:** not verified (MCK lineage likely, unconfirmed).
+- **Reimplementability (as algorithm):** S1 1; S2 1; S3 0; S4 2; S5 1 → 5, C. Assessed from: metadata only (provisional).
+- **Relevance to ca-geo:** candidate fuzzy metric for land-use validation; read before finalising the metric set.
+
+### brown2005path — Path dependence and the validation of agent-based spatial models of land use (round 2)
+- **Citation:** Brown, D. G., Page, S., Riolo, R., Zellner, M., Rand, W. (2005). *International Journal of Geographical Information Science*, 19(2), 153–174. DOI: 10.1080/13658810410001713399 (verified: Crossref)
+- **Access:** listed as bronze OA (publisher PDF); abstract elided in metadata; automated access not attempted further.
+- **Content:** per the title, validation of path-dependent (stochastic) agent-based land-use models; content not checked (provisional, read in round 3).
+- **Reimplementability:** n/a (method). Assessed from: metadata only.
+- **Relevance to ca-geo:** argument and design for **ensemble validation of stochastic CA** (probability-of-change maps from many runs, comparison with one observed history).
+
+### garcia2011analysis — An analysis of the effect of the stochastic component of urban cellular automata models (round 2)
+- **Citation:** García, A. M., Santé, I., Crecente, R., Miranda, D. (2011). *Computers, Environment and Urban Systems*, 35(4), 289–296. DOI: 10.1016/j.compenvurbsys.2010.11.001 (verified: Crossref)
+- **Access:** paywall (abstract elided).
+- **Content:** analysis of how the random term in urban CA affects results (title; content not checked).
+- **Reimplementability:** n/a (method). Assessed from: metadata only.
+- **Relevance to ca-geo:** together with `yeh2006errors` and `hewitt2017stable`, the basis for exposing the stochastic-term strength (e.g. the Weibull α of SIMLANDER) as a user control and showing ensemble spread.
+
+### xia2025pytorchfire — PyTorchFire: A GPU-accelerated wildfire simulator with Differentiable Cellular Automata (round 2)
+- **Citation:** Xia, Z., Cheng, S. (2025). *Environmental Modelling & Software*, 188, 106401. DOI: 10.1016/j.envsoft.2025.106401 (verified: Crossref; key already in references.bib from `fire`)
+- **Access:** OA (CC BY; arXiv 2502.18738, read).
+- **Model:** three-state wildfire CA (burnable, burning, burned) building on Alexandridis et al.: a burnable cell ignites with some probability if at least one neighbour burns; the probability combines a base propagation probability with scaling factors for wind velocity, wind direction and slope to each of the 8 neighbours (plus vegetation / density inputs); a burning cell keeps burning with probability p_continue, a burned cell stays burned. Everything is written as tensor operations on the GPU. The stochastic update is made differentiable so that the parameters can be calibrated by gradient descent (AdamW) against observed burned areas, with clamping of parameters.
+- **Inputs:** vegetation, density, wind speed and direction, slope tensors, initial ignition; dataset on Mendeley Data (DOI 10.17632/nx2wsksp9k.1, from the README).
+- **Code:** https://github.com/xiazeyu/PyTorchFire (MIT, active 2026-09; Zenodo DOI 10.5281/zenodo.13132218).
+- **Validation:** Jaccard index and burned-area match over time; 32 simulated events at three Californian sites and the Bear (2020) and Pier (2017) fires; millisecond-level step times on GPU.
+- **Reimplementability:** S1 2; S2 2; S3 2; S4 2; S5 2 → 10, A. Assessed from: full text (arXiv; skimmed sections on model, calibration and metrics).
+- **Browser fit:** the forward CA is a direct WebGPU / WebGL target; gradient-based calibration in the browser would need a small autodiff layer (feasible with ensembles of a few runs).
+- **Relevance to ca-geo:** cross-cutting reference for **GPU CA + in-browser calibration** (detailed scoring belongs to `fire`). Shows a route for fitting parameters interactively instead of brute-force Monte Carlo.
+
+### dejong2021environmental — An environmental modelling framework based on asynchronous many-tasks: Scalability and usability (round 2)
+- **Citation:** de Jong, K., Panja, D., van Kreveld, M., Karssenberg, D. (2021). *Environmental Modelling & Software*, 139, 104998. DOI: 10.1016/j.envsoft.2021.104998 (verified: Crossref)
+- **Access:** OA (CC BY).
+- **Content:** LUE, the successor framework to PCRaster from the same group: map-algebra operations implemented on an asynchronous many-task runtime for scalability from laptop to cluster (assessed from metadata and repository; paper not read).
+- **Code:** https://github.com/computationalgeography/lue (MIT, active 2026-09).
+- **Reimplementability:** n/a (framework). **Reuse for ca-geo:** medium — MIT-licensed operator set (local / focal / zonal / flow accumulation) and the idea of composing operations into a task graph are relevant to scheduling WebGPU passes; closes the round-1 gap "LUE only as EGU abstracts".
+
+### liu2009developing — Developing a web-based cellular automata model for urban growth simulation (round 2)
+- **Citation:** Liu, Y., He, J. (2009). *SPIE Proceedings*, 7492, 74925C. DOI: 10.1117/12.838657 (verified: Crossref)
+- **Access:** paywall; no abstract in metadata.
+- **Content:** a web-based urban growth CA (2009, so very likely server-side computation with a web front-end; not checked).
+- **Reimplementability:** n/a. Assessed from: metadata only.
+- **Relevance to ca-geo:** related-work item for web CA, alongside `parise2012swii2`.
+
+### douvinet2023postfire — Post-Fire Debris Flow Susceptibility Assessment Tracking the "Cauliflower Effect" (round 2)
+- **Citation:** Douvinet, J. (2023). In *Flood Risk in a Climate Change Context – Exploring Current and Emerging Drivers*, IntechOpen. DOI: 10.5772/intechopen.107510 (verified: Crossref)
+- **Access:** OA (IntechOpen).
+- **Phenomenon and study area:** runoff concentration in five burned catchments above Montecito (California) before the 2018 post-fire debris flows.
+- **Model:** the runoff-concentration CA RuiCells, previously used for flash-flood susceptibility (reported 43 % success rate in sedimentary areas), applied to burned catchments to relate catchment shape to concentration of surface flow (abstract).
+- **Code:** RuiCells is proprietary (©).
+- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: abstract.
+- **Relevance to ca-geo:** the only verified CA paper that explicitly addresses a **fire → runoff → debris-flow chain** (longlist chain L1), even if only as susceptibility, not as dynamic coupling.
+
+### Frameworks — round 2 check (no score changes)
+Repositories re-checked via the GitHub API on 2026-10-12: Landlab (MIT, last push 2026-10-09; CellLab-CTS inside), PCRaster (GPL-3.0, 2026-10-05), OpenCAL (LGPL-3.0, last push 2019-11 — inactive, use as design reference only), LUE (MIT, 2026-09). No peer-reviewed JavaScript / WebGL / WebGPU **geographic** CA framework was found; recent hobby repositories show the stack is feasible: `miguelgarglez/yesca` (TypeScript, MIT, GPU wildfire on real terrain and live wind) and `rkottomt/deluge-flood-sim` (TypeScript, MIT, WebGPU shallow-water flood on USGS terrain) — both verified (HTTP 200), no publication, not reviewed in depth.
+
 ## Most reimplementable (top picks)
 
 For this cross-cutting domain the "top picks" are reusable algorithms and reference frameworks rather
@@ -577,14 +694,19 @@ than phenomenon models:
 1. `pontius2011death` (A, 9) — quantity and allocation disagreement: closed-form, parameter-free, open R reference (diffeR). First metric for the ca-geo validation component.
 2. `pontius2011comparison` (B, 8) — three-map, multiple-resolution comparison; same open reference code; shows the scale at which a model is right.
 3. `vanvliet2011revisiting` (B, 7) — Kappa Simulation; corrects kappa for persistence; MCK can serve as a test oracle.
-4. `hagen2003fuzzy` / `hagenzanker2009improved` (C, 6; likely higher after full-text read) — Fuzzy Kappa for partial credit on near-miss fronts (fire, flood).
-5. `pontius2007comparing` + `varga2019intensity` (C, 6) — figure of merit, its components and the null model; simple to compute and explain in a demo.
+4. `hagenzanker2009improved` (A, 9; r2, full text) — improved Fuzzy Kappa with complete equations and an MIT MATLAB reference implementation; partial credit for near-miss fronts (fire, flood). `hagen2003fuzzy` (C, 6) is its predecessor.
+5. `roodposhti2020towards` (A, 10; harmonised r2) — fully specified automatic calibration of neighbourhood rules; basis for a "calibrate me" demo.
+6. `xia2025pytorchfire` (A, 10; r2, key from `fire`) — GPU CA with gradient-based calibration; template for fast in-browser fitting.
+7. `pontius2014quantity` (B, 8; r2) — quantity / exchange / shift, as implemented in diffeR (test oracle).
+8. `hagenzanker2008neutral` (B, 7; r2, full text) — neutral models of landscape change as benchmarks; parameter-free, pseudocode given.
+9. `pontius2007comparing` + `varga2019intensity` (C, 6) — figure of merit, its components and the null model; simple to compute and explain in a demo.
 
 Reference frameworks with the highest reuse value for the JS core (not scored):
 `hobley2017creative` / `tucker2016celllab` (Landlab, MIT, component coupling and asynchronous CA),
 `karssenberg2010software` (PCRaster operator set and Monte Carlo template),
 `derango2021opencal` (macroscopic CA API, active-cell optimisation),
-`digregorio1999empirical` + `avolio2012theorem` (MAD outflow kernel shared by all flow models).
+`digregorio1999empirical` + `avolio2012theorem` (MAD outflow kernel shared by all flow models),
+`dejong2021environmental` (LUE, MIT; r2).
 
 ## Gaps and unverified leads
 
@@ -628,5 +750,36 @@ Reference frameworks with the highest reuse value for the JS core (not scored):
 - **Full-text reads pending** (all OA, blocked to automated fetch or not attempted): Hagen (2003),
   Pontius & Millones (2011), van Vliet et al. (2011), Varga et al. (2019), Roodposhti et al. (2020),
   Geographic Automata Tool (2024). Reading them would likely raise S1 / S5 for the metric entries.
+- **Round 2 status of the gaps above:**
+  - Client-side geographic CA: still no peer-reviewed framework or paper (Crossref, web, GitHub). Only hobby repositories (yesca, deluge-flood-sim; see "Frameworks — round 2 check") and the server-side Swii2 / web CA of Liu & He (2009). The novelty argument for ca-geo stands. The 2014 WebGL SCIDDICA / SCIARA thesis and the 2026 AUEB wildfire platform were not found again.
+  - Multi-hazard coupling: no coupled CA framework verified. Closest items: `douvinet2023postfire` (fire → runoff susceptibility, closed CA), the SCIDDICA / LLUNPIY macroscopic-CA lineage (lahars including ice melt; Lupiano et al. 2017, *Natural Computing*, DOI 10.1007/s11047-017-9632-3, verified, belongs to `geo`), and Yu & Chang (2024) coupled GPU dynamic-wave flow + solute transport CA (NHESS preprint, DOI 10.5194/nhess-2024-131, verified, belongs to `hyd`). Coupling in ca-geo will have to follow framework patterns (Landlab components, PCRaster scripts) rather than a CA-specific precedent.
+  - Validation of stochastic CA: now covered by `hagenzanker2008neutral` (read), `brown2005path`, `garcia2011analysis`, `vanvliet2013fuzzy` (metadata only — read in round 3), plus round-1 `yeh2006errors`, `hewitt2017stable`.
+  - Still unread although OA-listed: Pontius & Millones 2011 (Clark, 403), Pontius et al. 2007 (WUR, 503), Varga et al. 2019 (Elsevier AM, 403), Hagen 2003 (T&F), Geographic Automata Tool 2024 (MDPI 403). Manual reading needed.
+  - Educational tools: no peer-reviewed evaluation found; Hasbani et al. (2011), interactive creation of land-use CA rules, InTech chapter, DOI 10.5772/16073 (seen in Crossref results; not assessed).
+  - Pontius (2000, 2002) PERS papers: not re-searched (OpenAlex still blocked).
 - **Overlaps:** SLEUTH, DINAMICA, SIMLANDER and constrained CA → `lu`; MAD / SCIARA / SCIDDICA /
   OpenCAL → `geo` and `hyd`; Landlab CellLab-CTS examples → `geo`, `eco`.
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| hagenzanker2009improved | 6, C (abstract) | 9, A (full text) | complete equations and worked examples read; MIT MATLAB implementation by the author verified |
+| roodposhti2020towards | 6, C (abstract) | 10, A (full text) | harmonised with the full-text assessment in land-use.md |
+| hewitt2019cellular | 6, C | 7, B | harmonised with land-use.md (code and demo data verified on the project site) |
+| hagen2003fuzzy | 6, C | 6, C | still unread; equations available via hagenzanker2009improved |
+| pontius2011death | 9, A (provisional) | 9, A (provisional) | still unread (403); diffeR source inspected, consistent |
+| pontius2011comparison | 8, B | 8, B | still paywalled; diffeR multiresolution function confirmed |
+| pontius2007comparing, varga2019intensity | 6, C | 6, C | repository / manuscript access failed (503 / 403) |
+| new: 9 rows | – | see catalogue (r2) | A 1 (PyTorchFire, shared key), B 2, C 2, n/a 4 |
+
+## New phenomena candidates (round 2)
+
+No new geography-bound phenomena came up in the cross-cutting searches beyond those recorded in
+land-use.md (deforestation, residential segregation, PV adoption diffusion, population-density
+redistribution). The fire → runoff → debris-flow item (`douvinet2023postfire`) is a chain of
+existing longlist items (L1), not a new phenomenon.
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| – | – | – | – | – | see land-use.md |

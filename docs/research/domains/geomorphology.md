@@ -1,6 +1,6 @@
 # Geomorphology and mass movements — literature survey
 
-Survey round: 1 (breadth-first), date 2026-10-12. Scoring per ../reimplementability-criteria.md.
+Survey rounds: 1 (breadth-first, 2026-10-12), 2 (deepening, 2026-10-12). Scoring per ../reimplementability-criteria.md.
 
 Domain code `geo`. Longlist items covered: HYD-05 (soil erosion), HYD-07 (river channel
 morphodynamics), HAZ-02 (landslides and debris flows), HAZ-03 (snow avalanche runout),
@@ -54,6 +54,35 @@ relevance-ranked over the whole index and therefore huge; only the top 5–10 we
 | landscape evolution review | Crossref | top 6 | Tucker & Hancock 2010, Coulthard 2001 |
 | GitHub repository search (CAESAR-Lisflood, ReSCAL, MOLASSES, SCIARA, SCIDDICA, RillGrow, DECAL, braided) | GitHub API | – | see Code column; GitHub API rate limit hit after 11 queries |
 
+### Round 2
+
+Crossref only (OpenAlex still quota-blocked), ≥1 s between requests. Full texts via Semantic
+Scholar `openAccessPdf`, Copernicus/BMC/arXiv PDFs (curl + pdftotext, scratchpad only, deleted
+after extraction). Elsevier, Springer LNCS, De Gruyter, Nature, APS and GSA were not reachable.
+
+| Query | Source | Hits | Notes |
+|---|---|---|---|
+| openAccessPdf for connor2012probabilistic, spataro2010latest, bak1987, murray1994, werner1995 | Semantic Scholar API | 5 | Connor 2012 read in full (BMC PDF); SCIARA OA link 403; Bak/Murray/Werner closed |
+| "The latest release of the lava flows simulation model SCIARA" pdf | WebSearch | 9 | Only repository records; Rongo et al. 2011 (SIMULTECH, 10.5220/0003575900370044) read as a secondary source |
+| Bak Tang Wiesenfeld 1987 pdf | WebSearch | 10 | Course-hosted scan found, image-only (no text layer, no OCR tool) – not assessable |
+| MOLASSES lava flow simulator cellular automata | Crossref + GitHub | 1.6 M / repo | No MOLASSES method paper; repo source tree and test DEMs inspected |
+| Dietterich benchmarking … lava flow simulation | Crossref | 1 | Dietterich et al. 2017 (J. Appl. Volcanol., OA) read: MOLASSES benchmarked with NRMSE |
+| Gallant MOLASSES lava probabilistic | Crossref | 1 | Gallant et al. 2018 (Geology) – seen, not catalogued |
+| rockfall cellular automata simulation | Crossref | 1.5 M | Noise; no rockfall CA |
+| rockfall propagation cellular automata model DEM | WebSearch | 10 | Only discrete-element (non-CA) rockfall models; no CA |
+| Gravitational Process Path GPP model | Crossref | 3 | Wichmann 2017 (GMD, OA) read in full – random-walk + friction raster model incl. rockfall |
+| Flow-R susceptibility mapping debris flows | Crossref | 2 | Horton et al. 2013 (NHESS, OA) read in full |
+| TopRunDF debris flow random walk | Crossref | 3 | Korean random-walk applications only |
+| cellular automata debris flow Czech Republic / landslide Carpathians / soil erosion Central Europe | Crossref | 0.6–1.9 M | No Central-European CA mass-movement study |
+| Flow-R / debris flow Czech (Krkonoše, Jeseníky) | WebSearch | 9 | No Czech Flow-R/CA study; Storm Boris 2024 inventory (Tichavský et al. 2026, verified) and Krkonoše avalanche GIS map (not verified) |
+| avalanche Krkonose runout model / debris flow runout Czech flysch | Crossref | 3–4 M | Noise |
+| cellular automata gully erosion model | Crossref | 3.7 M | Liu & Yuan 2012 rill-erosion CA (IEEE); loess-gully CA EGU abstract 2020 (not catalogued) |
+| cellular automata debris flow Alps hazard | Crossref | 2.6 M | Swii2 HTML5/WebGL SCIDDICA viewer (Parise et al. 2012) |
+| cellular automata mining subsidence | Crossref | 0.96 M | Chen et al. 2020 (Open Geosciences, OA; PDF blocked) + two minor papers |
+| cellular automata sinkhole / karst | Crossref + WebSearch | 1.5 M / 10 | Yizhaq et al. 2017 (GRL; arXiv preprint read); no karst-landscape CA |
+| cellular automaton limestone dissolution karst conduit | Crossref | 0.6 M | Non-CA karst models only |
+| Van De Wiel Coulthard SOC river basins | Crossref | 2 | Van De Wiel & Coulthard 2010 (Geology), Coulthard & Van De Wiel 2007 – seen, not catalogued |
+
 ## Model families
 
 1. **Sandpile / self-organised criticality (SOC) automata** — threshold toppling of a
@@ -102,6 +131,11 @@ gravitational process.
 |---|---|---|---|---|---|---|---|---|---|---|
 | damboise2022flowpy | 2022 | Flow-Py v1.0 | avalanche, rockfall, debris-flow runout | square raster / Moore 8 / flux, energy-line height / det. | 2 2 2 2 2 | 10 | A | yes | OA | full text |
 | eltner2025using | 2025 | RillGrow calibrated with 4D SfM (CTU Prague) | rill/interrill soil erosion | DEM cm-grid / 4–8 nbr (D8 steepest) / water depth, sediment, layers / stoch. (rain drops, detachment) | 1 2 2 2 2 | 9 | A | yes | OA | full text |
+| connor2012probabilistic | 2012 | Probabilistic lava inundation, Armenia | lava flow hazard | 100 m SRTM grid / 8 nbr / lava thickness vs residual, parent link / stoch. (vents, volumes, residual) | 2 2 2 2 1 | 9 | A | MOLASSES (same authors, GPL, verified) | OA | full text |
+| wichmann2017gpp | 2017 | GPP model (SAGA) (r2) | rockfall, debris-flow, avalanche process paths and runout | raster / Moore 8 / visited flag, velocity, deposit / stoch. random walk + friction model | 2 1 2 2 1 | 8 | B | SAGA GIS (GPL; GitHub mirror verified) | OA | full text |
+| dietterich2017benchmarking | 2017 | Lava-model benchmarks incl. MOLASSES (r2) | lava flow (benchmark) | MOLASSES CA: Moore / thickness vs critical thickness / det. per run | 1 1 2 2 2 | 8 | B | MOLASSES (verified) | OA | full text |
+| horton2013flowr | 2013 | Flow-R (r2) | debris-flow (and rockfall, avalanche) susceptibility and runout | raster / Moore 8 / susceptibility, kinetic energy / det. (MFD + persistence + energy line) | 2 1 1 2 1 | 7 | B | free binary (flow-r.org), not open source | OA | full text |
+| yizhaq2017scalefree | 2017 | Dead Sea sinkholes CA (r2) | sinkhole formation and size statistics | square 1024² / von Neumann / two layers: cavity, sinkhole / stoch. | 2 1 0 2 2 | 7 | B | no | paywall (arXiv preprint) | full text (preprint) |
 | dambrosio2003simulating | 2003 | SCIDDICA S3-hex | debris flows (Sarno 1998) | hexagonal / 6+1 / altitude, thickness, energy, soil depth, outflows / det. | 2 2 1 1 2 | 8 | B | partial (SciddicaT in OpenCAL) | OA | full text |
 | skinner2023testing | 2023 | CAESAR-Lisflood vs grid size | landscape evolution, sediment yield | square DEM / 4 nbr flow (LISFLOOD-FP) / water, multi-fraction sediment / det. | 1 1 2 2 2 | 8 | B | yes | OA | full text (summary) |
 | coulthard2013integrating | 2013 | LISFLOOD-FP inside CAESAR | landscape evolution + floods | square / 4 nbr / water depth, discharge, sediment / det. | 1 1 2 2 1 | 7 | B | yes | paywall | abstract (provisional) |
@@ -115,14 +149,14 @@ gravitational process.
 | vandewiel2007embedding | 2007 | Reach-scale dynamics in CAESAR | river reach morphodynamics | square / scanning routing / water, sediment / det. | 1 1 1 1 1 | 5 | C | descendant only | paywall | metadata only (provisional) |
 | coulthard2006cellular | 2006 | Cellular meandering | river meandering | square / curvature from regional window / det. | 1 1 1 1 1 | 5 | C | descendant only | paywall | abstract (provisional) |
 | li2023integrating | 2023 | SLIDE in CAESAR-Lisflood | rainfall–landslide–flash-flood chain | square / as CAESAR-Lisflood + infinite-slope stability / det. | 1 1 1 1 1 | 5 | C | base model only | paywall | metadata only (provisional) |
-| spataro2010latest | 2010 | SCIARA-fv2 | lava flows (Etna 2006) | square / Moore / altitude, thickness, temperature, solidified lava, outflows / det. | 1 1 1 1 1 | 5 | C | 3rd-party CUDA | OA | abstract (provisional) |
-| connor2012probabilistic | 2012 | Probabilistic lava inundation, Armenia | lava flow hazard | square DEM / 8 nbr / lava thickness vs residual / stoch. (vents, volumes) | 1 1 1 1 1 | 5 | C | same group (MOLASSES) | OA | abstract (provisional) |
+| spataro2010latest | 2010 | SCIARA-fv2 | lava flows (Etna 2006) | square / Moore / altitude, thickness, temperature, solidified lava, outflows / det. | 1 1 1 1 1 | 5 | C | 3rd-party CUDA | OA (blocked) | abstract + secondary (rongo 2011) (provisional) |
 | kronholm2005integrating | 2005 | Spatial patterns in avalanche CA | slab-avalanche fracture propagation | square / nearest nbr / stress, strength / threshold | 1 1 0 2 1 | 5 | C | no | paywall | abstract (provisional) |
 | bak1987selforganized | 1987 | BTW sandpile / SOC | foundation (avalanches of grains) | square / von Neumann / integer height / det. toppling, random driving | 1 1 0 2 1 | 5 | C | no | paywall | metadata only (provisional) |
 | hergarten1998selforganized | 1998 | SOC landslide model | landslide magnitude–frequency | grid PDE (not CA) | 1 1 0 2 1 | 5 | C | no | paywall | abstract (provisional) |
 | werner1995eolian | 1995 | Eolian dunes simulation | dune types | square / slab hopping + angle-of-repose avalanching / stoch. | 1 1 0 2 1 | 5 | C | no | paywall | metadata only (provisional) |
 | baas2007modelling | 2007 | DECAL vegetated dunes | parabolic & nebkha dunes | square / slab model + vegetation / stoch. | 1 1 0 2 1 | 5 | C | no (post-processing only) | paywall | abstract (provisional) |
 | segre1995cellular | 1995 | Realistic landslide CA | debris flow over 3-D topography | square / nbr / mass, energy / sandpile-derived | 1 1 0 1 1 | 4 | C | no | OA (scan) | abstract (provisional) |
+| chen2020dynamic | 2020 | Mining subsidence CA (r2) | subsidence basin growth above coal mining | raster / nbr / subsidence / det. (ArcGIS + Python) | 1 1 0 1 1 | 4 | C | no | OA (PDF blocked) | abstract (provisional) |
 | heung2013modelling | 2013 | USLE + CA sheet erosion | soil redistribution | raster / nbr / soil depth / det. | 1 1 0 1 1 | 4 | C | no | paywall | metadata only (provisional) |
 | guthrie2008exploring | 2008 | Magnitude–frequency CA for landslides | landslide size statistics | raster / nbr / stoch. | 1 1 0 1 1 | 4 | C | no | paywall | metadata only (provisional) |
 | lai2013integration | 2013 | MCE + CA landslide simulation | landslide spreading | raster / nbr / susceptibility-weighted | 1 1 0 1 1 | 4 | C | no | OA (bronze) | metadata only (provisional) |
@@ -134,10 +168,15 @@ gravitational process.
 | bilotta2012sensitivity | 2012 | MAGFLOW sensitivity analysis | lava flows | as MAGFLOW | 1 1 0 1 1 | 4 | C | no | paywall | metadata only (provisional) |
 | miyamoto1997simulating | 1997 | Improved lava CA | lava flows | square / nbr / Bingham / det. | 1 1 0 1 1 | 4 | C | no | paywall | metadata only (provisional) |
 | barpi2007cellular | 2007 | CA for dense-snow avalanches | avalanche path & deposit, Susa Valley | 3-D CA on DTM / erosion–deposition | 1 1 0 1 1 | 4 | C | no | green OA (repo) | abstract (provisional) |
+| liu2012cellular | 2012 | Rill-erosion CA (r2) | rill erosion | raster / – / – | 1 0 0 1 1 | 3 | D | no | paywall | metadata only (provisional) |
+| parise2012swii2 | 2012 | Swii2 HTML5/WebGL SCIDDICA viewer (r2) | debris flows (browser visualisation) | MCA (SCIDDICA) in browser | 1 0 0 1 0 | 2 | D | not found | paywall | metadata only (provisional) |
 | avolio2010development | 2010 | Preliminary avalanche MCA | snow avalanches | MCA | 1 1 0 1 1 | 4 | C | no | paywall | metadata only (provisional) |
 | digregorio1999empirical | 1999 | MCA modelling method | methodology (surface flows) | framework | – | n/a | n/a | – | paywall | metadata + citing papers |
 | coulthard2007cellular | 2007 | Cellular modelling of catchments & reaches | review | – | – | n/a | n/a | – | paywall | metadata only |
 | tucker2010modelling | 2010 | Modelling landscape evolution | review | – | – | n/a | n/a | – | paywall | abstract |
+| tichavsky2026hydrogeomorphic | 2026 | Storm Boris 2024 effects, NE Czechia (r2) | debris flows, floods (event inventory, not CA) | – | – | n/a | n/a | – | paywall? | metadata only |
+
+Count (after round 2): 46 verified publications. 42 scored: A 3, B 8, C 29, D 2. 4 n/a.
 
 ## Entries
 
@@ -200,8 +239,8 @@ gravitational process.
 - **Model:** replaces CAESAR's steady flow routing with the simplified shallow-water LISFLOOD-FP scheme on the same grid, enabling flood-wave effects inside a LEM.
 - **Inputs:** DEM, rainfall/discharge.
 - **Parameters:** not assessable from abstract.
-- **Code:** CAESAR-Lisflood (see skinner2023testing; verified).
-- **Validation:** not assessable from abstract.
+- **Code:** CAESAR-Lisflood (see skinner2023testing; verified). Round 2: also Zenodo 10.5281/zenodo.321820 (v1.9b) and parameter listings 10.5281/zenodo.6594745 (verified via Zenodo API).
+- **Validation:** not assessable from abstract. Round 2: still no OA copy; unchanged (harmonised with hydrology.md).
 - **Reimplementability:** S1 1; S2 1; S3 2; S4 2; S5 1 → 7, B. Assessed from: abstract (provisional).
 - **Browser fit:** medium (see above).
 - **Relevance to ca-geo:** HYD-07; the reference description of CAESAR-Lisflood.
@@ -265,7 +304,7 @@ gravitational process.
 - **Phenomenon:** emergence of braided channel patterns.
 - **Model:** foundational reduced-complexity cellular model of braided rivers (rules not assessed — abstract unavailable).
 - **Code:** no original; third-party reimplementation https://github.com/evan-greenbrg/CellularBraidedRiver (verified, unofficial).
-- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: metadata only (provisional). Expected to rise once full text is read (round 2).
+- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: metadata only (provisional). Round 2: Semantic Scholar reports closed access; no OA copy found; unchanged.
 - **Browser fit:** very good (small grid, simple rules).
 - **Relevance to ca-geo:** HYD-07 — likely the simplest attractive braided-river demo.
 
@@ -306,19 +345,23 @@ gravitational process.
 - **Phenomenon:** 2006 Etna lava flows; anisotropy test on a 5° inclined plane.
 - **Model:** deterministic MCA, square grid with Moore neighbourhood (replacing hexagons), Bingham-like rheology inside the minimisation algorithm, improved cooling/solidification.
 - **Code:** no official code; third-party CUDA implementation https://github.com/knotman90/SCIARA_FV2_CUDA (verified, unofficial).
-- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: abstract (provisional). The inclined-plane test is a good reference case once the full text is read.
+- **Round 2 (secondary source):** Rongo et al. 2011 (SIMULTECH proceedings, DOI 10.5220/0003575900370044, verified; scitepress PDF read through WebFetch) restates SCIARA-fv2: substates altitude, thickness, temperature and 8 outflows; Moore neighbourhood; outflows by the minimisation algorithm with a critical thickness hc (Bingham-like); relaxation rate r and hc both log-linear in temperature between the solidus and vent values; diagonal neighbour altitudes sampled on a circle of radius one cell to remove anisotropy. Parameter names are listed but no values; cooling formula not restated.
+- **Reimplementability:** S1 1; S2 1; S3 1; S4 1; S5 1 → 5, C. Assessed from: abstract + secondary (provisional). Round 2: no change; Elsevier still blocks the OA PDF.
 - **Browser fit:** good (MCA is GPU/WebGL friendly).
 - **Relevance:** HAZ-05.
 
 ### connor2012probabilistic — Probabilistic approach to modeling lava flow inundation: a lava flow hazard assessment for a nuclear facility in Armenia
 - **Citation:** Connor, L. J., Connor, C. B., Meliksetian, K., Savov, I. (2012). *Journal of Applied Volcanology* 1(1), 3. DOI: 10.1186/2191-5040-1-3 (verified: Crossref)
-- **Access:** OA (CC BY) — full text blocked by redirect to login for the fetcher.
-- **Phenomenon:** lava-flow hazard at Aragats (Armenia): vent-location probability + lava inundation simulation.
-- **Model:** two-stage probabilistic approach; inundation by a cellular lava-spreading algorithm (details not assessed).
-- **Code:** the same author group publishes MOLASSES, a GPL C lava-flow CA: https://github.com/geoscience-community-codes/MOLASSES (verified); exact correspondence to this paper not confirmed.
-- **Reimplementability:** 1 1 1 1 1 → 5, C. Assessed from: abstract (provisional).
-- **Browser fit:** likely excellent (simple spreading rule, Monte Carlo ensembles).
-- **Relevance:** HAZ-05; probabilistic ensemble maps.
+- **Access:** OA (CC BY) — round 2: BMC PDF read in full.
+- **Phenomenon:** lava-flow hazard for the Armenian nuclear power plant site (Shamiram Plateau, Aragats): vent-location probability (kernel density, SAMSE bandwidth, 18 volcanic centres) + lava inundation simulation, 10 000 Monte Carlo runs.
+- **Model:** total erupted volume is added at the vent in pulses (10⁵ m³ per iteration on a 100 m grid, i.e. 10 m of thickness). Every inundated cell keeps a residual thickness (≈ modal flow thickness) before it passes lava on. Active cells keep a list entry with their parent cell; a neighbour qualifies only if its effective elevation (ground + lava) is below the active cell's and it is not the parent. Excess lava is shared among qualifying neighbours in proportion to the effective-elevation difference (L_n = X_a·D_n/ΣD). Iterations stop when the volume is used up. Deterministic per run; stochastic over runs. Iterations are only loosely linked to time (10³–10⁴ s per pulse for 10–100 m³/s).
+- **Inputs:** SRTM (CGIAR-CSI) DEM resampled to 100 m; spatial density grid of vents.
+- **Parameters:** configuration table given: residual thickness from a truncated normal (mean 7–8 m, SD 1–3 m, 4–15 m), log₁₀ volume truncated normal (mean 7.2, SD 0.5, 6–9), pulse 10⁵ m³, 10 000 runs, area of interest.
+- **Code:** the PERL code of the paper is not released. Its successor MOLASSES (C, GPL-3, © L. Connor, J. Richardson, C. Connor; https://github.com/geoscience-community-codes/MOLASSES, verified) implements the same residual/parent/proportional-to-slope rule (modules `distribute_proportional2slope*`, `pulse`, `neighbor_*`) and ships test DEMs (flat, dipping planes) with configuration files. Dietterich et al. 2017 state that MOLASSES is based on this paper's algorithm.
+- **Validation:** conditional and annual inundation probabilities for the site; simulated flow lengths compared with observed volume-limited flows (qualitative).
+- **Reimplementability:** S1 2 – rule, stopping and stochastic inputs explicit (one small ambiguity: the text says "up to 3" neighbours); S2 2 – configuration table; S3 2 – authors' own successor code; S4 2 – SRTM; S5 1 – probabilities only, no test case → 9, A. Round 2: re-assessed from full text — S 2 2 2 2 1 (was 1 1 1 1 1).
+- **Browser fit:** excellent — a few hundred lines; Monte Carlo ensembles of thousands of runs are feasible in a worker or on the GPU.
+- **Relevance:** HAZ-05 primary candidate (simplest complete lava CA). The same residual-thickness rule could serve for mud or tailings spreading. For quantitative checks use `dietterich2017benchmarking`.
 
 ### kronholm2005integrating — Integrating spatial patterns into a snow avalanche cellular automata model
 - **Citation:** Kronholm, K., Birkeland, K. W. (2005). *Geophysical Research Letters* 32(19). DOI: 10.1029/2005gl024373 (verified: Crossref)
@@ -332,7 +375,7 @@ gravitational process.
 - **Citation:** Bak, P., Tang, C., Wiesenfeld, K. (1987). *Physical Review Letters* 59(4), 381–384. DOI: 10.1103/physrevlett.59.381 (verified: Crossref)
 - **Access:** paywall
 - **Model:** the sandpile automaton that defines SOC (rules not assessed from this source — abstract withheld).
-- **Reimplementability:** S1 1; S2 1; S3 0; S4 2; S5 1 → 5, C. Assessed from: metadata only (provisional). Expected A after reading full text (rules are very short).
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 2; S5 1 → 5, C. Assessed from: metadata only (provisional). Round 2: only an image-only scan was found (no text layer); not re-assessed.
 - **Browser fit:** trivial.
 - **Relevance:** foundation for landslide/avalanche magnitude–frequency demos; teaching baseline.
 
@@ -347,7 +390,7 @@ gravitational process.
 - **Citation:** Werner, B. T. (1995). *Geology* 23(12), 1107. DOI: 10.1130/0091-7613(1995)023<1107:EDCSAA>2.3.CO;2 (verified: Crossref)
 - **Access:** paywall
 - **Model:** foundational slab-based dune CA (rules not assessed — abstract withheld).
-- **Reimplementability:** 1 1 0 2 1 → 5, C. Assessed from: metadata only (provisional).
+- **Reimplementability:** 1 1 0 2 1 → 5, C. Assessed from: metadata only (provisional). Round 2: closed access; unchanged.
 - **Relevance:** dunes; very browser-friendly family.
 
 ### baas2007modelling — Modelling vegetated dune landscapes
@@ -459,6 +502,76 @@ gravitational process.
 - **Access:** paywall
 - **Value as entry point:** broad review of LEMs and geomorphic transport laws; places cellular models among continuum LEMs. **n/a.**
 
+### dietterich2017benchmarking — Benchmarking computational fluid dynamics models of lava flow simulation for hazard assessment, forecasting, and risk management (round 2)
+- **Citation:** Dietterich, H. R., Lev, E., Chen, J., Richardson, J. A., Cashman, K. V. (2017). *Journal of Applied Volcanology* 6, 9. DOI: 10.1186/s13617-017-0061-x (verified: Crossref)
+- **Access:** OA (CC BY), BMC PDF read in full.
+- **Content:** Four benchmarks for lava-flow codes with analytical or laboratory references: BM-A isothermal isoviscous sloping flow, BM-B the same with obstacles, BM-C cooling axisymmetric flow, BM-D cooling and solidifying molten basalt on a slope. Several codes, including FLOW-3D, OpenFOAM and **MOLASSES** (a CA based on connor2012probabilistic; Moore neighbourhood, spreading proportional to slope above a critical thickness, volume steps as time steps).
+- **Results:** NRMSE of flow length, width and thickness for every code; MOLASSES reaches about 4–12 % on the isothermal cases and reproduces flow around obstacles.
+- **Reimplementability (of the MOLASSES set-up):** S1 1 – CA rules only summarised; S2 1; S3 2 – MOLASSES open; S4 2 – synthetic benchmark geometries; S5 2 – NRMSE tables → 8, B. Assessed from: full text.
+- **Relevance:** HAZ-05. Ready-made quantitative checks for a ca-geo lava CA (BM-A/B need only a sloping plane and an obstacle).
+
+### wichmann2017gpp — The Gravitational Process Path (GPP) model (v1.0) – a GIS-based simulation framework for gravitational processes (round 2)
+- **Citation:** Wichmann, V. (2017). *Geoscientific Model Development* 10(9), 3309–3327. DOI: 10.5194/gmd-10-3309-2017 (verified: Crossref)
+- **Access:** OA (CC BY), full text read.
+- **Phenomenon:** process paths, runout and deposition of rockfall, debris flows and snow avalanches on a raster DTM; examples from the Alps.
+- **Model:** a mass point moves cell to cell over the 8 neighbours. Path options: steepest descent or a random walk in which lower neighbours are admitted by a slope threshold and a divergence exponent a (Gamma-like criterion), then chosen with probability proportional to slope × a persistence factor p for the previous direction; many repetitions per start cell. Runout by geometric gradient, Fahrböschung, shadow angle, or one- and two-parameter friction models (velocity along the path); optional sink filling and deposition. Not called a CA, but every step is a local neighbourhood rule.
+- **Parameters:** tables of typical configurations and parameter ranges for rockfall (e.g. divergence exponent 1.5–2.0, persistence 1.0–1.6), debris flow and avalanche, plus friction coefficients per land cover (e.g. rockfall material, meadow, alpine shrubs, forest); full parameter list in Appendix A.
+- **Code:** in SAGA GIS (GPL), "Geomorphology" tool library; SourceForge https://sourceforge.net/projects/saga-gis/ (bot-blocked) and GitHub https://github.com/saga-gis/saga-gis (HTTP 200).
+- **Validation:** sensitivity figures and application examples; no quantitative test set in the paper.
+- **Reimplementability:** S1 2; S2 1 – ranges, not one calibrated set; S3 2; S4 2 – DTM + release areas; S5 1 → 8, B. Assessed from: full text.
+- **Browser fit:** very good (independent random walks, embarrassingly parallel).
+- **Relevance to ca-geo:** HAZ-02, HAZ-03 and **rockfall** (new phenomenon candidate). An alternative to Flow-Py with stochastic paths; friction per land cover fits CZ land-cover layers.
+
+### horton2013flowr — Flow-R, a model for susceptibility mapping of debris flows and other gravitational hazards at a regional scale (round 2)
+- **Citation:** Horton, P., Jaboyedoff, M., Rudaz, B., Zimmermann, M. (2013). *Natural Hazards and Earth System Sciences* 13(4), 869–885. DOI: 10.5194/nhess-13-869-2013 (verified: Crossref)
+- **Access:** OA (CC BY), full text read.
+- **Phenomenon:** regional debris-flow source identification and propagation (also used for rockfall, avalanches); Swiss case studies (Solalex and others).
+- **Model:** sources from thresholds on slope, flow accumulation, lithology and land use; spreading by a modified Holmgren multiple-flow-direction rule (exponent x, central-cell raise dh to reduce DEM noise), weighted by a persistence function (three variants, tabulated); runout from a simple energy balance with a minimum travel angle and a maximum velocity. Propagation from each source with an active-cell list.
+- **Parameters:** recommended exponents, travel angles (e.g. about 11° for Alpine debris flows) and velocity limits; 10 m DEM recommended.
+- **Code:** free stand-alone Matlab-compiled application, http://www.flow-r.org (HTTP 200) and https://wp.unil.ch/risk/flow-r/ (HTTP 200); source not open → S3 1.
+- **Validation:** qualitative comparison with mapped events; sensitivity to DEM resolution and parameters.
+- **Reimplementability:** S1 2; S2 1; S3 1; S4 2; S5 1 → 7, B. Assessed from: full text.
+- **Browser fit:** very good (single sweep per source).
+- **Relevance:** HAZ-02. Inventories from the Hrubý Jeseník (Storm Boris 2024, `tichavsky2026hydrogeomorphic`) could serve as a CZ check for Flow-R-like or Flow-Py-like runout.
+
+### yizhaq2017scalefree — Scale-free distribution of Dead Sea sinkholes: Observations and modeling (round 2)
+- **Citation:** Yizhaq, H., Ish-Shalom, C., Raz, E., Ashkenazy, Y. (2017). *Geophysical Research Letters* 44(10), 4944–4952. DOI: 10.1002/2017gl073655 (verified: Crossref)
+- **Access:** paywall; author preprint arXiv:1611.00940 read in full.
+- **Phenomenon:** formation and growth of collapse sinkholes along the Dead Sea shore; sinkhole-area statistics from field mapping.
+- **Model:** two-layer stochastic CA on a 1024 × 1024 grid. Lower layer (salt): cells become cavities with a probability that grows with the number of cavity neighbours (von Neumann) and with the size of the cavity cluster (dissolution efficiency parameter). Upper layer (soil): cells above a cavity collapse with a probability that grows with the cavity size (soil-strength parameter). Explicit five-step update order.
+- **Parameters:** initial cavity probability and the two process parameters; ranges that match the field statistics are shown.
+- **Code:** not found.
+- **Validation:** sinkhole-area distributions follow power laws with exponent ≈ 1.9–2.0 in the model and 1.5–2.0 in the field.
+- **Reimplementability:** S1 2; S2 1; S3 0; S4 2 – synthetic grids; S5 2 – power-law exponents → 7, B. Assessed from: full text (preprint).
+- **Browser fit:** trivial.
+- **Relevance:** new phenomenon candidate (sinkholes / collapse). Not geo-referenced; would need a DEM-based susceptibility layer for a CZ demo.
+
+### chen2020dynamic — Dynamic simulation for the process of mining subsidence based on cellular automata model (round 2)
+- **Citation:** Chen, Q., Li, J., Hou, E. (2020). *Open Geosciences* 12(1), 832–839. DOI: 10.1515/geo-2020-0172 (verified: Crossref)
+- **Access:** OA (CC BY); De Gruyter blocked the PDF; abstract via Semantic Scholar.
+- **Phenomenon:** time evolution of a subsidence basin above a coal mine (East China), as a basis for land-reclamation planning.
+- **Model:** CA built from mining-subsidence theory, implemented with ArcGIS and Python; prediction reported to agree with observations. Rules not read.
+- **Reimplementability:** S1 1; S2 1; S3 0; S4 1; S5 1 → 4, C. Assessed from: abstract (provisional).
+- **Relevance:** new phenomenon candidate (mining subsidence), highly relevant to the Ostrava–Karviná coalfield; could feed LND-03-style flooding of subsidence troughs.
+
+### liu2012cellular — A cellular automata model for the process of rill erosion (round 2)
+- **Citation:** Liu, X., Yuan, L. (2012). In: *2012 International Symposium on Geomatics for Integrated Water Resource Management*, 1–3. IEEE. DOI: 10.1109/giwrm.2012.6349546 (verified: Crossref)
+- **Access:** paywall; abstract withheld.
+- **Reimplementability:** S1 1; S2 0; S3 0; S4 1; S5 1 → 3, D. Assessed from: metadata only (provisional).
+- **Relevance:** HYD-05; a short alternative to RillGrow, not assessable.
+
+### parise2012swii2 — Swii2, a HTML5/WebGL Application for Cellular Automata Debris Flows Simulation (round 2)
+- **Citation:** Parise, R., D'Ambrosio, D., Spingola, G., Filippone, G., Rongo, R., Trunfio, G. A., Spataro, W. (2012). In: *Lecture Notes in Computer Science* (ACRI 2012), 444–453. Springer. DOI: 10.1007/978-3-642-33350-7_46 (verified: Crossref)
+- **Access:** paywall; abstract withheld.
+- **Content:** a browser (HTML5/WebGL) application for SCIDDICA debris-flow simulation (from the title; details not read).
+- **Reimplementability:** S1 1; S2 0; S3 0; S4 1; S5 0 → 2, D. Assessed from: metadata only.
+- **Relevance:** **direct browser precedent** for ca-geo (MCA in WebGL, 2012); worth a manual read for architecture lessons. Overlap with `gen`.
+
+### tichavsky2026hydrogeomorphic — Hydrogeomorphic effects of Storm Boris (2024) in the rainfall epicentre (NE Czechia) and a century of extreme rainfall patterns (round 2)
+- **Citation:** Tichavský, R., Rozsívalová, E., Tolasz, R. (2026). *Natural Hazards* 122(4). DOI: 10.1007/s11069-025-07960-3 (verified: Crossref)
+- **Content (from search snippet, not read):** field inventory of new debris-flow paths in the Hrubý Jeseník after the September 2024 storm, related to topographic indices. Not a CA.
+- **Reimplementability:** n/a (data source). Value: a recent **CZ** event inventory to check HAZ-02 runout demos (Flow-Py / GPP / SCIDDICA-like) on Czech terrain.
+
 ## Most reimplementable (top picks)
 
 1. **damboise2022flowpy** (A, 10) — open Python code, 4 parameters, analytical tests; DEM + release mask only; covers avalanches, rockfall and debris-flow runout (HAZ-03, HAZ-02).
@@ -466,10 +579,12 @@ gravitational process.
 3. **dambrosio2003simulating** (B, 8) — complete SCIDDICA S3-hex rules with parameter values and areal fitness metrics; the MCA template for all surface flows (HAZ-02, reusable for HAZ-05).
 4. **skinner2023testing / coulthard2013integrating** (B, 8/7) — CAESAR-Lisflood open source with open test data; best route to river morphodynamics (HYD-07).
 5. **kochanski2019rescal** (B, 8) — open dune CA code; needs 2-D reduction for the browser.
+6. **connor2012probabilistic + MOLASSES** (A, 9; round 2) — the simplest complete lava CA (residual thickness, parent cell, slope-proportional sharing) with the authors' GPL successor code; quantitative checks in `dietterich2017benchmarking` (B 8). Best HAZ-05 candidate.
+7. **wichmann2017gpp** (B, 8; round 2) — open SAGA random-walk + friction runout model with parameter ranges for rockfall, debris flows and avalanches.
+8. **horton2013flowr** (B, 7; round 2) — complete MFD + persistence + energy-line runout rules; free binary only.
 
-Likely to climb after full-text reading (round 2): bak1987selforganized, murray1994cellular,
-werner1995eolian (very short, complete rule sets), spataro2010latest (inclined-plane
-test), connor2012probabilistic + MOLASSES (simple lava CA with code).
+Still expected to climb if full texts become available: bak1987selforganized (scan only),
+murray1994cellular, werner1995eolian (closed access), spataro2010latest (Elsevier OA blocked).
 
 ## Gaps and unverified leads
 
@@ -480,13 +595,13 @@ test), connor2012probabilistic + MOLASSES (simple lava CA with code).
   metadata only. Round 2: obtain full texts (library access) for Murray & Paola 1994,
   Werner 1995, Bak et al. 1987, Van De Wiel 2007, Heung 2013, Lai 2013, Clerici 2000,
   MAGFLOW papers, Miyamoto 1997.
-- **Rockfall CA:** no dedicated CA found in Crossref; rockfall is covered by grid routing
-  tools (Flow-Py). Round 2: search "rockfall propagation raster model", "Rockyfor3D"
-  (not CA), "rockfall cellular".
-- **MOLASSES:** code verified (GitHub, GPL), but no peer-reviewed MOLASSES description paper
-  was found in Crossref; benchmark repository jarichardson/MOLASSES_benchmarking exists
-  (seen via GitHub search, not individually checked). Lava benchmarking paper (Dietterich
-  et al. 2017, J. Appl. Volcanology, seen in search) may include MOLASSES — verify in round 2.
+- **Rockfall CA:** round 2 again found no rockfall CA (Crossref and web); only discrete-element
+  models (non-CA). Rockfall is best covered by raster runout tools with local rules:
+  `damboise2022flowpy` (A) and `wichmann2017gpp` (B), and by `horton2013flowr` (B).
+- **MOLASSES:** round 2 confirmed it is the authors' successor of connor2012probabilistic and is
+  benchmarked in `dietterich2017benchmarking` (verified). Still no method paper of its own;
+  Gallant et al. 2018 (Geology, 10.1130/g45123.1, seen in Crossref, not read) applies it.
+  Dietterich et al. cite an older repository URL (github.com/usfvolcanology/molasses, not checked).
 - **Q-LavHA** (QGIS lava hazard plugin): only a 2025 application paper seen (Volcanica,
   DOI prefix 10.30909); the plugin URL tried returned 404. Unverified.
 - **ReSCAL original distribution** (Narteau, IPGP) — URL unreachable; only the rescal-snow
@@ -503,9 +618,43 @@ test), connor2012probabilistic + MOLASSES (simple lava CA with code).
   (SCIARA review), Cappello et al. 2011 (MAGFLOW hazard-map validation, OA), Ma et al. 2009,
   Sun et al. 2022, Tang et al. 2022 (soil erosion CA, China), runoutSIM 2025 preprint
   (random-walk landslide runout in R).
-- **CZ studies:** apart from the CTU Prague erosion data, no Czech CA mass-movement study
-  was found; round 2 should search Czech flysch landslides (Beskydy / Vsetín) and Krkonoše
-  avalanches with CA or Flow-Py.
+- **CZ studies:** round 2 (Crossref + Czech/English web search) still found no Czech or
+  Central-European CA mass-movement study and no Czech Flow-R/Flow-Py application. CZ
+  anchors now: CTU erosion data (`eltner2025using`), the open CTU erosion code SMODERP2D
+  (`landa2019smoderp2d`, in hydrology.md), the Storm Boris debris-flow inventory
+  (`tichavsky2026hydrogeomorphic`) and earlier Hrubý Jeseník / Krkonoše debris-flow and avalanche
+  studies (seen in search: Křížek et al. 2018 map of debris-flow paths; a GRASS-based Krkonoše
+  avalanche susceptibility map; neither verified). Mining subsidence (Ostrava–Karviná) is a new CZ
+  phenomenon candidate (`chen2020dynamic`).
+- **Karst / river ice:** no karst-landscape CA (dolines, conduits) found; only the Dead Sea
+  sinkhole CA (`yizhaq2017scalefree`). No river-ice CA found (see hydrology.md).
+- **Swii2** (`parise2012swii2`): browser precedent; full text needed (Springer LNCS).
 - **Overlaps:** CAESAR-Lisflood and LISFLOOD-FP with `hyd`; Rescal-snow and snow drift with
   `atm`; DECAL vegetation–dune coupling with `eco`; OpenCAL, ReSCAL, MCA methodology and
   GPU/WebGL ports (Swii2, MAGFLOW CUDA) with `gen`.
+
+## Round 2 changes
+
+| Key | Old score / class | New score / class | Reason |
+|---|---|---|---|
+| connor2012probabilistic | 1 1 1 1 1 = 5 C | 2 2 2 2 1 = 9 A | Full text read: complete rule and configuration table; MOLASSES confirmed as the authors' successor code |
+| spataro2010latest | 5 C | 5 C (unchanged) | Only a secondary restatement (Rongo et al. 2011) read; parameter values still missing |
+| coulthard2013integrating | 7 B | 7 B (unchanged) | Zenodo code and parameter listings verified; no full text |
+| bak1987selforganized, murray1994cellular, werner1995eolian | 5 C | 5 C (unchanged) | No readable full text (closed / image-only scan) |
+| wichmann2017gpp (new) | – | 2 1 2 2 1 = 8 B | OA, open SAGA code, rockfall included |
+| dietterich2017benchmarking (new) | – | 1 1 2 2 2 = 8 B | Lava benchmarks with NRMSE for the MOLASSES CA |
+| horton2013flowr (new) | – | 2 1 1 2 1 = 7 B | OA, full rules; binary-only code |
+| yizhaq2017scalefree (new) | – | 2 1 0 2 2 = 7 B | Sinkhole CA, full rules (preprint) |
+| chen2020dynamic (new) | – | 1 1 0 1 1 = 4 C | Mining-subsidence CA, abstract only |
+| liu2012cellular (new) | – | 1 0 0 1 1 = 3 D | metadata only |
+| parise2012swii2 (new) | – | 1 0 0 1 0 = 2 D | metadata only; browser precedent |
+| tichavsky2026hydrogeomorphic (new) | – | n/a | CZ event inventory (data source) |
+
+## New phenomena candidates (round 2)
+
+| Phenomenon | Short description (what is simulated) | Why interesting | CZ relevance | Best verified reference key(s) + class | Note |
+|---|---|---|---|---|---|
+| Rockfall runout | Paths and stopping of falling blocks from cliff cells downslope (random walk or MFD + friction / energy line) | Very cheap, visual; forest as protection (friction per land cover) | High: sandstone rock towns (Labské pískovce, Adršpach), rockfalls on roads and railways in the Bohemian Massif valleys | `wichmann2017gpp` B, `damboise2022flowpy` A, `horton2013flowr` B | HAZ-02 covers landslides/debris flows only; could be a separate item or a HAZ-02 variant |
+| Collapse sinkholes | Cavity growth in a soluble or undermined layer and collapse of the cover; size statistics | Simple two-layer stochastic CA with clear power-law check | Medium: Moravian Karst dolines; collapse pits above old mines (e.g. Kutná Hora, Ostrava) | `yizhaq2017scalefree` B | Synthetic grid only; needs a susceptibility layer for geodata |
+| Mining subsidence | Growth of a subsidence basin above underground coal mining | Couples with WAT ponding (subsidence lakes) and LND-03 | High: Ostrava–Karviná coalfield | `chen2020dynamic` C | Also listed in hydrology.md |
+| Aeolian dunes (incl. vegetated dunes) | Sand slabs eroded, transported and deposited by wind; avalanching at the angle of repose; vegetation stabilisation | Classic, very browser-friendly CA family; strong teaching value | Low–medium: inland dune fields (e.g. Bzenec "Moravian Sahara", Labe terraces), mostly stabilised | `kochanski2019rescal` B, `werner1995eolian` C, `baas2007modelling` C | Found in round 1 but not on the longlist |
