@@ -1,16 +1,18 @@
 # Research (literature review)
 
-**Empty on purpose.** The literature review is a later phase of the project
-(see `docs/roadmap.md` once it exists).
+Broad survey of cellular-automata models tied to geography, focused on
+**reimplementability**.
 
-Planned content:
+| File | Content |
+|---|---|
+| `search-protocol.md` | Goal, domains, sources, selection rules, output format |
+| `reimplementability-criteria.md` | Scoring of publications (S1–S5, classes A–D) |
+| `domains/*.md` | Per-domain survey: search log, model families, catalogue, entries, leads |
+| `catalogue.md` | Cross-domain summary for selecting models to implement |
 
-- notes on published CA models relevant to the selected candidates,
-- review of open data sources (availability, licence, resolution, coverage of CZ/EU),
-- answers to the questions collected in `docs/review/open-questions.md`.
+Workflow rules:
 
-Workflow for that phase:
-
-- Every `TODO(literature)` marker in the docs is a task for this phase.
-- Every cited source gets an entry in `/references.bib`; cite by BibTeX key.
-- Only sources that were actually read are cited.
+- Every cited source is verified in OpenAlex / Crossref and has an entry in `/references.bib`
+  (key `firstauthorYYYYword`); cite by BibTeX key.
+- Scores assessed from an abstract only are marked as provisional.
+- `TODO(literature)` markers in other docs are tasks for this phase.

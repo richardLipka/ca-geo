@@ -6,9 +6,14 @@ The goal is to show — interactively, in a web browser — how simple local rul
 on a raster grid can reproduce spatial phenomena such as water flow, flooding or wildfire
 spread, driven by real open geodata.
 
-## Current phase: exploration
+## Current phase: literature review
 
-The project is in its **exploratory phase**. The output of this phase is documentation only:
+The exploratory phase produced a longlist, criteria and an evaluation (scope grouping
+pending approval). The project is now in a **broad literature review** of geographic CA
+models, focused on how well published models can be re-implemented
+(see `docs/research/`).
+
+The exploratory phase produced documentation only:
 
 - a brainstormed longlist of phenomena suitable for CA simulation,
 - evaluation criteria and an evaluation of the candidates,

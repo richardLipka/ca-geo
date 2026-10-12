@@ -6,17 +6,22 @@ ca-geo is a demonstration toolkit for cellular automata (CA) simulations over ge
 (raster) data, running in the browser. Confirmed models: water flow / flooding and wildfire
 spread. Other models are being selected.
 
-## Current phase: EXPLORATION (documentation only)
+## Current phase: LITERATURE REVIEW (documentation only)
 
-Rules of the exploratory phase — follow strictly:
+Exploration (longlist, criteria, evaluation matrix) is done up to the proposed grouping
+in `docs/review/evaluation-matrix.md`, which is **paused, pending author approval**;
+the literature review may change it. Current work: broad survey of geographic CA,
+see `docs/research/search-protocol.md` and `docs/research/reimplementability-criteria.md`.
+
+Rules — follow strictly:
 
 - No model implementation code, no dependencies (no `package.json`, no `npm install`),
-  no data downloads.
-- No invented citations, authors, years or numeric parameter values. Anything that needs
-  support from literature is marked `TODO(literature)`; unverified facts (data sources,
-  named models/approaches) are marked "to be verified".
-- Named models or approaches may be mentioned only as a lead, marked "to be verified",
-  without bibliographic details.
+  no data downloads, no PDFs stored in the repository.
+- Cite only publications verified in OpenAlex / Crossref; take metadata from the
+  database, never from memory. Never invent citations, authors, years, DOIs, code links
+  or parameter values. Unverified leads are listed as such.
+- Summaries in our own words; no long quotations.
+- Unsupported claims stay marked `TODO(literature)` / "to be verified".
 - State uncertainty openly; an open question is better than a confident guess.
 - Ask the user before any decision that narrows the project scope.
 - Work step by step; commit after each step and summarize briefly.
@@ -29,7 +34,7 @@ docs/models/candidates/   candidate model cards (<id>.md, from docs/templates/mo
 docs/review/              criteria, evaluation matrix, shared components, data needs, open questions
 docs/decisions/           ADRs (NNNN-short-title.md, from docs/templates/adr.md)
 docs/templates/           templates
-docs/research/            literature review (later phase)
+docs/research/            literature review: protocol, criteria, domains/*.md, catalogue
 docs/glossary.md          EN–CS terminology glossary
 docs/roadmap.md           project phases
 data/                     local data, not versioned (only README.md / .gitkeep)
