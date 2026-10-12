@@ -54,3 +54,16 @@ Rules:
 | open data | otevřená data | Data published under a licence permitting free reuse. | |
 | raster | rastr | Grid of values covering an area; natural input for CA. | |
 | resolution (spatial) | prostorové rozlišení | Ground size of one raster cell. | |
+
+## Modelling and evaluation
+
+| English term | Czech term | Short definition | Note |
+|---|---|---|---|
+| calibration | kalibrace | Tuning model parameters so that results match observations. | |
+| ensemble (of runs) | soubor simulací | Repeated runs of a stochastic model with different seeds; summarised e.g. as probability maps. | ? "ansámbl" is used in meteorology; prefer "soubor simulací" in UI |
+| mass conservation | zachování hmoty | Property that a quantity (e.g. water volume) is neither created nor lost by the rule. | |
+| parameter | parametr | Constant controlling the rule (not a per-cell state). | |
+| scenario | scénář | Specific combination of inputs and parameters to be simulated and compared. | |
+| update scheme | schéma aktualizace | Order in which cells are updated (synchronous / asynchronous). | |
+| validation | validace | Comparison of model results with independent observations. | vs. *verification* (ověření správnosti implementace) |
+| weighted score | vážené skóre | Weighted average of criterion scores used to rank candidates. | used in docs/review |
