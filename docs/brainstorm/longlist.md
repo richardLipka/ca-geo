@@ -18,6 +18,11 @@ Conventions:
 - Real events are mentioned as potential validation cases; details (dates, extent) are
   **to be verified**.
 
+> **Review note (2026-10-12, author decision):** water flow / flooding is treated as
+> **one model with scenarios**. Items HYD-01, HYD-02, HYD-03, URB-02, HYD-04 and LND-03
+> are evaluated together as `WAT` (`water-flow-flooding`) in
+> `docs/review/evaluation-matrix.md`. The items stay listed below as scenario ideas.
+
 ## Overview
 
 | Category | Code | Items |
