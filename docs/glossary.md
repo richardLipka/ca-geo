@@ -108,3 +108,22 @@ Czech names proposed for the UI; to be reviewed together with the model cards.
 | urban heat island | městský tepelný ostrov | Higher temperatures in cities compared to surroundings. | |
 | wildfire | požár v přírodě (lesní požár) | Uncontrolled fire in vegetation. | "lesní požár" common, but not all are in forests |
 | windthrow | polom (větrná kalamita) | Trees uprooted or broken by wind. | |
+
+## Additions from literature review round 1
+
+| English term | Czech term | Short definition | Note |
+|---|---|---|---|
+| aquifer | zvodeň (kolektor) | Rock or soil layer holding and transmitting groundwater. | "zvodeň" for the water body, "kolektor" for the layer |
+| carrying capacity | nosná kapacita (prostředí) | Maximum population a cell's habitat can sustain. | |
+| colonisation front | čelo kolonizace (šíření) | Moving boundary of the area occupied by a spreading population. | |
+| containment zone | pásmo omezení (ochranné pásmo) | Area with control measures to stop a spread. | ? term varies by domain (veterinary: "uzavřené pásmo") |
+| fetch | délka rozběhu větru (fetch) | Distance of open water over which wind blows and builds waves. | ? check hydrology usage |
+| groundwater | podzemní voda | Water in saturated soil and rock below the surface. | |
+| hydraulic head | piezometrická výška | Height to which groundwater would rise; drives groundwater flow. | ? "hydraulická výška" also used |
+| long-distance dispersal | šíření na velké vzdálenosti | Rare jumps far beyond the local neighbourhood. | |
+| oil spill | únik ropných látek, ropná skvrna | Release of oil onto water; "skvrna" for the floating slick. | |
+| pathogen | patogen (původce choroby) | Organism causing disease in plants or animals. | |
+| reimplementability | reimplementovatelnost | How well a model can be re-implemented from its publication. | used in docs/research |
+| shoreline erosion | abraze (eroze) břehů | Wave-driven erosion of lake, reservoir or sea shores. | "abraze" is the technical term for reservoirs |
+| snow drift | sněhová závěj, sněhový jazyk | Accumulation of wind-blown snow. | "jazyk" for elongated drift |
+| water table | hladina podzemní vody | Upper surface of the saturated zone. | |

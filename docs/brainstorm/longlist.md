@@ -9,12 +9,14 @@ Conventions:
 - Each item has a stable **ID** (`CAT-NN`) and a kebab-case **slug** that will become the
   file name of a model card if the item is selected.
 - ★ = confirmed project model (water flow / flooding, wildfire spread).
+  † = added after literature review round 1 (`docs/research/catalogue.md`); keys in
+  backticks refer to `/references.bib`.
   `CZ` = phenomenon with specific relevance for the Czech Republic.
 - *Data* lists layer types; concrete sources are only hints and are all **to be verified**
   (availability, licence, resolution, coverage). Source names are given as search leads,
   not as confirmed facts.
 - Named models or approaches are leads only, marked **(to be verified)**, without
-  bibliographic details. Literature is a later phase (`TODO(literature)`).
+  bibliographic details (original longlist). Items marked † cite verified references.
 - Real events are mentioned as potential validation cases; details (dates, extent) are
   **to be verified**.
 
@@ -22,20 +24,24 @@ Conventions:
 > **one model with scenarios**. Items HYD-01, HYD-02, HYD-03, URB-02, HYD-04 and LND-03
 > are evaluated together as `WAT` (`water-flow-flooding`) in
 > `docs/review/evaluation-matrix.md`. The items stay listed below as scenario ideas.
+>
+> **Review note (2026-10-12, literature round 1):** six phenomena with well-documented
+> CA models were added (marked †): HYD-08, HYD-09, HYD-10, ECO-09, ATM-05, EPI-04.
+> They are **not yet evaluated** in the evaluation matrix.
 
 ## Overview
 
 | Category | Code | Items |
 |---|---|---|
-| Hydrology and geomorphology | `HYD` | 7 |
+| Hydrology and geomorphology | `HYD` | 10 |
 | Natural hazards | `HAZ` | 5 |
-| Ecology and forestry | `ECO` | 8 |
+| Ecology and forestry | `ECO` | 9 |
 | Landscape and land use | `LND` | 3 |
 | City and infrastructure | `URB` | 4 |
-| Atmosphere and pollution | `ATM` | 4 |
-| Spread of diseases and populations | `EPI` | 3 |
+| Atmosphere and pollution | `ATM` | 5 |
+| Spread of diseases and populations | `EPI` | 4 |
 | Movement of people and traffic | `MOV` | 3 |
-| **Total** | | **37** |
+| **Total** | | **43** |
 
 ## HYD — Hydrology and geomorphology
 
@@ -84,6 +90,28 @@ Erosion and deposition reshape a braided or meandering channel over many floods.
 Landscape-evolution CA exist as leads (e.g. CAESAR-type models — to be verified).
 *Data:* DEM / river bathymetry, sediment properties, discharge series. *Why:* unusual,
 long time scale "landscape is alive" demo; scientifically demanding.
+
+**HYD-08 · Shoreline erosion of lakes and reservoirs** (`shoreline-erosion`) †
+Waves driven by wind over the open water surface erode the shore; exposure depends on
+fetch (distance of open water upwind) and bank resistance. Literature: cellular shoreline
+models with open code (`palermo2024newts`; coastline model `ashton2001formation`).
+*Data:* DEM / bathymetry, water level, wind climate, bank material. *Why:* bank abrasion of
+Czech reservoirs is a possible local case (to be verified); intuitive "wind × fetch" demo.
+
+**HYD-09 · Groundwater flow and water table** (`groundwater-flow`) †
+Hydraulic head is exchanged between neighbouring cells according to aquifer properties;
+pumping wells, rivers and recharge act as sources and sinks. Literature: macroscopic CA
+for groundwater with analytical benchmarks (`ravazzani2011macroscopic`). *Data:* DEM,
+hydrogeology (aquifer type, permeability — availability to be verified), river network,
+wells. *Why:* invisible process made visible; supports LND-03 (post-mining lakes) and
+drought scenarios; analytical test cases make it a good verification target.
+
+**HYD-10 · Oil and pollutant spill on water** (`oil-spill-spreading`) †
+A spill spreads on a water surface or along a river, driven by current and wind, while
+evaporating and sticking to banks. Literature: early water-surface CA
+(`karafyllidis1997oil`, class C). *Data:* water bodies / river network, flow velocity,
+wind, spill location. *Why:* civil-protection scenario on rivers and reservoirs; links to
+ATM-01 (dispersion) — CZ river accidents as possible cases (to be verified).
 
 ## HAZ — Natural hazards
 
@@ -173,6 +201,14 @@ vegetation (Turing-type patterns as a lead — to be verified). *Data:* DEM (slo
 rainfall; essentially synthetic for Europe. *Why:* beautiful emergent patterns;
 didactically strong, but little relevance to CZ landscapes.
 
+**ECO-09 · Plant pest and pathogen spread** (`plant-pest-spread`) †
+A pest or pathogen spreads between host cells by short-range dispersal with occasional
+long-distance jumps; containment zones slow it down. Literature: host-raster CA with open
+code (`white2017modelling`, `jones2021iteratively`). *Data:* host distribution (forest
+composition, orchards, crops), climate suitability, (to be verified) outbreak records.
+*Why:* relevant for CZ forests and agriculture (e.g. ash dieback, oak or fruit-tree
+pathogens — to be verified); demo of control strategies; close to ECO-01 and ECO-03.
+
 ## LND — Landscape and land use
 
 **LND-01 · Urban growth and suburbanisation** (`urban-growth`) `CZ`
@@ -250,6 +286,14 @@ temperature series, (to be verified) soil-moisture monitoring products for CZ. *
 highly topical in CZ; but mostly a cell-local water balance with weak neighbour
 interaction.
 
+**ATM-05 · Wind-blown snow and snow drifts** (`snow-drift`) †
+Wind lifts, transports and deposits snow, creating drifts behind obstacles and on lee
+slopes. Literature: lattice-gas CA with open code (`sharma2019understanding`,
+`kochanski2019rescal`) — 3D and micro-scale, so a 2D simplification would be needed.
+*Data:* DEM, wind direction and speed, land cover (forest edges, fences). *Why:* snow
+drifts on Czech mountain roads and ridges, link to avalanche release (HAZ-03); visually
+attractive; sand dunes are the non-CZ variant of the same mechanism.
+
 ## EPI — Spread of diseases and populations
 
 **EPI-01 · Spatial epidemic (SIR on a population grid)** (`spatial-epidemic`)
@@ -270,6 +314,15 @@ risk spreads with hosts and shifts with climate. *Data:* land cover, DEM, climat
 series, (to be verified) disease incidence statistics. *Why:* CZ is known for
 tick-borne encephalitis (to be verified); mostly suitability mapping rather than
 spread — CA fit questionable.
+
+**EPI-04 · Population dispersal and colonisation** (`population-dispersal`) †
+Population per cell grows towards a local carrying capacity and emigrates to neighbouring
+cells (occasionally further), so a colonisation front advances over a habitat raster.
+Literature: population CA with open code (`bradshaw2021stochastic`,
+`gregoriodesouza2021reassessing`). *Data:* habitat suitability / carrying-capacity raster
+derived from land cover and DEM. *Why:* one generic mechanism for the return of species to
+CZ (beaver, wolf, jackal — to be verified), historical settlement expansion or
+recolonisation after disturbance; reusable by ECO-04 and ECO-07.
 
 ## MOV — Movement of people and traffic
 
