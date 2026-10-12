@@ -67,3 +67,44 @@ Rules:
 | update scheme | schéma aktualizace | Order in which cells are updated (synchronous / asynchronous). | |
 | validation | validace | Comparison of model results with independent observations. | vs. *verification* (ověření správnosti implementace) |
 | weighted score | vážené skóre | Weighted average of criterion scores used to rank candidates. | used in docs/review |
+
+## Phenomena (from the longlist)
+
+Czech names proposed for the UI; to be reviewed together with the model cards.
+
+| English term | Czech term | Short definition | Note |
+|---|---|---|---|
+| accessibility | dostupnost | How far / how fast a place can be reached from a source. | |
+| African swine fever (ASF) | africký mor prasat (AMP) | Viral disease of pigs and wild boar. | |
+| air pollutant dispersion | rozptyl znečišťujících látek | Spreading of pollutants in the air by wind and mixing. | |
+| avalanche | lavina | Rapid flow of snow down a slope. | |
+| bark beetle | kůrovec (lýkožrout smrkový) | Insect attacking spruce; cause of large-scale forest dieback. | "kůrovec" in UI, species name in docs |
+| bark-beetle outbreak | kůrovcová kalamita | Mass outbreak of bark beetles killing forest stands. | |
+| beaver dam | bobří hráz | Dam built by beavers on a stream. | |
+| cold-air pooling | stékání a hromadění studeného vzduchu | Night-time drainage of cold air into valleys. | ? shorter UI label needed; "jezero studeného vzduchu" for the pool itself |
+| dam breach | protržení hráze | Failure of a dam releasing stored water. | |
+| debris flow | mura (bahnokamenný proud) | Fast flow of water-saturated debris in a channel. | ? check usage |
+| erosion | eroze | Removal of soil by water or wind. | |
+| evacuation | evakuace | Moving people out of a threatened area. | |
+| fishpond | rybník | Artificial pond for fish farming, typical of Czech landscape. | |
+| flash flood | přívalová povodeň | Rapid flood caused by short intense rainfall. | |
+| flood | povodeň | Temporary rise of water flooding normally dry land. | |
+| floodplain | údolní niva | Flat land along a river regularly flooded. | |
+| flood zone | záplavové území | Officially designated area flooded by a given flood. | |
+| frost hollow | mrazová kotlina | Depression where cold air collects, causing frequent frost. | |
+| habitat connectivity | konektivita (propojenost) krajiny | Ability of animals to move between habitats. | |
+| heavy gas | těžký plyn | Gas denser than air, flowing along the ground. | |
+| inundation | zaplavení, rozliv | Area or process of water spreading over land. | |
+| invasive species | invazní druh | Non-native species spreading and causing harm. | |
+| landslide | sesuv (svahový sesuv) | Downslope movement of soil or rock mass. | |
+| lava flow | lávový proud | Flow of molten rock from a vent. | |
+| muddy flood | bahnitá povodeň, erozní smyv | Runoff carrying large amounts of eroded soil from fields. | ? settle term |
+| pluvial flooding | přívalové zaplavení z dešťů (pluviální povodeň) | Flooding caused directly by rainfall, not by a river. | ? settle term |
+| runoff (surface) | povrchový odtok | Water flowing over the ground surface. | |
+| snowmelt | tání sněhu | Melting of snow cover releasing water. | |
+| succession | sukcese | Natural sequence of vegetation stages on a site. | |
+| suburbanisation | suburbanizace | Growth of residential areas around cities. | |
+| tick-borne encephalitis | klíšťová encefalitida | Viral disease transmitted by ticks. | |
+| urban heat island | městský tepelný ostrov | Higher temperatures in cities compared to surroundings. | |
+| wildfire | požár v přírodě (lesní požár) | Uncontrolled fire in vegetation. | "lesní požár" common, but not all are in forests |
+| windthrow | polom (větrná kalamita) | Trees uprooted or broken by wind. | |
