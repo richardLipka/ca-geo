@@ -141,3 +141,21 @@ Czech names proposed for the UI; to be reviewed together with the model cards.
 | snow redistribution (gravitational) | gravitační přemisťování sněhu | Sliding or sloughing of snow from steep slopes. | |
 | ventilation corridor | ventilační (provětrávací) koridor | Path of cold or fresh air flowing into a town. | |
 | voter model | voličský model | Opinion model where agents copy a neighbour's opinion. | ? term rarely used in Czech |
+
+## Engine and simulation (architecture)
+
+| English term | Czech term | Short definition | Note |
+|---|---|---|---|
+| arrival time | čas příchodu (čela) | Time when a front (fire, water, population) first reaches a cell. | UI output |
+| backend | výpočetní backend | Implementation executing the engine (CPU or GPU). | technical, not for UI |
+| boundary flux | tok přes okraj | Amount leaving or entering the domain across its edge. | |
+| engine | výpočetní jádro (engine) | Software running the cellular automaton. | |
+| flux | tok | Amount exchanged between two cells per time step. | |
+| front | čelo | Moving boundary of a spreading process. | |
+| intervention | zásah | User action changing the simulation (ignite, dam, barrier). | UI |
+| mass balance | bilance hmoty | Check that inputs − outputs = change of storage. | UI (water) |
+| maximum envelope | obálka maxim | Per-cell maximum over the run (e.g. max water depth). | |
+| probability map | mapa pravděpodobnosti | Share of ensemble runs in which a cell was affected. | UI |
+| replay | přehrání (běhu) | Exact re-run from stored seed, inputs and interventions. | |
+| scenario | scénář | (see above) | |
+| stage | fáze kroku | One processing step within a simulation time step. | technical |
