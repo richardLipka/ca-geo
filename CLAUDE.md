@@ -6,17 +6,21 @@ ca-geo is a demonstration toolkit for cellular automata (CA) simulations over ge
 (raster) data, running in the browser. Confirmed models: water flow / flooding and wildfire
 spread. Other models are being selected.
 
-## Current phase: LITERATURE REVIEW (documentation only)
+## Current phase: ARCHITECTURE DESIGN (documentation only)
 
-Exploration (longlist, criteria, evaluation matrix) is done up to the proposed grouping
-in `docs/review/evaluation-matrix.md`, which is **paused, pending author approval**;
-the literature review may change it. Current work: broad survey of geographic CA,
-see `docs/research/search-protocol.md` and `docs/research/reimplementability-criteria.md`.
+Literature review rounds 1–2 are done (`docs/research/catalogue.md`). Working model
+selection: revision 2 in `docs/review/evaluation-matrix.md` (6 core, 8 extension;
+formal decision pending as ADR 0001). Current work: CA engine architecture
+(`docs/architecture/`), collecting papers (`literature/`) and reference implementations.
 
 Rules — follow strictly:
 
-- No model implementation code, no dependencies (no `package.json`, no `npm install`),
-  no data downloads, no PDFs stored in the repository.
+- No implementation code yet, no dependencies (no `package.json`, no `npm install`).
+  Interface sketches in architecture docs are allowed.
+- Downloads allowed only for: openly accessible papers (`literature/`, see its README —
+  only redistributable licences in `literature/open/` are committed), reference test data
+  (`data/reference/`, not committed) and shallow clones of reference implementations
+  (`external/`, not committed, never executed without review).
 - Cite only publications verified in OpenAlex / Crossref; take metadata from the
   database, never from memory. Never invent citations, authors, years, DOIs, code links
   or parameter values. Unverified leads are listed as such.
@@ -35,9 +39,12 @@ docs/review/              criteria, evaluation matrix, shared components, data n
 docs/decisions/           ADRs (NNNN-short-title.md, from docs/templates/adr.md)
 docs/templates/           templates
 docs/research/            literature review: protocol, criteria, domains/*.md, catalogue
+docs/architecture/        CA engine architecture
+literature/               downloaded papers (open/ versioned, restricted/ local) + manifest
 docs/glossary.md          EN–CS terminology glossary
 docs/roadmap.md           project phases
 data/                     local data, not versioned (only README.md / .gitkeep)
+external/                 local clones of reference implementations, not versioned
 packages/  apps/          future code (README only for now)
 references.bib            BibTeX, filled in during the literature phase
 ```
