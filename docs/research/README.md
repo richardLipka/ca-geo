@@ -10,6 +10,7 @@ Broad survey of cellular-automata models tied to geography, focused on
 | `domains/*.md` | Per-domain survey: search log, model families, catalogue, entries, leads, round-2 changes |
 | `domains/new-phenomena.md` | Horizon scan of phenomena outside the longlist (round 2) |
 | `catalogue.md` | Cross-domain summary for selecting models to implement |
+| `implementations.md` | Available implementations of the selected models, architecture notes, clones, reference data, licence facts |
 
 Workflow rules:
 

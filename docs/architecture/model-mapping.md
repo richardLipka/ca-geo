@@ -14,7 +14,7 @@ model cards, with provenance).
 | HAZ-01 wildfire | ○ | ● | | ○ | | ○ | ○ | | | | | fixed (event for PROPAGATOR variant) | yes | square |
 | WAT water | ● | | ● | ● | | | ○ | | | | | adaptive / converge | no | square |
 | EPI-04 population | ● | | ● | ○ | | ● | | | | | | fixed | yes | square (graph for EPI-05 variant) |
-| ATM-02 cold air | ● | | ● | ○ | | | | | | | | fixed (adaptive for KLAM-like) | no | square |
+| ATM-02 cold air | ● | | ● | ○ | | | | | | | | fixed (adaptive for SAGA / KLAM-like) | no | square |
 | ECO-01 bark beetle | ○ | ● | | ○ | | ○ | | | | | | fixed (year) | yes | square (hex variant) |
 | LND-01 urban growth | ● | ● | | ● | | | | | | ● | ● | fixed (year) | yes | square |
 | MOV-03 accessibility | ○ | ○ | | | | | ● | | | | | event (or converge) | no | square |
@@ -44,6 +44,8 @@ models only) and `convolve` (ECO-09) — these are the candidates to implement l
   `reduce` count burning (stop condition).
 - **Variant:** PROPAGATOR-style — `queue` with stochastic time-to-ignition per neighbour
   (event time policy) — same layers.
+- **Variant:** Cell2Fire-style — fixed fire period, per-neighbour progress accumulator in a
+  slot layer (`stencil`), ignition when progress reaches the neighbour distance.
 - **Observers:** arrival time, burnt area per step; **ensembles** → burn probability map.
 - **Interventions:** ignite, firebreak (set non-burnable), change wind.
 - **URB-03 scenario:** buildings as fuel classes; same stages with a different LUT.
@@ -96,6 +98,8 @@ models only) and `convolve` (ECO-09) — these are the candidates to implement l
   limited so outgoing shares ≤ 1, gather; open boundaries.
 - **Variant (KLAM-like):** `flux` on face momentum (gravity of the cold-layer top,
   friction, optional ambient wind) + donor-cell advection; adaptive Δt.
+- **Variant (SAGA Cold Air Flow):** Moore multiple-flow-direction outflow proportional to
+  drop / distance, gravity-current velocity, adaptive Δt — the same `flux` machinery as WAT.
 - **Scenario:** urban ventilation corridors (buildings as resistance classes).
 - **Interventions:** change land use (e.g. build / remove forest), night duration.
 

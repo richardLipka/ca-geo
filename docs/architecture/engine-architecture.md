@@ -273,7 +273,9 @@ type TimePolicy =
 
 - Adaptive Δt is computed from a `reduce` stage at the start of the step (e.g. minimum of
   the CFL / velocity limits), clamped and multiplied by a safety factor; parameter values
-  come from the template model, not from the engine.
+  come from the template model, not from the engine. Δt may be **snapped** so that
+  output times are hit exactly (as in caflood, `docs/research/implementations.md`); if
+  nothing moves, Δt may grow up to `dtMax` (as in the SAGA cold-air tool).
 - The **display clock** is separate: the runtime maps model time to animation frames
   (e.g. "1 s of animation = 10 min of model time") and skips or interpolates frames (R4.6).
 
@@ -447,7 +449,28 @@ engine stage when their source changed (R7.5).
 | Model | Each model against its template's published results (fire shapes, SLEUTH demo outputs, Flow-Py tests, Theis solution, EA flood benchmarks, lava benchmarks, FFCA evacuation curves) | analysis benchmark runner |
 | i18n | Key parity of `cs` / `en` catalogues | i18n |
 
-## 16. Risks and open questions
+## 16. Lessons from reference implementations
+
+From `docs/research/implementations.md` (source code read, paraphrased):
+
+| Implementation | Observation | Consequence for the engine |
+|---|---|---|
+| caflood (WCA2D) | Two-phase edge outflow → cell update; adaptive Δt from max velocity, snapped to output times | Confirms `flux` primitive and adaptive / snapped time policy |
+| PROPAGATOR | Event-driven min-heap per realisation; external events (wind change, firelines) cut the run into windows | Confirms `queue` + controllers that split runs into windows; ensemble dimension inside one run is an optimisation to consider |
+| Cell2Fire | Fixed fire period with per-neighbour progress accumulators | Third fire variant expressible as `stencil` + slot layer (progress per neighbour) |
+| SAGA Cold Air Flow | Moore multiple-flow-direction outflow, CFL-like adaptive Δt, open / closed edges | ATM-02 shares the WAT outflow machinery; adaptive Δt also for ATM-02 |
+| MOLASSES | Active list + parent code, pulses, explicit volume check | Confirms `front` primitive and mass observers |
+| Flow-Py | Path-wise traversal per release cell, tile-level multiprocessing | `front` must support per-release-cell independence (parallel workers) |
+| dispeRse | Frontier list updated in place → order-dependent results | Our gather-only rule avoids this; arrival-time output is a useful default observer |
+| GRASS `r.sim.water` | Counter-based random stream per walker, independent of thread count | Supports ADR 0004 |
+| PoPS | Pluggable dispersal kernels; separate seeded generator per process | Kernel library for `convolve` / `jump`; RNG key includes stage id (≈ per-process stream) |
+| WebFlood | WebGL ping-pong textures, GPU reduction for water-volume check, in-browser GeoTIFF loading | Browser feasibility precedent for the GPU backend and geodata loading |
+| SLEUTH | Own seeded RNG, yearly Monte Carlo, expected outputs in the distribution | Benchmark oracle for LND-01 |
+
+No validated geographic CA of any selected model exists in JavaScript; the engine is
+new in this respect, but every primitive has a working reference in another language.
+
+## 17. Risks and open questions
 
 | # | Topic | Question / risk | Proposed handling |
 |---|---|---|---|
