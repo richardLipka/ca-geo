@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | proposed |
+| Status | accepted (2026-10-13) |
 | Date | 2026-10-13 |
 | Deciders | Richard Lipka (author) |
 | Related | `docs/architecture/engine-architecture.md` §10 |
@@ -36,7 +36,7 @@ Cons: awkward for reductions, integer atomics and multi-output stages; WebGPU su
 Pros: no duplication. Cons: design effort before knowing the real kernel shapes; risk of a
 leaky abstraction.
 
-## Decision (proposed)
+## Decision
 
 Option B. The CPU backend implements every primitive and is the reference; the WebGPU
 backend implements `map`, `stencil`, `flux`, `reduce`, `convolve` (and later `jump`,

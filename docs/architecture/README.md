@@ -1,6 +1,6 @@
 # Architecture
 
-Design of the ca-geo cellular-automata engine (proposal, 2026-10-13).
+Design of the ca-geo cellular-automata engine (accepted baseline, 2026-10-13).
 
 | File | Content |
 |---|---|
@@ -8,5 +8,5 @@ Design of the ca-geo cellular-automata engine (proposal, 2026-10-13).
 | `engine-architecture.md` | Architecture: packages, core concepts, stage primitives, time, RNG, boundaries, backends, runtime API, geodata pipeline, testing, open questions |
 | `model-mapping.md` | Coverage check: every selected model expressed with the engine primitives |
 
-Decisions: `docs/decisions/0001`–`0004` (status *proposed*).
+Decisions: `docs/decisions/0001`–`0006` (accepted).
 Reference implementations and their engine designs: `docs/research/implementations.md`.

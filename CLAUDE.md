@@ -9,8 +9,8 @@ spread. Other models are being selected.
 ## Current phase: ARCHITECTURE DESIGN (documentation only)
 
 Literature review rounds 1–2 are done (`docs/research/catalogue.md`). Working model
-selection: revision 2 in `docs/review/evaluation-matrix.md` (6 core, 8 extension;
-formal decision pending as ADR 0001). Current work: CA engine architecture
+selection accepted (ADR 0001: 6 core, 8 extension). Architecture baseline accepted
+(ADRs 0002–0006, `docs/architecture/`). Current work: CA engine architecture
 (`docs/architecture/`), collecting papers (`literature/`) and reference implementations.
 
 Rules — follow strictly:
@@ -59,12 +59,18 @@ references.bib            BibTeX, filled in during the literature phase
 
 ## Planned stack (do NOT install yet)
 
-- JavaScript (ES modules), browser-first.
+- **TypeScript** (strict, ES modules), browser-first, also Node (ADR 0005).
 - npm workspaces (`packages/*` shared libraries, `apps/*` demos).
 - Vite (dev server / build), Vitest (tests).
 
 Future UI rule: **no hard-coded user-facing strings**. All UI texts go through translation
 catalogues for `cs` and `en`; both catalogues must stay in sync (same keys).
+
+## Licence
+
+MIT (`LICENSE`, ADR 0006). **Clean-room rule:** never copy or translate code from GPL /
+EUPL / unlicensed projects (`external/`); read them only to understand algorithms and run
+them as external oracles. MIT / BSD / Apache code may be reused with its notice kept.
 
 ## Commit conventions
 

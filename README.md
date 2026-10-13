@@ -6,36 +6,34 @@ The goal is to show — interactively, in a web browser — how simple local rul
 on a raster grid can reproduce spatial phenomena such as water flow, flooding or wildfire
 spread, driven by real open geodata.
 
-## Current phase: literature review
+## Current phase: architecture design
 
-The exploratory phase produced a longlist, criteria and an evaluation (scope grouping
-pending approval). The project is now in a **broad literature review** of geographic CA
-models, focused on how well published models can be re-implemented
-(see `docs/research/`).
+Done so far (documentation only, no implementation code yet):
 
-The exploratory phase produced documentation only:
+- exploration — longlist of 47 phenomena, criteria, evaluation (`docs/brainstorm/`,
+  `docs/review/`),
+- literature review — two rounds, 418 verified references scored by reimplementability
+  (`docs/research/`, `references.bib`), inventory of reference implementations,
+- **accepted model scope** (`docs/decisions/0001-model-scope.md`),
+- **accepted engine architecture** (`docs/architecture/`, ADRs 0002–0006).
 
-- a brainstormed longlist of phenomena suitable for CA simulation,
-- evaluation criteria and an evaluation of the candidates,
-- candidate model cards for the selected models,
-- an overview of shared components and data needs,
-- open questions for the later literature review,
-- a scope decision (ADR) and a roadmap.
+Selected models:
 
-No model implementation, no dependencies and no downloaded data exist yet. Literature and
-concrete published models will be added in the next phase (see `docs/research/`).
-
-Models confirmed so far:
-
-1. **Water flow / flooding**
-2. **Wildfire spread**
-
-Further models are being selected in this phase.
+| Core | Extension |
+|---|---|
+| Water flow / flooding ★ | Accessibility front |
+| Wildfire spread ★ | Lava flow |
+| Population dispersal | Plant pest / pathogen spread |
+| Cold-air pooling | Landslide / avalanche / rockfall runout |
+| Bark-beetle outbreak | Pedestrian evacuation |
+| Urban growth | Soil erosion |
+| | Pollutant dispersion |
+| | Groundwater flow |
 
 ## Planned direction
 
-- **JavaScript** implementation running **in the browser** (planned stack: npm workspaces,
-  Vite, Vitest).
+- **TypeScript** implementation running **in the browser** and in Node (planned stack:
+  npm workspaces, Vite, Vitest; WebGPU acceleration with a CPU reference backend).
 - **Open geodata** with a focus on the **Czech Republic and the EU**.
 - **Bilingual demos (cs/en)** — all UI texts via translation catalogues; see
   `docs/glossary.md` for the EN–CS terminology.
@@ -44,17 +42,20 @@ Further models are being selected in this phase.
 
 ```
 docs/
-  brainstorm/          free-form ideas, longlist
-  models/candidates/   candidate model cards
-  review/              criteria, evaluation, shared components, data needs, open questions
-  decisions/           architecture / scope decisions (ADR)
+  brainstorm/          longlist of phenomena
+  models/candidates/   model cards
+  review/              criteria, evaluation matrix
+  research/            literature survey, catalogue, implementations
+  architecture/        engine requirements, architecture, model mapping
+  decisions/           ADRs
   templates/           document templates
-  research/            literature review (later phase)
   glossary.md          EN–CS terminology glossary
+literature/            downloaded papers (PDFs local only, never in git) + manifest
 data/                  local data (not versioned, except README files)
-packages/              future shared libraries (CA core, geodata, visualization)
-apps/                  future web demos
-references.bib         bibliography (filled in during the literature phase)
+external/              local clones of reference implementations (not versioned)
+packages/              future TypeScript libraries (core, backends, geodata, models, …)
+apps/                  future web demos (cs/en)
+references.bib         bibliography
 ```
 
 ## Contributing conventions
@@ -66,3 +67,9 @@ references.bib         bibliography (filled in during the literature phase)
 ## Remote
 
 Planned remote: GitLab at `https://gitlab.kiv.zcu.cz/lipka/` (not configured yet).
+
+## Licence
+
+MIT — see `LICENSE`. Models are re-implemented from their publications; copyleft
+reference implementations are used only as algorithm references and test oracles
+(`docs/decisions/0006-licence.md`).

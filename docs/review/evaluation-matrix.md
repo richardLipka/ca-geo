@@ -138,8 +138,7 @@ Merged as scenarios (no separate card): URB-03 → HAZ-01, HAZ-03 → HAZ-02, EC
 
 ## Revision 2 — re-evaluation after literature rounds 1–2 (2026-10-13)
 
-**Status: proposal.** Supersedes the revision-1 grouping above as the working selection
-for the architecture phase; the formal scope decision will be recorded in ADR 0001.
+**Status: accepted** (ADR 0001, 2026-10-13). Supersedes the revision-1 grouping above.
 
 Changes against revision 1:
 

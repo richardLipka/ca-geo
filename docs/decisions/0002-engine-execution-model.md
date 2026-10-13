@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | proposed |
+| Status | accepted (2026-10-13) |
 | Date | 2026-10-13 |
 | Deciders | Richard Lipka (author) |
 | Related | `docs/architecture/engine-architecture.md` §5–§7, `docs/architecture/model-mapping.md` |
@@ -39,7 +39,7 @@ Pros: proven abstractions. Cons: no JavaScript / browser implementations found
 (`docs/research/implementations.md`); still needs Option B-like primitives for queue and
 agent processes.
 
-## Decision (proposed)
+## Decision
 
 Option B, with a `custom` stage as a CPU-only escape hatch for prototyping. Parallel
 stages are **gather-only**; scatter-like processes are written as two-pass `flux` stages

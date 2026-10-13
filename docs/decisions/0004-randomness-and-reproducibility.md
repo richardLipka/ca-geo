@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | proposed |
+| Status | accepted (2026-10-13) |
 | Date | 2026-10-13 |
 | Deciders | Richard Lipka (author) |
 | Related | `docs/architecture/engine-architecture.md` §8 |
@@ -32,7 +32,7 @@ Pros: stateless, order-independent, identical integer output on CPU and GPU, tri
 ensemble seeding and replay. Cons: needs a hash of good statistical quality that is cheap
 in WGSL (32-bit integer operations only).
 
-## Decision (proposed)
+## Decision
 
 Option C. Candidate generators (Philox-style 32-bit, or a strong 32-bit integer hash) will
 be compared for statistical quality and WGSL cost before the choice is fixed in this ADR.

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | proposed |
+| Status | accepted (2026-10-13) |
 | Date | 2026-10-13 |
 | Deciders | Richard Lipka (author) |
 | Related | `docs/review/evaluation-matrix.md` (revision 2), `docs/review/criteria.md`, `docs/research/catalogue.md`, `docs/architecture/` |
@@ -34,7 +34,7 @@ dispersion). Cons: larger extension set.
 Top N by weighted score. Cons: ignores diversity of mechanisms and Czech relevance
 (would include e.g. lava without the portfolio argument made explicit).
 
-## Decision (proposed)
+## Decision
 
 Option B.
 
@@ -55,6 +55,6 @@ Option B.
   from a fixed, literature-backed set; each model has a primary reference for its card.
 - **Negative / costs:** the extension set is large; hex and graph topologies and
   multi-clock coupling are deferred.
-- **Follow-up:** author approval (status → accepted); write model cards for the selected
+- **Follow-up:** write model cards for the selected
   models from `docs/templates/model-candidate.md`; revisit when round-3 full-text reading
   changes a template's class.

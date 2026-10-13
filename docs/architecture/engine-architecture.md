@@ -1,11 +1,11 @@
 # CA engine architecture (proposal)
 
-**Status:** proposal, 2026-10-13. Key decisions are recorded as proposed ADRs
-(`docs/decisions/0002`–`0004`). Requirements: `requirements.md` (IDs `R…` below).
+**Status:** accepted baseline, 2026-10-13. Key decisions: ADRs `docs/decisions/0002`–`0006`
+(execution model, backends, RNG, TypeScript, MIT licence). Requirements: `requirements.md` (IDs `R…` below).
 Coverage check per model: `model-mapping.md`.
 
-Interface sketches use TypeScript notation for readability only; the implementation
-language details (plain JS + JSDoc types vs. TypeScript) are an open question (§16).
+Interface sketches are TypeScript, the implementation language (ADR 0005); they are
+sketches, not final signatures.
 
 ## 1. Purpose and scope
 
@@ -478,8 +478,8 @@ new in this respect, but every primitive has a working reference in another lang
 | Q2 | Kernel duplication | Two bodies (JS + WGSL) per GPU stage cost effort and may diverge. | Equivalence tests; GPU only where needed; revisit DSL after 3–4 models. |
 | Q3 | Float determinism | CPU f32 emulation vs GPU f32 can differ (fused operations, transcendentals). | Determinism guaranteed per backend; cross-backend within tolerance. |
 | Q4 | Cross-origin isolation | `SharedArrayBuffer` needs COOP/COEP headers; static hosting may not allow it. | Design works with transferable copies; shared memory is an optimisation. |
-| Q5 | Language | Plain JS + JSDoc vs TypeScript. | Decide before the first package (ADR). |
-| Q6 | Licence of ca-geo | GPL reference code (e.g. some templates) may only be used as algorithm reference unless ca-geo is GPL-compatible. | Decide licence early; see `docs/research/implementations.md`. |
+| Q5 | Language | — | **Resolved:** TypeScript (ADR 0005). |
+| Q6 | Licence of ca-geo | — | **Resolved:** MIT with clean-room rule; copyleft code only as reference / oracle (ADR 0006). |
 | Q7 | Geodata libraries | GeoTIFF / reprojection / rasterisation libraries and their size. | Evaluate in the geodata phase. |
 | Q8 | Hex and graph topologies | Effort vs value. | Keep the slot abstraction; implement square first; hex / graph only if a selected model needs them. |
 | Q9 | Event-driven fire (PROPAGATOR) vs synchronous fire (Alexandridis) | Two engines for one phenomenon? | Both are expressible (`queue` vs `stencil`); start with the synchronous variant. |
