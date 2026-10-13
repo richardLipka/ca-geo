@@ -1,8 +1,8 @@
 # Literature manifest
 
 Downloaded papers for the selected models (2026-10-13). Keys refer to `/references.bib`.
-Status: **open** = in `open/` (versioned, redistributable licence); **restricted** = in
-`restricted/` (local only); **web** = web page only; **manual** = no legal free copy could be
+Status: **open** = in `open/` (redistributable licence); **restricted** = in
+`restricted/` (personal use only); **web** = web page only; **manual** = no legal free copy could be
 fetched automatically (paywalled, or open access behind a bot check — download by hand);
 **failed** = a legal free copy exists but automated download was blocked.
 

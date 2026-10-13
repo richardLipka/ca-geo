@@ -18,7 +18,7 @@ Rules — follow strictly:
 - No implementation code yet, no dependencies (no `package.json`, no `npm install`).
   Interface sketches in architecture docs are allowed.
 - Downloads allowed only for: openly accessible papers (`literature/`, see its README —
-  only redistributable licences in `literature/open/` are committed), reference test data
+  PDFs are never committed), reference test data
   (`data/reference/`, not committed) and shallow clones of reference implementations
   (`external/`, not committed, never executed without review).
 - Cite only publications verified in OpenAlex / Crossref; take metadata from the
@@ -40,7 +40,7 @@ docs/decisions/           ADRs (NNNN-short-title.md, from docs/templates/adr.md)
 docs/templates/           templates
 docs/research/            literature review: protocol, criteria, domains/*.md, catalogue
 docs/architecture/        CA engine architecture
-literature/               downloaded papers (open/ versioned, restricted/ local) + manifest
+literature/               downloaded papers (PDFs local only, never in git) + manifest
 docs/glossary.md          EN–CS terminology glossary
 docs/roadmap.md           project phases
 data/                     local data, not versioned (only README.md / .gitkeep)

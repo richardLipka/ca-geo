@@ -23,10 +23,9 @@ desktop.ini
 .idea/
 *.swp
 
-# Literature: only openly licensed PDFs are versioned (literature/open/);
-# other downloaded papers stay local (see literature/README.md)
-literature/restricted/**
-!literature/restricted/README.md
+# PDFs are never versioned (author decision); papers stay local in literature/
+*.pdf
+*.PDF
 
 # Local clones of third-party implementations (reference only, not versioned)
 external/**
