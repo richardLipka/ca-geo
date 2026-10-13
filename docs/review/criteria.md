@@ -42,6 +42,40 @@ Additional rules (proposed):
   different categories and mechanisms (flow vs. spread vs. growth), so that the shared
   core is tested on diverse models. Deviations from the ranking are justified in the ADR.
 
+## Revision 2 — literature support (2026-10-13)
+
+After literature rounds 1–2 a ninth criterion was added and the weights were revised
+(proposal; the author may adjust). Revision-1 weights are kept above for traceability;
+`evaluation-matrix.md` shows both scores.
+
+| Code | Criterion | Weight rev. 1 | Weight rev. 2 | Change |
+|---|---|---|---|---|
+| `C1` | Suitability for CA | 20 | 20 | — |
+| `C2` | Open data for CZ/EU | 15 | 15 | — |
+| `C3` | Demonstration and didactic value | 15 | 15 | — |
+| `C4` | Implementation complexity | 10 | **5** | partly captured by C9 (complete rule, open code) |
+| `C5` | Computational cost in the browser | 10 | 10 | — |
+| `C6` | Validation against reality | 10 | **5** | partly captured by C9 (reference results, benchmarks) |
+| `C7` | Reuse of shared components | 10 | 10 | — |
+| `C8` | Visual attractiveness | 10 | 10 | — |
+| `C9` | **Literature support / reimplementability** | — | **10** | new |
+| | **Total** | 100 | 100 | |
+
+`C9` is derived from the best reimplementability class of a reference that can serve as
+the template for the model (`docs/research/catalogue.md`):
+
+| Score | Description |
+|---|---|
+| 1 | No CA (or CA-like grid) model found in the literature. |
+| 2 | Best template is class D, or only non-CA physics models exist. |
+| 3 | Best template is class C, or a class B model that is not a CA (e.g. individual-based). |
+| 4 | Best template is class B, or class A that is not strictly a CA (e.g. cost-distance). |
+| 5 | Best template is class A: complete rule, parameters, open code and reference results. |
+
+Rationale: the project now has evidence on how much of each model can be taken over
+from published, checkable work; this lowers implementation risk and gives validation
+targets, so it gets its own weight, taken from the two criteria it overlaps with.
+
 ## Rationale for the weights
 
 - **`C1` Suitability for CA (20)** — the project is about cellular automata; a phenomenon

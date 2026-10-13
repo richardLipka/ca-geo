@@ -9,7 +9,7 @@ Conventions:
 - Each item has a stable **ID** (`CAT-NN`) and a kebab-case **slug** that will become the
   file name of a model card if the item is selected.
 - ★ = confirmed project model (water flow / flooding, wildfire spread).
-  † = added after literature review round 1 (`docs/research/catalogue.md`); keys in
+  † = added after literature review rounds 1–2 (`docs/research/catalogue.md`); keys in
   backticks refer to `/references.bib`.
   `CZ` = phenomenon with specific relevance for the Czech Republic.
 - *Data* lists layer types; concrete sources are only hints and are all **to be verified**
@@ -28,20 +28,28 @@ Conventions:
 > **Review note (2026-10-12, literature round 1):** six phenomena with well-documented
 > CA models were added (marked †): HYD-08, HYD-09, HYD-10, ECO-09, ATM-05, EPI-04.
 > They are **not yet evaluated** in the evaluation matrix.
+>
+> **Review note (2026-10-13, literature round 2, author decision):** only phenomena with
+> at least one verified class A/B reference were added: HAZ-06, EPI-05, SOC-01, SOC-02
+> (new items) and three scenarios (rockfall → HAZ-02, cold-air ventilation of towns →
+> ATM-02, gravitational snow redistribution → ATM-05). Candidates supported only by
+> class C references (e.g. mining subsidence, raised-bog patterning) stay in
+> `docs/research/domains/new-phenomena.md`.
 
 ## Overview
 
 | Category | Code | Items |
 |---|---|---|
 | Hydrology and geomorphology | `HYD` | 10 |
-| Natural hazards | `HAZ` | 5 |
+| Natural hazards | `HAZ` | 6 |
 | Ecology and forestry | `ECO` | 9 |
 | Landscape and land use | `LND` | 3 |
 | City and infrastructure | `URB` | 4 |
 | Atmosphere and pollution | `ATM` | 5 |
-| Spread of diseases and populations | `EPI` | 4 |
+| Spread of diseases and populations | `EPI` | 5 |
 | Movement of people and traffic | `MOV` | 3 |
-| **Total** | | **43** |
+| Society and culture | `SOC` | 2 |
+| **Total** | | **47** |
 
 ## HYD — Hydrology and geomorphology
 
@@ -127,6 +135,8 @@ Cells become unstable when slope and saturation exceed a threshold; the released
 travels downslope and stops in flatter terrain. *Data:* DEM, geology / soil,
 soil moisture or rainfall, (to be verified) national slope-instability register.
 *Why:* a real hazard in the Carpathian part of CZ (flysch); combines trigger and runout.
+*Scenario (round 2):* rockfall runout with the same energy-line mechanics
+(`wichmann2017gpp`, `damboise2022flowpy`).
 
 **HAZ-03 · Snow avalanche runout** (`avalanche-runout`) `CZ`
 Snow released in steep starting zones flows down the slope; the model shows the reach of
@@ -146,6 +156,13 @@ Lava spreads downslope, cools and solidifies, changing the terrain for later flo
 CA lava models are a known lead (to be verified). *Data:* DEM of a volcano, vent
 position, effusion rate. *Why:* textbook CA demo, but no relevance for CZ (EU: Italy,
 Iceland, Canary Islands) — included for completeness and as a didactic counterpoint.
+
+**HAZ-06 · Collapse sinkholes** (`sinkhole-collapse`) †
+Cavities below the surface grow and collapse; collapses weaken neighbouring cells, so
+sinkholes cluster and occasionally cascade. Literature: sinkhole CA with full rules
+(`yizhaq2017scalefree`, class B). *Data:* DEM, karst / undermined areas (to be verified),
+sinkhole inventories (to be verified). *Why:* simple, striking threshold-and-cascade demo;
+CZ relevance limited to karst areas and old mining (to be verified).
 
 ## ECO — Ecology and forestry
 
@@ -272,6 +289,9 @@ basins, creating frost hollows. *Data:* DEM, land cover (forest vs. open land),
 (to be verified) temperature station data. *Why:* unusual but intuitive; reuses
 water-like flow routing for air; known Czech frost hollows could serve as cases (to be
 verified).
+*Scenario (round 2):* night-time cold-air ventilation corridors of towns
+(`sievers2016cold`, `nowatschin2006gpubased`). Literature (round 2): grid models
+`nowatschin2006gpubased`, `conrad2020coldairflow`, `sievers2016cold`.
 
 **ATM-03 · Heavy-gas release** (`heavy-gas-release`)
 A gas heavier than air leaks from an industrial source and flows along terrain into low
@@ -293,6 +313,8 @@ slopes. Literature: lattice-gas CA with open code (`sharma2019understanding`,
 *Data:* DEM, wind direction and speed, land cover (forest edges, fences). *Why:* snow
 drifts on Czech mountain roads and ridges, link to avalanche release (HAZ-03); visually
 attractive; sand dunes are the non-CZ variant of the same mechanism.
+*Scenario (round 2):* gravitational snow redistribution on steep slopes
+(`bernhardt2010snowslide`, 2D, class B).
 
 ## EPI — Spread of diseases and populations
 
@@ -324,6 +346,14 @@ derived from land cover and DEM. *Why:* one generic mechanism for the return of 
 CZ (beaver, wolf, jackal — to be verified), historical settlement expansion or
 recolonisation after disturbance; reusable by ECO-04 and ECO-07.
 
+**EPI-05 · Wildlife rabies front and vaccination barriers** (`rabies-front`) †
+Infection moves as a wave through a wildlife population; rivers slow it and vaccination
+zones can stop it. Literature: barrier-modified spread on landscape units
+(`smith2002predicting`, class B). *Data:* land cover, rivers and other barriers,
+administrative units, (to be verified) historical case records. *Why:* clear "wave meets
+barrier" demo; historical relevance for Europe, where oral vaccination campaigns pushed
+rabies back (details for CZ to be verified).
+
 ## MOV — Movement of people and traffic
 
 **MOV-01 · Pedestrian evacuation** (`pedestrian-evacuation`)
@@ -344,6 +374,23 @@ how far one can get in a given time — e.g. emergency service reach or walking 
 *Data:* road network, land cover, DEM, locations of services. *Why:* cheap, intuitive;
 shares the "front propagation over a cost raster" mechanism with fire and animal
 dispersal.
+
+## SOC — Society and culture
+
+**SOC-01 · Spatial competition of languages** (`language-competition`) †
+Two or more languages compete for speakers; speakers shift towards the locally dominant
+language and spread by migration, while mountains or rivers act as barriers.
+Literature: reaction–diffusion competition on a lattice (`patriarca2009influence`,
+class B). *Data:* DEM (barriers), population grid, (to be verified) historical language
+maps. *Why:* unusual cultural-geography demo; possible link to the historical
+Czech–German language border (to be verified).
+
+**SOC-02 · Voting patterns from imitation and commuting** (`opinion-commuting`) †
+Opinions spread by local imitation in municipalities and are carried by commuters to
+other municipalities. Literature: voter model with commuting
+(`fernandezgracia2014voter`, class B). *Data:* municipalities, commuting flows,
+election results (Czech open data to be verified). *Why:* relatable; boundary case — the
+"cells" are municipalities connected by a network, not raster cells.
 
 ## Links and chains of phenomena
 

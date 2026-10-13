@@ -127,3 +127,17 @@ Czech names proposed for the UI; to be reviewed together with the model cards.
 | shoreline erosion | abraze (eroze) břehů | Wave-driven erosion of lake, reservoir or sea shores. | "abraze" is the technical term for reservoirs |
 | snow drift | sněhová závěj, sněhový jazyk | Accumulation of wind-blown snow. | "jazyk" for elongated drift |
 | water table | hladina podzemní vody | Upper surface of the saturated zone. | |
+
+## Additions from literature review round 2
+
+| English term | Czech term | Short definition | Note |
+|---|---|---|---|
+| commuting | dojížďka | Regular travel between home and work municipality. | |
+| language shift | jazykový posun | Change of a population's dominant language over time. | |
+| oral vaccination (of wildlife) | orální vakcinace | Vaccine baits distributed in the landscape. | |
+| rabies | vzteklina | Viral disease of mammals spread by bites. | |
+| rockfall | skalní řícení, opad kamenů | Free fall, bouncing and rolling of rock fragments. | |
+| sinkhole | závrt (krasový), propad | Surface depression from collapse of an underground cavity. | "závrt" for karst, "propad" generic |
+| snow redistribution (gravitational) | gravitační přemisťování sněhu | Sliding or sloughing of snow from steep slopes. | |
+| ventilation corridor | ventilační (provětrávací) koridor | Path of cold or fresh air flowing into a town. | |
+| voter model | voličský model | Opinion model where agents copy a neighbour's opinion. | ? term rarely used in Czech |
