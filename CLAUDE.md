@@ -78,7 +78,7 @@ them as external oracles. MIT / BSD / Apache code may be reused with its notice 
   Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `build`, `ci`.
 - English, imperative mood, summary under ~72 characters.
 - No AI co-author / attribution trailers.
-- Branch `main`; local only for now. Planned remote: `https://gitlab.kiv.zcu.cz/lipka/`.
+- Branch `main`; remote `origin` = https://github.com/richardLipka/ca-geo (public). Push after each step only when the author asks.
 - Line endings: LF (enforced by `.gitattributes`).
 
 ## Markers

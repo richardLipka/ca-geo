@@ -66,7 +66,7 @@ references.bib         bibliography
 
 ## Remote
 
-Planned remote: GitLab at `https://gitlab.kiv.zcu.cz/lipka/` (not configured yet).
+Repository: https://github.com/richardLipka/ca-geo (public). A mirror on GitLab KIV (`https://gitlab.kiv.zcu.cz/lipka/`) may follow.
 
 ## Licence
 
