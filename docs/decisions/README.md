@@ -16,3 +16,4 @@ Architecture and scope decisions recorded as ADRs (Architecture Decision Records
 | 0004 | [Randomness and reproducibility: counter-based RNG](0004-randomness-and-reproducibility.md) | accepted |
 | 0005 | [Implementation language: TypeScript](0005-typescript.md) | accepted |
 | 0006 | [Licence: MIT with a clean-room rule for copyleft references](0006-licence.md) | accepted |
+| 0007 | [Revision of the stage primitives after the model cards](0007-primitive-set-revision.md) | proposed |

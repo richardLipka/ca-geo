@@ -1,7 +1,9 @@
-# CA engine architecture (proposal)
+# CA engine architecture
 
-**Status:** accepted baseline, 2026-10-13. Key decisions: ADRs `docs/decisions/0002`–`0006`
-(execution model, backends, RNG, TypeScript, MIT licence). Requirements: `requirements.md` (IDs `R…` below).
+**Status:** accepted baseline 2026-10-13; **revision 1.1, 2026-10-14** — refinements from the
+14 model cards (`docs/review/shared-components.md`, "Implications" I1–I16; ADR 0007).
+Key decisions: ADRs `docs/decisions/0002`–`0006` (execution model, backends, RNG,
+TypeScript, MIT licence); revision 1.1 is proposed as ADR 0007 (primitive set revision). Requirements: `requirements.md` (IDs `R…` below).
 Coverage check per model: `model-mapping.md`.
 
 Interface sketches are TypeScript, the implementation language (ADR 0005); they are
@@ -161,21 +163,39 @@ interface LayerDecl {
 - **Face layers** implement staggered (Arakawa-C-like) grids for local-inertial water flow
   and momentum-based cold air (R1.4).
 - **Slot layers** hold one value per neighbour: outflows of the weighted / MoD flow rules,
-  barrier weights (river between two cells), persistence weights (R1.5).
+  barrier permeability (river between two cells), per-slot slope (R1.5). Kernels can read a
+  neighbour's value for the opposite slot via `reverseSlot(k)` ("what does my neighbour send
+  towards me"). An extended 16-slot neighbourhood (knight's moves) is available for `queue`.
+- **Slot masks** (u8 bitmask per cell) store sets of slots — parents of a lava cell, donors
+  of a runout cell (SC-SLOTMASK).
+- **Persistent intermediate layers:** a `flux` outflow / face layer can be declared as state
+  (kept between steps, readable by submodels — WCA2D previous outflows, local-inertial
+  discharge, erosion reading water fluxes) instead of scratch.
+- **Lookup tables are live:** a controller may recompute a table from mutable parameters
+  (SLEUTH slope table after self-modification) and an intervention may swap a table
+  (management scenario of the beetle model); the engine re-uploads it to the GPU (I12).
+  Two-key tables (class × class, distance ring × class × class) are supported (SC-PAIRLUT).
 
 ### 5.3 Neighbourhoods and kernels (R2)
 
 ```ts
 interface Neighbourhood {
-  kind: 'vonNeumann' | 'moore' | 'radius' | 'custom';
-  radius?: number;
-  weights?: (dx: number, dy: number, dist: number) => number;   // static weights
-  directional?: { field: 'wind' | 'aspect' | LayerRef;          // dynamic direction weights (R2.3)
-                  weight: (cosAngle: number, magnitude: number) => number };
+  kind: 'vonNeumann' | 'moore' | 'moore16' | 'radius' | 'custom';
+  radius?: number | ParamRef;            // may depend on forcing (wind-dependent radius)
+  weights?: WeightTable                  // static weights, optionally per (ring, srcClass, dstClass)
+          | ((dx: number, dy: number, dist: number) => number);
+  normalise?: boolean;                   // weighted average Σw·x / Σw over valid neighbours
+  centreWeight?: number | ParamRef;
+  direction?: { field: 'wind' | 'aspect' | LayerRef };  // per-slot direction values (R2.3)
 }
+// Per slot the kernel receives: target index, distance, unit vector, reverseSlot(k);
+// with `direction`: cos of the angle to the field, field magnitude; with a DEM: ΔE to the
+// target (SC-DIRSLOPE). The kernel decides how to combine them (multiplier, exponent, …).
 ```
 
 - Small neighbourhoods are unrolled into slot tables.
+- The engine **does not combine direction factors** itself: fire rules multiply them, other
+  rules use them as exponents (I8). It only provides the per-slot values.
 - Extended kernels (radius ≤ ~7, i.e. up to 15 × 15) run as a **stencil stage** with a
   weight table; direction-dependent weights are recomputed only when the driving vector
   changes (global wind) or read per cell (raster wind).
@@ -235,18 +255,31 @@ parallel stage without double buffering.
 |---|---|---|---|---|
 | `map` | Cell-local update: `out[i] = f(in[i], params, rng(i))`. | CPU, GPU | R3.1, R6.1 | growth (Ricker, Gompertz), sources / sinks, decay, reclassification |
 | `stencil` | Synchronous gather from a neighbourhood (slots or weighted kernel) into the cell's own new value. | CPU, GPU | R3.1, R2.1–R2.3 | fire ignition, beetle infestation, SLEUTH edge growth, floor-field diffusion, focal dispersion |
-| `flux` | Two passes: (a) **outflow pass** writes bounded outflows into a slot or face layer; (b) **gather pass** updates the cell from its own outflows and the neighbours' outflows towards it. Conservation is exact if (a) never sends more than available. | CPU, GPU | R3.2, R1.4, R1.5 | WCA2D / MoD water, local-inertial water, cold air, groundwater, emigration, sediment, SCIDDICA |
+| `flux` | Two passes: (a) **outflow pass** — either a *donor kernel* (cell writes bounded outflows to its slots / faces) or a *face kernel* (one antisymmetric value per face from both sides); optional **per-donor limiter** sub-pass (scale outflows so Σ out ≤ available); optional **retention** threshold (mobile part = max(0, h − h_ret)); (b) **gather pass** updates the cell. Declared flux unit (volume per step, rate, unit discharge). Integer / multinomial mode and an ordered slot loop with RNG for stochastic integer exchange. The flux layer may be persistent state. | CPU, GPU | R3.2, R1.4, R1.5 | WCA2D / MoD water, local-inertial water, cold air, groundwater, emigration, sediment, SCIDDICA, dynamic floor field |
 | `reduce` | Global reduction (sum, min, max, count, histogram, arg-max) of an expression over cells; result available to controllers and time policy. | CPU, GPU | R4.2, R8.1, R6.4 | adaptive Δt, mass balance, growth rate, convergence test |
 | `convolve` | Convolution with a large static kernel (FFT / separable / tiled). | CPU, GPU | R2.4 | short-range dispersal kernels (Xylella), propagule pressure |
-| `jump` | Sparse stochastic long-distance events: each source cell draws a count of jumpers; each jumper draws distance / direction; targets filtered by a mask; arrivals accumulated. CPU: event list; GPU: per-source draws + atomic accumulation into an integer layer. | CPU, GPU* | R2.5 | long-distance dispersal, fire spotting |
-| `queue` | Priority-queue propagation (Dijkstra / fast marching / ordered sweeps): pop the cell with the smallest key, relax neighbours with a user function. Supports isotropic and anisotropic costs and stochastic travel times. | CPU | R3.4, R7.2 | accessibility front, cost-distance static fields, PROPAGATOR-style time-to-ignition, ordered FlowFill |
-| `front` | Active list with parent pointers: propagate from source cells, each active cell distributes to qualifying neighbours given its parent and state; supports budgets (volume pulses) and per-path state (energy line). | CPU | R3.5, R4.4 | lava (Connor), Flow-Py runout |
-| `agents` | Lattice agents with exclusion: **propose** (each agent picks a target from a probability over slots), **resolve** (conflicts: random winner or friction μ), **move**, update occupancy layer. | CPU (GPU later) | R1.8, R3.6 | pedestrian floor-field CA |
-| `allocate` | Demand-constrained allocation: rank cells by a potential layer (per class) and convert the top N; ties broken by RNG. CPU: partial sort; GPU: histogram threshold + tie handling. | CPU, GPU* | R3.7 | constrained land-use CA |
-| `walk` | Short random walks along a feature layer from seed cells (with step limit). | CPU | R2.6 | SLEUTH road-influenced growth |
+| `jump` | Sparse stochastic long-distance events with pluggable **emission** (count per source), **distance** and **direction** laws and **acceptance** (probability layer, not only a mask); masked targets are discarded or redrawn; **conservative mode** debits the source; deterministic multi-cell **rays** (wind-aligned ignition). CPU: event list; GPU: per-source draws + atomic accumulation. | CPU, GPU* | R2.5 | long-distance dispersal, fire spotting, group migration |
+| `queue` | Priority-queue propagation (Dijkstra / ordered sweeps): multi-source; relax function may read any layer; direction flag (time **to** or **from** sources, matters for anisotropic cost); outputs value, `parent` and `nearest` source; 8 or 16 slots; stochastic (e.g. exponential) edge times; may be **re-run during a simulation** (controller / intervention, e.g. a new exit). | CPU | R3.4, R7.2 | accessibility front, static floor field, rabies first-passage front, PROPAGATOR-style time-to-ignition, priority-flood, ordered FlowFill |
+| `front` | Active-list propagation in two modes: **shared-grid relaxation** (one grid; cells re-enter the list; per pulse iterate until no excess; deterministic or keyed-shuffle order) and **per-source traversal** (each source has sparse per-path state — flux, energy line, parent set — merged by max / sum / count into global outputs; sources independent → parallel workers). Eligibility, flow weights, persistence and cutoff come from the shared flow-weight library. | CPU | R3.5, R4.4 | lava (Connor / MOLASSES), Flow-Py runout, rockfall, avalanche |
+| `agents` | Lattice agents with exclusion: **propose** (each agent picks a target from a probability over slots; per-agent move probability for speeds below one cell per step), **resolve** (conflicts: random winner or friction μ; conflict counts reported), **move**, update occupancy layer; sinks remove agents. | CPU (GPU later) | R1.8, R3.6 | pedestrian floor-field CA |
+| `allocate` | Demand-constrained allocation. Modes: **top-N** per class; **joint greedy multi-class** (globally highest (cell, class) potential among classes with unmet demand, each cell once); **zone quotas**; **weighted sampling without replacement** (random keys u^(1/w) + top-N); **patch growth** (seed + contiguous growth to a drawn size, uses `queue`); optional **allowed-transition matrix**. Ties by keyed RNG. | CPU, GPU* | R3.7 | constrained land-use CA (SIMLANDER, PLUS, FUTURES) |
+| `events` | Sequential sparse **event scripts** (replaces `walk`, ADR 0007): K events (count from parameters), each picks a start (uniform over a mask or from a list, e.g. this step's new cells), optionally searches (spiral / nearest feature), optionally walks along a feature layer (directed or undirected, step limit from a layer value), then performs a local action with up to n neighbour tries. Keyed RNG per event id. | CPU | R2.6 | SLEUTH spontaneous growth, spreading centres and road growth; corridor moves of invasive species |
 | `custom` | Escape hatch: arbitrary JS over whole arrays (CPU only), declared reads / writes. | CPU | — | prototypes; must be replaced by primitives before GPU use |
 
 \* GPU versions are optional optimisations; the CPU version is the reference.
+
+**Scatter as gather.** Where a source picks one target (SLEUTH edge growth, short-range
+spotting, agent proposals), the target can recompute each neighbour's keyed draw
+`rng(source, tag)` and decide exactly as a scatter would — parallel stages stay gather-only.
+
+**One-pass state updates.** When several transitions must read the same previous state
+(a burning cell burns out while it ignites its neighbours), they belong to one `stencil`
+stage, or all their outputs are double-buffered across the stages (I15).
+
+**Repeat blocks.** A group of stages can be repeated inside one step a fixed number of
+times (from a parameter or forcing) or until a condition (`reduce` result, demand met),
+with a controller hook between iterations (SC-REPEAT: dispersion iterations per hour,
+PLUS allocation until demand is met).
 
 **Mixed pipelines.** A step may combine GPU stages and CPU stages (e.g. GPU flux water +
 CPU queue); the engine inserts the needed buffer transfers. Because transfers are costly,
@@ -265,10 +298,17 @@ dispatch list. Correctness never depends on activity (inactive tiles are no-ops)
 ```ts
 type TimePolicy =
   | { kind: 'fixed', dt: number, unit: 's' | 'min' | 'h' | 'day' | 'year' }
-  | { kind: 'adaptive', dtFrom: ReduceRef, dtMin: number, dtMax: number, safety: number }
+  | { kind: 'adaptive', dtFrom: ReduceRef, dtMin: number, dtMax: number, safety: number,
+      every?: number,                              // recompute period (model time)
+      snap?: 'fractionOfMax' | 'outputs',          // Δt = dtMax / k, or cut to hit output times
+      lookAhead?: ForcingRef[],                    // include upcoming forcing in the limit
+      growWhenIdle?: number,                       // e.g. ×2 if nothing moves
+      retry?: { check: ReduceRef, maxTries: number } } // reject step, retry with smaller Δt
   | { kind: 'converge', on: ReduceRef, epsilon: number, patience: number }
   | { kind: 'budget', budget: ParamRef }          // e.g. lava volume
-  | { kind: 'event' };                            // time advanced by the queue stage
+  | { kind: 'event' }                             // time advanced by the queue stage
+  | { kind: 'oneShot' };                          // no model time (runout traversal);
+                                                  // display clock = traversal generation
 ```
 
 - Adaptive Δt is computed from a `reduce` stage at the start of the step (e.g. minimum of
@@ -283,7 +323,10 @@ type TimePolicy =
 
 `Forcing` objects provide time-dependent values: scalar series (rain intensity, wind
 vector, hourly meteorology) with interpolation rules, and raster series (radar rain) with
-lazy loading. Stages read them as uniforms (`forcing('rain', t)`) or bound layers.
+lazy loading and linear interpolation between slices (e.g. carrying capacity from
+millennial layers); the domain mask itself may be a forcing (sea level). A forcing may
+**reset** a layer at the start of each period (dispersion restarts from emissions every
+hour). Stages read forcings as uniforms (`forcing('rain', t)`) or bound layers.
 
 ### 7.3 Controllers (R6.4)
 
@@ -293,7 +336,10 @@ results, the clock and mutable parameters:
 - **self-modification** (SLEUTH: growth rate above / below thresholds → multiply
   coefficients),
 - **scheduled events** (hydrograph changes, lava pulses, ignition at time t),
-- **stop conditions** (front extinguished, budget used, convergence, max time).
+- **stop conditions** (front extinguished, budget used, convergence, max time),
+- **table rebuilds** (recompute a LUT from mutable parameters),
+- **clustered random events** (cluster point process masks, e.g. catastrophes),
+- **scenario triggers** (breach when a downstream crest is overtopped for a given time).
 
 Controllers never touch cell arrays directly; they change parameters or enqueue
 interventions, which keeps them backend-independent.
@@ -315,10 +361,17 @@ Each model declares which interventions it accepts (e.g. `ignite`, `firebreak`, 
 - **Distributions** (R5.2) implemented once for CPU and once in WGSL from uniform draws:
   Bernoulli, exponential, normal (Box–Muller), truncated normal (rejection with bounded
   attempts), Weibull (inverse CDF), Poisson / binomial (exact for small means, normal
-  approximation above a documented threshold).
+  approximation above a documented threshold), **beta**, **lognormal** (incl. truncated),
+  **categorical** (cumulative table), **multinomial** (sequential binomials), **discrete 2D
+  Gaussian displacement**; sampling of cells from a probability raster (CDF / alias table,
+  SC-SRCSAMPLE).
 - **Ensembles**: run seeds are derived from a master seed and the run index; any single
-  run of an ensemble can be replayed alone.
-- **Sequential primitives** (`queue`, `front`, `agents`, `walk`) draw with the same keyed
+  run of an ensemble can be replayed alone. Mutable parameters are **reset** to their
+  initial values at the start of every run.
+- **Statistical oracles:** reference implementations with their own sequential RNGs
+  (SLEUTH, PyTorchFire, Xylella model) cannot be reproduced run by run; benchmarks compare
+  distributions of statistics.
+- **Sequential primitives** (`queue`, `front`, `agents`, `events`) draw with the same keyed
   generator using (agent id / event id, draw) so results do not depend on container order.
 
 ## 9. Boundaries and masks (R6.2)
@@ -332,6 +385,11 @@ Per layer (and per stage if needed):
 | `fixed(value or layer)` | Dirichlet value outside / in marked cells (e.g. fixed head). | Exchange recorded. |
 | `flux(value or layer)` | Prescribed inflow / outflow across the edge (Neumann). | Recorded. |
 | `mirror` | Reflective copy of the edge cell. | — |
+| `exitFlag` | Mobile material reaching the edge is recorded (and optionally stops the run). | Recorded. |
+
+`fixed` and `flux` also apply to **interior cell masks** (fixed-head rivers in groundwater,
+fixed-level reservoirs, emission cells reset every iteration). Stages may require sources
+to be interior cells (SLEUTH never grows from the outer ring).
 
 The domain mask defines inside / outside cells; additional **target masks** forbid
 transitions into some cells (sea for dispersal jumps, buildings for pedestrians,
@@ -392,8 +450,14 @@ const ens = await Ensemble.run({ ...sameConfig, runs: 100, workers: 4,
 const chain = Chain.of(fireRun).then(burntToRunoffCoefficient).then(floodRun); // R9.1
 ```
 
-- **Observers** (R8.1–R8.3): `reduce` series, first-arrival time, max envelope, visit
-  counts, snapshots at times, exporters (GeoTIFF, PNG, CSV, JSON).
+- **Observers** (R8.1–R8.3): `reduce` series (also grouped by a zone layer), first-arrival
+  time with a threshold predicate (and per-agent origin variant), max envelope, visit
+  counts, values at station points, front speed (arrival vs. distance), back-tracking of
+  paths from parent links, mass balance (optional per model), snapshots, exporters
+  (GeoTIFF, PNG, CSV, JSON).
+- **Ensembles**: frequency / probability maps, mean and per-cell quantiles of continuous
+  fields (e.g. arrival time), per-step scalar statistics (mean / std), and **paired
+  scenarios** with shared seeds for differences (relative risk).
 - **Chains** (R9.1): sequential handover of layers between runs, with resampling when grids
   differ. Concurrent coupling with different clocks (R9.3) is a later extension using
   synchronisation points.
@@ -409,19 +473,21 @@ Runs before the simulation (in a worker or in Node), produces a `GridSpec` and i
 2. Rasterise vectors: roads, rivers, polygons; **edge rasterisation** of line barriers into
    slot layers (which neighbour pairs a river separates).
 3. Derive terrain layers: slope, aspect, hillshade, D8 direction, flow accumulation,
-   depression filling (priority-flood), distance and cost-distance (reusing the `queue`
-   primitive).
+   depression filling (priority-flood), per-slot elevation difference, Euclidean distance
+   transform and cost-distance (reusing the `queue` primitive).
 4. Reclassify categorical layers via lookup tables (land cover → fuel, production, K).
 5. Cache results (IndexedDB / OPFS in the browser, files in Node) keyed by input hashes.
 
 Derived layers that depend on dynamic state (slope of an eroding DEM, effective elevation
 under lava) are declared as **derived layers with dependencies** and recomputed by an
-engine stage when their source changed (R7.5).
+engine stage when their source changed (R7.5). Interventions that edit the DEM (dike,
+breach, erosion) invalidate dependent layers (slope, D8, effective surface) automatically.
 
 ## 13. Analysis, validation, calibration (R8.4, R8.5, R10.2)
 
 - Metrics: quantity / allocation disagreement, figure of merit, fuzzy kappa, Jaccard /
-  Sørensen, RMSE / NRMSE against series — each implemented with tests against the
+  Sørensen, F1, AUC, Boyce index, RMSE / NRMSE against series, arrival-time bias;
+  connected components and landscape metrics; neutral benchmark models as baselines — each implemented with tests against the
   published reference implementations where available (`pontius2011death`,
   `hagenzanker2009improved`).
 - **Benchmark runner**: a benchmark = model + inputs + parameters + expected outputs +
@@ -483,4 +549,4 @@ new in this respect, but every primitive has a working reference in another lang
 | Q7 | Geodata libraries | GeoTIFF / reprojection / rasterisation libraries and their size. | Evaluate in the geodata phase. |
 | Q8 | Hex and graph topologies | Effort vs value. | Keep the slot abstraction; implement square first; hex / graph only if a selected model needs them. |
 | Q9 | Event-driven fire (PROPAGATOR) vs synchronous fire (Alexandridis) | Two engines for one phenomenon? | Both are expressible (`queue` vs `stencil`); start with the synchronous variant. |
-| Q10 | Very long runs (land use over decades with Monte Carlo) | Performance of `allocate` / `walk` on the CPU. | Profile with SLEUTH demo data; move to GPU only if needed. |
+| Q10 | Very long runs (land use over decades with Monte Carlo) | Performance of `allocate` / `events` on the CPU. | Profile with SLEUTH demo data; move to GPU only if needed. |

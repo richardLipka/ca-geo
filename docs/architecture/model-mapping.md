@@ -1,240 +1,73 @@
 # Mapping of selected models onto the engine
 
-Coverage check of `engine-architecture.md`: every selected model (revision 2) is expressed
-with the engine's primitives. Mechanics come from the template entries in
-`docs/research/domains/*.md`; parameter values are not repeated here (they belong in the
-model cards, with provenance).
+Coverage check of `engine-architecture.md`: every selected model (ADR 0001) expressed with
+the engine primitives.
+
+**Revision 1.1, 2026-10-14.** The authoritative, detailed mapping of each model is section
+11a of its card in `docs/models/candidates/`; this file is the summary. Revision 1.0
+(2026-10-13) was written before the cards; the corrections found while writing them are
+listed at the end.
 
 ## Coverage matrix
 
-● = main mechanism, ○ = used / optional variant.
+● = main mechanism of the primary rule, ○ = variant / scenario / optional.
 
-| Model | map | stencil | flux | reduce | convolve | jump | queue | front | agents | allocate | walk | Time policy | RNG | Topology |
+| Model | map | stencil | flux | reduce | convolve | jump | queue | front | agents | allocate | events | repeat | Time policy | RNG |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| HAZ-01 wildfire | ○ | ● | | ○ | | ○ | ○ | | | | | fixed (event for PROPAGATOR variant) | yes | square |
-| WAT water | ● | | ● | ● | | | ○ | | | | | adaptive / converge | no | square |
-| EPI-04 population | ● | | ● | ○ | | ● | | | | | | fixed | yes | square (graph for EPI-05 variant) |
-| ATM-02 cold air | ● | | ● | ○ | | | | | | | | fixed (adaptive for SAGA / KLAM-like) | no | square |
-| ECO-01 bark beetle | ○ | ● | | ○ | | ○ | | | | | | fixed (year) | yes | square (hex variant) |
-| LND-01 urban growth | ● | ● | | ● | | | | | | ● | ● | fixed (year) | yes | square |
-| MOV-03 accessibility | ○ | ○ | | | | | ● | | | | | event (or converge) | no | square |
-| HAZ-05 lava | ○ | | ○ | | | | | ● | | | | budget | yes (ensemble) | square |
-| ECO-09 pest / pathogen | ● | ○ | | ○ | ● | ● | | | | | | fixed (year) | yes | square |
-| HAZ-02 runout | | | ○ | | | | | ● | | | | budget / converge | no | square (hex variant) |
-| MOV-01 evacuation | ● | ● | | ○ | | | ● | | ● | | | fixed (~0.3 s) | yes | square |
-| HYD-05 erosion | ● | | ● | ● | | | | | | | | adaptive (shares WAT) | optional | square |
-| ATM-01 dispersion | ● | ● | | | | | | | | | | fixed (iterations per hour) | no | square |
-| HYD-09 groundwater | ● | | ● | ○ | | | | | | | | fixed (stability-checked) | no | square |
+| WAT water / flooding | ● | | ● | ● | | | ○ | | | | | ○ | adaptive (period, snapping, look-ahead); converge (FlowFill) | no |
+| HYD-05 soil erosion | ● | | ● | ● | | | | | | | | | adaptive (shares WAT; retry) | optional |
+| HYD-09 groundwater | ● | | ● | ○ | | | | | | | | | fixed (stability-checked) | no |
+| ATM-02 cold air | ● | ○ | ● | ○ | | | | | | | | | fixed (Nowatschin) / adaptive with growth when idle (SAGA) | no |
+| HAZ-05 lava | ○ | | ○ | ○ | | | | ● | | | | | budget (pulses) | yes (ensembles) |
+| HAZ-02 runout | | | ○ | | | | | ● | | | | | oneShot (per-source traversal) | optional |
+| HAZ-01 wildfire | ○ | ● | | ○ | | ○ | ○ | | | | | | fixed; event (PROPAGATOR variant) | yes |
+| ECO-01 bark beetle | ● | ● | | ● | | ○ | ○ | | | | | | fixed (year) | yes |
+| ECO-09 pest / pathogen | ● | ○ | | ○ | ● | ● | | | | | ○ | | fixed (year) | yes |
+| EPI-04 population | ● | ○ | ● | ● | | ● | ○ | | | | | | fixed (generation); event (EPI-05 variant) | yes |
+| MOV-03 accessibility | ○ | ○ | | | | | ● | | | | | | event (or converge for the CA-like animation) | optional |
+| MOV-01 evacuation | ● | ○ | ○ | ● | | | ● | | ● | | | | fixed (~0.3 s per step) | yes |
+| LND-01 urban growth | ● | ● | | ● | ○ | | | | | ● | ● | ○ | fixed (year) | yes |
+| ATM-01 dispersion | ● | ● | ○ | | | | | | | | | ● | fixed (hour) with repeat (iterations per hour) | no |
 
 Every primitive is used by at least one core model except `front` and `agents` (extension
-models only) and `convolve` (ECO-09) — these are the candidates to implement later.
+only).
 
-## Per-model mapping
+## Per-model summary
 
-### HAZ-01 Wildfire spread (core ★)
+Stages per step in order; *init* = once before the first step. Component IDs refer to
+`docs/review/shared-components.md`.
 
-- **Templates:** `alexandridis2008cellular` (rule restated in `xia2025pytorchfire`,
-  `freire2019using`), `trucchia2020propagator`, firebrands `hargrove2000simulating`.
-- **Layers:** `dem` (in), `fuel` (in, categorical + LUT), `density` (in), `slope`
-  (derived), `fire.state` (state u8: non-burnable / unburnt / burning / burnt),
-  `fire.arrivalTime` (output), wind (forcing, global or raster).
-- **Stages:** `stencil` Moore — burning neighbours ignite an unburnt cell with probability
-  from vegetation, density, wind alignment (direction weight per slot) and slope (elevation
-  difference per slot), Bernoulli draw; `map` burning → burnt; optional `jump` spotting;
-  `reduce` count burning (stop condition).
-- **Variant:** PROPAGATOR-style — `queue` with stochastic time-to-ignition per neighbour
-  (event time policy) — same layers.
-- **Variant:** Cell2Fire-style — fixed fire period, per-neighbour progress accumulator in a
-  slot layer (`stencil`), ignition when progress reaches the neighbour distance.
-- **Observers:** arrival time, burnt area per step; **ensembles** → burn probability map.
-- **Interventions:** ignite, firebreak (set non-burnable), change wind.
-- **URB-03 scenario:** buildings as fuel classes; same stages with a different LUT.
+| Model | Card | Stages per step (primary rule) | Notable engine needs |
+|---|---|---|---|
+| WAT (WCA2D) | `water-flow-flooding.md` | `map` sources / sinks / infiltration → `flux` (donor kernel on a **persistent face layer**) → every update period: `map` velocity + `reduce` Δt → `reduce` mass balance | adaptive Δt with recompute period, snapping and forcing look-ahead; previous Δt available to kernels; boundaries on edge segments; LND-03 scenario = histogram `reduce` + controller, not flux |
+| WAT variants | same | local inertial: `flux` face kernel on persistent discharge; FlowFill: `flux` D8 slots with `converge` or CPU `queue` sweeps | antisymmetric face kernel |
+| HYD-05 | `soil-erosion.md` | submodel of WAT: `map` detachment / deposition → `flux` sediment along water outflows → DEM update → derived slope / D8 recomputed | reads WAT flux layer; derived-layer invalidation; step retry (Courant band) |
+| HYD-09 | `groundwater-flow.md` | `map` recharge, wells, river exchange → `flux` face kernel (harmonic-mean transmissivity × head difference) → gather | fixed head on interior cell masks; analytical oracle (Theis) |
+| ATM-02 | `cold-air-pooling.md` | `map` production by land-use LUT → `flux` face kernel with **per-donor limiter** → gather; SAGA variant: slot outflows ∝ drop / length, adaptive Δt | effective surface (SC-EFFSURF); scatter of SAGA rewritten as gather |
+| HAZ-05 | `lava-flow.md` | controller adds a pulse at the vent → `front` shared-grid relaxation until no excess (residual retention, lower non-parent neighbours, share ∝ drop) | parent = **slot bitmask**; primary rule uses von Neumann (MOLASSES uses Moore); keyed order |
+| HAZ-02 | `landslide-runout.md` | `front` per-source traversal from each release cell (flow weights × persistence, energy line stop, cutoff with redistribution) → merge by max / sum / count | `oneShot` time; per-source workers; SCIDDICA variant = `flux` with energy as a cell layer |
+| HAZ-01 | `wildfire-spread.md` | *init* per-slot elevation difference → one `stencil` (ignition 1 − Π(1 − p) **and** burn-out from the previous state) → optional `jump` spotting → `reduce` burning count | direction values per slot, combined by the kernel; deterministic N2 ray; `reverseSlot` for the Cell2Fire variant |
+| ECO-01 | `bark-beetle-outbreak.md` | `stencil` neighbour bump of the level → `map` **categorical Markov** transition from a scenario table → `map` dieback → `reduce` by zone | SC-MARKOV, LUT swap by intervention; Bernoulli / kernel form is a variant |
+| ECO-09 | `plant-pest-spread.md` | `map` Gompertz growth → `convolve` exponential kernel (no wrap) → `jump` threshold-triggered jumps (redraw on sea) → `map` control-zone removal | unnormalised kernel; numerical cut-off as a parameter; ensemble mean and paired scenarios |
+| EPI-04 | `population-dispersal.md` | `map` K slice + resampling → `map` Ricker growth → `map` clustered catastrophes → `flux` emigration (ordered slot loop with RNG, barrier slot weights) → `jump` **conservative** LDD with acceptance probability | arrival with threshold predicate; per-cell arrival quantiles; EPI-05 as `queue` with exponential edge times |
+| MOV-03 | `accessibility-front.md` | `queue` multi-source with anisotropic Tobler cost per slot (direction to / from sources) | `parent` / `nearest` outputs, path tracing, 16 slots; time gates from hazard arrival |
+| MOV-01 | `pedestrian-evacuation.md` | *init* `queue` static field → `agents` propose / resolve (friction) / move → `flux` or `stencil` dynamic field (stochastic decay / diffusion) → `reduce` agents left | move probability for slow speeds; `queue` re-run when exits change |
+| LND-01 SLEUTH | `urban-growth.md` | `events` spontaneous growth and spreading centres → `stencil` edge growth (scatter as gather) → `events` road growth (spiral search + walk) → `map` commit → `reduce` + controller self-modification | LUT rebuild from mutable coefficients; per-run parameter reset; statistical oracle |
+| LND-01 constrained | same | `stencil` / `convolve` neighbourhood effect (class-pair weights) → `map` potential + Weibull noise → `allocate` (joint greedy / quotas / patches) → `map` commit | `allocate` modes; EDT for accessibility; CCL and neutral models for validation |
+| ATM-01 | `pollutant-dispersion.md` | per hour: reset from emissions → `repeat` k(u) × (`stencil` wind-weighted normalised focal average with centre weight → `map` reset source cells) | normalised kernel with distance and direction; repeat block; point observations; not mass-conserving |
 
-### WAT Water flow / flooding (core ★)
+## Corrections against revision 1.0
 
-- **Templates:** `guidolin2016weighted` (WCA2D), `bates2010simple` / `shaw2021lisflood`
-  (local inertial), `callaghan2019computing` (FlowFill), `landa2019smoderp2d`.
-- **Layers:** `dem` (in), `roughness` (in or LUT), `infiltration` (in / LUT),
-  `water.depth` (state f32), `water.out` (slot f32, WCA2D) or `water.q` (face f32,
-  local inertial), `water.maxDepth`, `water.arrivalTime` (outputs).
-- **Stages (WCA2D):** `map` sources and sinks (rain forcing, point inflow, infiltration);
-  `reduce` → Δt (velocity / CFL limit); `flux` outflow pass computes weighted outflows to
-  von Neumann neighbours, limited by available volume and velocity, gather pass updates
-  depth; `map` velocity estimate.
-- **Stages (local inertial):** `flux` with face layer: (a) update face discharge from
-  water-surface gradient, friction and previous discharge; (b) gather to update depth.
-- **Variant (FlowFill):** fixed runoff, `converge` policy, Jacobi-style synchronous
-  version on the GPU or ordered `queue` sweeps on the CPU.
-- **Boundaries:** open by default (boundary flux recorded), closed or fixed level per
-  scenario.
-- **Checks:** mass balance (`reduce` sum of volume + cumulative boundary / sink fluxes);
-  benchmark runner with `neelz2010benchmarking` test cases.
-- **Interventions:** dam / dike (raise `dem` cells), rain intensity, breach.
-
-### EPI-04 Population dispersal (core; + EPI-05, ECO-04)
-
-- **Templates:** `bradshaw2021stochastic`, `gregoriodesouza2021reassessing`; barriers
-  `smith2002predicting`.
-- **Layers:** `K` (carrying capacity, derived from land cover via LUT), `pop.N` (state f32
-  or i32), `pop.out` (slot), `barrier` (slot weights from rivers / roads), `pop.arrival`.
-- **Stages:** `map` local growth (Ricker / logistic, optional demographic noise from
-  Poisson / binomial draws); `flux` emigration: outflow pass sends a share of N to
-  neighbours when N/K exceeds a threshold, weighted by neighbour suitability and barrier
-  weights; gather pass; `jump` long-distance dispersal; `reduce` occupied area.
-- **EPI-05 rabies front:** S/I fractions instead of N (SI rule as `stencil`), vaccination
-  zones as an intervention mask; graph topology + discrete-time variant of the township
-  model is optional.
-- **ECO-04 connectivity:** resistance from land cover; compare with MOV-03 cost front.
-
-### ATM-02 Cold-air pooling (core)
-
-- **Templates:** `nowatschin2006gpubased` (GPU shader model), `sievers2016cold` (KLAM_21,
-  momentum + heat deficit).
-- **Layers:** `dem`, `landuse` (LUT: production, resistance), `cold.k` (state: cold-air
-  height), `cold.v` (face: velocities, simple model) or `cold.E`, `cold.u` (heat deficit,
-  face momentum for the KLAM-like variant).
-- **Stages (simple):** `map` production per land-use class; `flux` with face velocities
-  from the difference of (terrain + cold-air surface) divided by resistance, outflow
-  limited so outgoing shares ≤ 1, gather; open boundaries.
-- **Variant (KLAM-like):** `flux` on face momentum (gravity of the cold-layer top,
-  friction, optional ambient wind) + donor-cell advection; adaptive Δt.
-- **Variant (SAGA Cold Air Flow):** Moore multiple-flow-direction outflow proportional to
-  drop / distance, gravity-current velocity, adaptive Δt — the same `flux` machinery as WAT.
-- **Scenario:** urban ventilation corridors (buildings as resistance classes).
-- **Interventions:** change land use (e.g. build / remove forest), night duration.
-
-### ECO-01 Bark-beetle outbreak (core)
-
-- **Templates:** `pietzsch2023nonparametric` (Markov CA with neighbour spread),
-  `liu2025multiscale` (stochastic density CA), parameters `dolezal2016fine`,
-  `berec2013population`, CZ validation case `duraciova2020bark`.
-- **Layers:** `stand` (in, categorical: spruce share, age class), `susceptibility`
-  (derived; drought forcing), `beetle.state` (state: healthy / infested / dead / cleared)
-  or `beetle.density` (f32), `beetle.year` (output: year of attack).
-- **Stages:** `stencil` Moore (or hex) — transition probability from a lookup table
-  indexed by own state, stand features and the number / density of infested neighbours;
-  Bernoulli draw; optional `jump` for long-distance dispersal; `map` sanitation felling
-  intervention.
-- **Time:** annual (or generations per year); ensembles → infestation probability.
-
-### LND-01 Urban growth (core)
-
-- **Templates:** `clarke1997selfmodifying` (SLEUTH), `roodposhti2020towards` /
-  `hewitt2019cellular` (constrained CA, SIMLANDER).
-- **SLEUTH variant:** layers `slope`, `excluded`, `roads`, `urban` (state u8). Stages per
-  year: `map` spontaneous growth (random cells, slope-weighted); `stencil` new spreading
-  centres and edge growth; `walk` road-influenced growth along `roads`; `reduce` growth
-  rate; **controller** self-modification of coefficients. Monte Carlo ensembles →
-  urbanisation probability.
-- **Constrained CA variant:** `stencil` with extended distance-decay kernel (neighbourhood
-  effect per class), `map` potential = neighbourhood × suitability × accessibility ×
-  zoning + Weibull noise, `allocate` top-N cells per class according to yearly demand.
-- **Validation:** `analysis` metrics (quantity / allocation disagreement, figure of
-  merit) against historical land cover.
-
-### MOV-03 Accessibility front (extension)
-
-- **Templates:** `wood2012anisotropic` (anisotropic Tobler slope + land-cover speed),
-  `nelson2019suite`, `weiss2020global` (reference rasters).
-- **Layers:** `dem`, `landcover` (LUT speed), `roads`, `travelTime` (output).
-- **Stages:** `queue` from sources (hospitals, fire stations, exits) with direction-dependent
-  cost per slot (slope along the move); event time policy; the animation reveals the front
-  by arrival time. Alternative CA-like visualisation: `stencil` Bellman-Ford relaxation
-  with `converge` policy (GPU friendly).
-- Also provides the **static floor field** for MOV-01 and connectivity for ECO-04.
-
-### HAZ-05 Lava flow (extension)
-
-- **Templates:** `connor2012probabilistic` (MOLASSES-type), benchmarks
-  `dietterich2017benchmarking`.
-- **Layers:** `dem`, `lava.thickness` (state), `lava.parent` (state, slot index),
-  `residual` (in or drawn per run).
-- **Stages:** `front` from the vent: active cells keep the residual thickness and share
-  the excess with lower neighbours (not the parent) in proportion to the effective-elevation
-  difference; **controller** adds volume pulses until the budget is used.
-- **Ensembles:** thousands of runs with residual / volume drawn from truncated normals →
-  inundation probability.
-- Alternative (SCIARA-type): `flux` with minimisation of differences + temperature
-  solidification (same primitive as WAT).
-
-### ECO-09 Plant pest / pathogen spread (extension; + ECO-03)
-
-- **Templates:** `white2017modelling` (Xylella), `moenickes2013shapes` (giant hogweed,
-  corridors), CZ case `nehrbass2007simulation`.
-- **Layers:** `host` (cover fraction), `K` (derived), `pest.I` (infected fraction),
-  `corridor` (in), `control` (intervention mask), `sea / forbidden` (target mask).
-- **Stages:** `map` local growth (discretised Gompertz); `convolve` short-range dispersal
-  kernel; `jump` long-distance jumps above a threshold, not into forbidden cells; `map`
-  control-zone removal.
-- **ECO-03 variant:** kernel weights modulated along corridors (`stencil` with
-  corridor-dependent weights instead of a static convolution).
-
-### HAZ-02 Runout: debris flow, avalanche, rockfall (extension)
-
-- **Templates:** `damboise2022flowpy` (energy line + persistence), `wichmann2017gpp`,
-  `dambrosio2003simulating` (SCIDDICA MoD on hex).
-- **Layers:** `dem`, `release` (in), `runout.flux`, `runout.zDelta` (max energy-line
-  height), `runout.travelAngle` (outputs).
-- **Stages (Flow-Py):** `front` from release cells; flux split to 8 neighbours by slope
-  weight × persistence (direction change vs parent), stop when energy-line height < 0 or
-  flux < cutoff; per-cell max / sum aggregation; independent release cells can run in
-  parallel workers.
-- **Variant (SCIDDICA):** `flux` with minimisation of differences (hex or square).
-
-### MOV-01 Pedestrian evacuation (extension)
-
-- **Templates:** `kirchner2002simulation`, `kirchner2003friction`, test suite
-  `ronchi2013process`.
-- **Layers:** `walls` / `obstacles` (in, from building footprints), `exits`, `S` (static
-  floor field, from `queue`), `D` (dynamic floor field, state), `occupancy` (state), agents
-  list.
-- **Stages:** `queue` once to build S (distance or anisotropic cost from MOV-03); per step:
-  `agents` propose (probabilities from S, D, occupancy), resolve conflicts (friction μ),
-  move; `map` deposit bosons into D; `stencil` diffusion + decay of D; `reduce` agents
-  left (stop).
-- **Ensembles:** hundreds of runs → evacuation-time curves.
-
-### HYD-05 Soil erosion / muddy floods (extension)
-
-- **Templates:** `landa2019smoderp2d` (sheet / rill flow on D8), `eltner2025using`
-  (RillGrow, plot scale).
-- **Composition:** submodel of WAT in the same simulation (R9.2): reads `water.depth`,
-  velocities / outflows; adds `soil.erodible`, `sediment.c` (state), `dem` becomes dynamic.
-- **Stages:** `map` detachment / deposition from transport capacity; `flux` sediment
-  transport along water outflows; derived-layer recomputation of slope when `dem` changes.
-
-### ATM-01 Pollutant / smoke dispersion (extension)
-
-- **Template:** `sonnenschein2025hybrid` (open code, focal weighted average with wind).
-- **Layers:** `baseline` (in), `emission` (in / forcing), `conc` (state), morphology
-  layers (in).
-- **Stages:** `map` reset source cells to emission values; `stencil` n × n focal average
-  with direction weights from wind (windward / leeward factors); repeated k iterations per
-  forcing hour.
-- **Chain:** smoke source from HAZ-01 burning cells (L11).
-
-### HYD-09 Groundwater flow (extension)
-
-- **Template:** `ravazzani2011macroscopic` (macroscopic CA, Theis benchmark).
-- **Layers:** `K` (conductivity), `Sy` (specific yield), `bottom`, `head` (state),
-  `recharge` (forcing), `wells` (sources / sinks), river cells.
-- **Stages:** `flux` von Neumann with harmonic-mean transmissivity × head difference;
-  gather update `h += ΣQ·Δt / (Sy·Δs²)`; `map` recharge, wells, river exchange.
-- **Boundaries:** fixed head (Dirichlet) and fixed flux (Neumann) cells.
-- **Benchmark:** Theis solution (analytical) in the benchmark runner.
-
-## Requirements traceability (summary)
-
-| Requirement group | Covered by | Notes |
+| Model | Revision 1.0 said | Corrected (source: card section 11a) |
 |---|---|---|
-| R1 space | GridSpec, layers (cell / face / slot), LUT, agents | hex / graph: slot abstraction ready, implementation deferred |
-| R2 neighbourhoods | slot tables, weighted / directional kernels, `convolve`, `jump`, `walk` | |
-| R3 update schemes | `map`, `stencil`, `flux`, `queue`, `front`, `agents`, `allocate`, active tiles | Gillespie on graphs deferred (C) |
-| R4 time | time policies, forcing, display clock | |
-| R5 randomness | counter-based RNG, distributions, ensembles | |
-| R6 sources / boundaries / interventions | `map` stages, boundary policies, target masks, interventions, controllers | |
-| R7 derived layers | geodata pipeline, derived layers with dependencies | |
-| R8 observation | observers, exporters, metrics, benchmark runner | |
-| R9 coupling | submodels, chains | concurrent multi-clock coupling deferred (C) |
-| R10 parameters | ParamDecl with provenance, scenarios, calibration helpers | |
-| R11 non-functional | workers, Node, CPU reference, WebGPU, i18n keys | |
+| WAT | outflows in a slot layer; Δt from a `reduce` every step | face layer suffices for WCA2D; outflow layer is persistent state; Δt recomputed every update period |
+| WAT / LND-03 | flux scenario | histogram `reduce` + connected basin mask + controller |
+| HAZ-01 | `map` burning → burnt after the stencil; spotting by `jump` | burn-out inside the same stencil (previous state); N2 rule is a deterministic ray; per-slot elevation difference needed |
+| ECO-01 | Bernoulli draw from LUT by infested-neighbour count; optional jump | neighbour bump + categorical Markov table; felling inside the table; no jump in the primary model |
+| EPI-04 | `jump` accumulates arrivals | `jump` is conservative with acceptance probabilities; clustered catastrophes; EPI-05 better as `queue` |
+| HAZ-05 | `lava.parent` slot index | slot bitmask; von Neumann in the primary rule |
+| HAZ-02 | time policy budget / converge | `oneShot` per-source traversal + merge |
+| ATM-02 | plain face flux | per-donor limiter sub-pass; description second-hand (primary not local) |
+| LND-01 | `map` spontaneous growth, `walk` road growth, top-N `allocate` | `events` (sequential trials, spiral search + walk), scatter-as-gather stencil, extended `allocate` modes |
+| ATM-01 | fixed iterations per hour | `repeat` block, forcing reset each hour, normalised kernel with centre weight |
+| MOV-01 | `stencil` for the dynamic field | stochastic integer decay / diffusion (`flux` integer mode); `queue` re-run on exit changes |
