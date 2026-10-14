@@ -1,10 +1,11 @@
 <!--
-Candidate model card template.
-Copy to docs/models/candidates/<id>.md, where <id> is the longlist identifier in kebab-case.
+Model card template (version 2, 2026-10-14 — adds parameters with provenance, engine
+mapping and implementations).
+Copy to docs/models/candidates/<id>.md, where <id> is the longlist slug (kebab-case).
 Fill in every section. If something is unknown, write it as an open question rather than
-guessing. Do not invent citations, authors, years or numeric parameter values:
-use `TODO(literature)` for anything that needs support from literature and
-"to be verified" for unverified facts (data sources, licences, named approaches).
+guessing. Every numeric value must cite its source (BibTeX key + table / section / page)
+or be marked as an assumption. Unverified facts (data sources, licences) are marked
+"to be verified". Literature: only references in /references.bib.
 -->
 
 # <Model name>
@@ -15,7 +16,8 @@ use `TODO(literature)` for anything that needs support from literature and
 | Longlist ref. | `<longlist item ID>` |
 | Category | <e.g. hydrology, natural hazards, ecology…> |
 | Group | core / extension |
-| Weighted score | <from docs/review/evaluation-matrix.md> |
+| Weighted score | <revision 2 score from docs/review/evaluation-matrix.md> |
+| Primary reference | `<bibkey>` |
 | Status | draft |
 | Last updated | YYYY-MM-DD |
 
@@ -46,11 +48,19 @@ network structure…).
 - **Update scheme:** synchronous / asynchronous; why.
 - **Boundary conditions:** which kind and why.
 
-## 5. Transition rule — idea
+## 5. Transition rule
 
-Verbal description of the rule (no equations taken from literature). Describe the
-mechanism step by step: what a cell looks at, what decides its next state, what is
-conserved (e.g. mass of water) and what is not.
+The rule of the primary reference, step by step, in our own words; equations may be
+restated in our notation with a citation (key + equation / section number). State what a
+cell reads, what decides its next state, what is conserved and what is not, and every
+place where the paper is ambiguous (mark as an open question). Variants from supporting
+references in a separate sub-section.
+
+## 5a. Parameters
+
+| Parameter | Symbol | Unit | Value / range | Source (key, location) | Note |
+|---|---|---|---|---|---|
+| | | | | `key`, Table N | |
 
 ## 6. Deterministic vs. stochastic
 
@@ -88,6 +98,13 @@ validation is realistic.
 Which models can feed this one or consume its output (chaining scenarios), and which
 shared components it uses (see `docs/review/shared-components.md`).
 
+## 11a. Engine mapping
+
+- **Stages** (primitives from `docs/architecture/engine-architecture.md` §6), in order per step.
+- **Time policy**, **boundaries**, **RNG use**, **observers**, **interventions**.
+- **Shared components** used (IDs from `docs/review/shared-components.md`).
+- **Model-specific parts** that are not shared.
+
 ## 12. Complexity estimate
 
 - **Implementation:** low / medium / high — why.
@@ -103,13 +120,14 @@ resolution), technical (performance), communication (users mistaking a demo for 
 
 - …
 
-## 15. Literature
+## 15. Literature and implementations
 
-TODO(literature)
-
-Keywords for the literature search:
-
-- `…`
+- **Primary reference:** `key` — why this one.
+- **Supporting references:** `key` — role (parameters, variant, validation case).
+- **Benchmarks / reference data:** `key` or `data/reference/<name>`.
+- **Implementations:** name, URL, licence, use under ADR 0006 (reusable code / reference
+  only / oracle only).
+- **Still missing:** `TODO(literature)` items and keywords for further search.
 
 ## 16. Terminology (cs)
 
