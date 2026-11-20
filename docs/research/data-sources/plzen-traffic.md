@@ -28,6 +28,31 @@ repository.
 | Parking | car parks (55: 120 polygons, type), parking houses occupancy (166, weekly CSV) | type, capacity, occupancy | destinations / parking search |
 | Counts at Náměstí Republiky (218), school surroundings (219) | vehicle / pedestrian / cyclist counts | — | local validation |
 
+## DXF versions: sign orientation and arrow types (key finding)
+
+The **DXF distributions** (open data, same datasets 6 and 92) keep what GeoJSON and SHP lose:
+
+- **Vertical signs (6):** all 28 506 signs are block references (`INSERT`) whose block name
+  starts with the **sign code** (`P4$209`, `IP4B$…`, `B20A$…`; 252 codes) and which carry a
+  **rotation angle** (non-zero for 28 153 signs); S-JTSK coordinates.
+- **Horizontal markings (92):** 12 540 block references; **arrow types are in the block
+  names**: `V9AR` straight (2 002), `V9AP` right (96), `V9AL` left (87), `V9ARP` straight +
+  right (71), `V9ARL` straight + left (68), `V9APL` right + left (23), `V9APRL` all (4), plus
+  `V9BP`, `V9CP`; other symbols (`V14`, `V10F`, `V15…`, `V6A`, `V12B`, `V20`) also coded.
+  Line markings are `LINE` / `POLYLINE` entities on numbered layers (codes of line types are in
+  the GeoJSON / SHP attribute `OZNACENI`).
+- **The rotation is meaningful** (tested against the street graph, nearest segment ≤ 30 m):
+  - (rotation − road bearing) mod 180 is within 80–100° for 4 593 of 6 116 selected signs
+    (75 %) and 1 848 of 2 295 arrows (81 %) — symbols are drawn perpendicular to the road.
+  - Combined with the side of the road on which the sign stands, the rotation cluster
+    (≈ 90° or ≈ 270° relative to the segment) agrees with right-hand placement for
+    **97.2 %** of one-way signs IP4b (559 / 575), **94.8 %** of P4 / P6 (1 027 / 1 083),
+    84.8 % of B2, 76.3 % of P2 and 74.1 % of B20a. Hence the governed travel direction can be
+    derived as **rotation + 90°** (empirical rule; lower shares for P2 / B20a are expected at
+    junctions and on medians where the nearest segment is a cross street).
+- The street graph DXF has 13 layers (road categories) but still **no direction attribute**;
+  direction comes from the signs.
+
 ## Data quality findings
 
 - **Both sign layers are invalid GeoJSON**: unescaped double quotes inside texts
@@ -38,11 +63,9 @@ repository.
   them into points (28 470), lines (630) and polygons (71) with the same four attributes —
   sign positions are therefore available as points, in S-JTSK coordinates (EPSG:5514, read
   from the file extent; the ZIP has **no .prj** file). Neither version has a **facing
-  direction or link to a road segment**. Position = centroid; which approach a sign governs must be
-  inferred (nearest segment, side of road, symbol orientation) — the main source of
-  ambiguity.
-- **Direction arrows (V9a) carry no arrow type** (straight / left / right); the type would
-  have to be recognised from the polygon shape.
+  direction or link to a road segment** — the **DXF version has the rotation** (see above).
+- **Direction arrows (V9a) carry no arrow type in GeoJSON / SHP** — but the DXF block names do
+  (see above).
 - **Street graph is a cartographic centreline network, not a routable graph**: with exact
   endpoint matching it falls apart into 2 224 components (largest 4 162 of 8 922 nodes,
   5 605 dead ends); with a 1e-4° (~10 m) tolerance still 1 849 components; 181 dead ends lie
@@ -54,20 +77,22 @@ repository.
 
 ## Feasibility
 
-**Short answer: yes for a realistic CA traffic model of a selected central sub-network
-(tens of junctions with detectors), with semi-automatic reconstruction and manual
-curation; no for a fully automatic city-wide lane-level model.**
+**Short answer (revised with the DXF findings): yes — the open data (street graph, line
+markings with codes, signs and arrows with codes and orientation) allow a largely automatic
+reconstruction of a directed, rule-annotated road network with lane counts and turn lanes
+where markings exist; manual curation remains for junction details, and signal timing is
+missing.**
 
 | Model element | Source | Automation | Effort / risk |
 |---|---|---|---|
 | Road network topology (links, junction nodes) | street graph (56) filtered to vehicle categories + snapping / splitting | automatic + checks | medium — cleaning rules, small manual fixes |
 | Carriageway width | road outlines (81) | automatic (cross-section distance) | low |
 | **Number of lanes per link** | lane dividers V2b / V1a between edge lines V4 (92), counted along cross-sections | semi-automatic | medium — only where markings exist (main roads); residential streets default to 1 + 1 |
-| **Turn lanes at junctions** | arrows V9a near stop lines V5 (92) | shape recognition + manual check | high — arrow type not in attributes |
-| One-way streets | IP4b / B2 / C2 signs (6) | sign-to-segment association | high — no sign orientation; cross-check needed |
+| **Turn lanes at junctions** | arrows from DXF (type in block name, orientation from rotation) near stop lines V5 (92) | automatic + checks | medium |
+| One-way streets | IP4b / B2 / C2 signs from DXF: governed direction = rotation + 90° (97 % consistent for IP4b) | automatic + checks | low–medium |
 | Speed limits | B20a values + IZ8a / IZ5a zones (6); defaults by category | semi-automatic (zones as polygons need reconstruction from entry / exit signs) | medium |
-| Priority at unsignalised junctions | P1–P6 signs (6) | association to approaches | high (same orientation problem) |
-| Turn bans | B24a / B24b (6) | association | high |
+| Priority at unsignalised junctions | P1–P6 signs from DXF with orientation (95 % consistent for P4 / P6) | association to the approaching link | medium |
+| Turn bans | B24a / B24b from DXF with orientation | association | medium |
 | **Signal timing** | not published | — | **gap** — estimate fixed-time plans or request from the city; 90-s detector intervals are about one signal cycle, too coarse to infer phases |
 | Demand (inflows, turning ratios) | detector intensities per lane at 100 junctions (160) + profile capacities (132) | automatic aggregation | medium — no OD matrix; turning ratios only partly derivable from lane-level loops |
 | Calibration / validation | detector occupancy and intensity (90 s), speed at some junctions | automatic | low–medium |
@@ -98,5 +123,5 @@ correct and calibrate them.
   available, e.g. via the ČHMÚ-tailored dataset 161?).
 - Meaning of detector labels (`DVC` vs `DVC'`) — lane vs. upstream / downstream loop.
 - OSM coverage of lanes / turn lanes / signals in Plzeň.
-- Does the DGN version keep the symbol rotation (cell angle) of the signs? It would give the
-  facing direction (SHP and GeoJSON do not; to be verified).
+- Validate the rule "governed direction = rotation + 90°" on a manually checked sample of
+  junctions (empirical consistency is 74–97 % depending on the sign type).
