@@ -8,6 +8,11 @@ Done 2026-11-20 by downloading the GeoJSON distributions to a temporary folder a
 analysing them with scripts (geometry, attributes, topology); nothing stored in the
 repository.
 
+> **Update 2026-11-20:** the city GIS services (not the open-data portal) contain a routable
+> traffic-model network with capacities and assigned volumes, live and historical FCD speeds,
+> DTM road surfaces and a 0.5 m terrain model — see `plzen-gis-services.md`, which revises the
+> feasibility conclusion below (subject to the city's GIS data licence).
+
 ## Datasets and what they contain
 
 | Dataset (ID) | Content (measured) | Attributes | Use for a traffic model |
