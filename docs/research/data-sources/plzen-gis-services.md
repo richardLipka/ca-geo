@@ -8,16 +8,25 @@ downloaded in bulk, nothing stored in the repository.
 
 ## Terms of use — read first
 
-- The **open-data portal** (`plzen-opendata.md`) is the licensed open channel (free reuse).
-- Data from the **city GIS** outside the portal are governed by the *Rules for providing data
-  and outputs from the GIS of the City of Plzeň* (approved by the City Council on
-  9 June 2016, resolution No. 656) with **licence conditions**, an application form and a
-  price list. The rules contain a dedicated article for **students and public research and
-  educational institutions (article 6)**.
-- The ArcGIS REST services listed below are publicly reachable for viewing; the portal items
-  carry no licence information. **Reuse of their data in ca-geo should go through an official
-  request under article 6** (University of West Bohemia as a public research institution),
-  not by harvesting the services. Exact conditions to be verified in the rules document.
+Based on the *Rules for providing data and outputs from the GIS of the City of Plzeň*
+(City Council resolution No. 656, 9 June 2016), their annexes (price list valid from
+1 Feb 2023, licence conditions, application forms) and the portal's licence page — all read
+2026-11-20.
+
+| Tier | What | Access | Licence / conditions |
+|---|---|---|---|
+| **1. Public, basic regime** (Rules art. 1(3)) | (a) **Open data** at opendata.plzen.eu (153 datasets); (b) **map viewing and download services** "listed at mapy.plzen.eu" | free, no request | Licence conditions point 4: **CC BY-SA 4.0** + attribution "datový podklad © SITMP". **Inconsistent sources:** the portal's open-data page says **ODbL**; the NKOD records of the datasets say "no copyrighted works / no protected database". Third-party data keep their own licences (see below) |
+| **2. Technically public, licence unclear** | ArcGIS REST services on ags.plzen.eu queryable **without a token** — traffic-model scenarios, FCD incl. history, detectors, closures, DMT 2020 / 2022 (ImageServer), historical maps, DTM ZPS, orthophotos 2020 / 2022 / 2024, 3D scene layers, cadastre and land-use-plan map services | reachable without login | Whether they count as the "download services" of tier 1 is **not stated**: no explicit list of services (WMS / REST) was found on mapy.plzen.eu. The licence page requires citing the source when "using data from SITMP web services". Clarification requested in `requests/sitmp-article6-request.md`, question 1 |
+| **3. On request only** | (a) token-protected services (e.g. folder `GIS_Povodne`); (b) data **files** prepared by SITMP beyond open data (standard / above-standard regime), e.g. the priced items: cadastral parcels, orthophotos 2006 / 2004 / 2002 / 1996 / 1945, simplified base and thematic layers, technical-map networks (public-lighting cables, traffic-signal cables, SITMP optical network, heating, utility tunnels), greenery passport; other data "individually by agreement"; (c) internal applications for city staff | written request (forms 3a–3e) | Article 6 (public research / education): **free**, "reasonable scope (e.g. a data sample) at the supplier's discretion"; use **only for the stated purpose, no provision to third parties in any form** (licence conditions 1.2); contractual penalty 30 000 CZK. Article 8 (others): handling fee 300 CZK + price list |
+| **Not available** | traffic-signal timing plans (no service found; loops only linked to controller ids) | — | — |
+
+Third-party data distributed by SITMP keep their supplier's conditions (Rules art. 1(12–13)).
+The portal's licence page lists external licences for: 3D models of Plzeň 2024 / 2020 / 2009
+(Georeal — the 2024 / 2020 licences allow free sublicensing with the attribution
+"© GEOREAL spol. s r.o."), ZABAGED and DMR (ČÚZK), Geonames, orthophotos 1938–2019, the
+Mapy.cz plan and the Imperial obligatory imprint 1841. The DMT services are named
+"Georeal" (supplier licence to be verified); FCD / CEDA data are not on the list (rights
+holder unknown).
 
 ## Transport applications on the map portal
 
