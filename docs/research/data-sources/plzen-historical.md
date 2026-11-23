@@ -133,6 +133,87 @@ features with `valid_from` / `valid_to` ranges and provenance → animate layer 
   feeding demos. Licensing (ČÚZK cadastre mosaic, city aerials, archive content) is the main
   constraint, not technology.
 
+## 6. Pre-1800 sources (second round, 2026-11-23)
+
+Focused searches on medieval and early-modern material: iconography and maps, fortification
+plans in military / state archives, written and archaeological sources. Automated searches
+were blocked at Riksarkivet (CAPTCHA), Gallica (403/503), Heidelberg diglit, digilib.phil.muni.cz
+(CAPTCHA) and several Czech portals — "not found" there means "not searched", not "absent".
+
+### Views and siege images (additions)
+
+| Item | Date | Holder / licence | Note |
+|---|---|---|---|
+| Wall painting, view from NE (Dominican cloister) | c. 1500–25 | fragment in ZČM; Průzkumy památek 1997/2, fig. 15 | oldest view; Commons "Pilsen in 1515" is a modern redrawing |
+| G. de Statia, Crucifixion with view from SW (town hall) | 1574 | in situ; ibid., fig. 26 | double wall, turrets on SE outer wall; proportions judged reliable |
+| Hogenberg workshop, *Beleg van Pilsen, 1619* (key A–Y) | 1619–21 | Rijksmuseum RP-P-OB-78.785-365, CC0 | longest legend of the 1618 siege images |
+| Keller etching, Halle impression | 1619 | Kunstmuseum Moritzburg MOIISt00199; image PDM | better free copy than Kramerius UK |
+| *Warhaffter Bericht* with Halbmayr copperplate (Nürnberg) | 1619 | Regensburg 999/Caps.9(12 → BSB bsb11086816, NoC-NC; Ossolineum copy | plate probably not in the scan (TBV) |
+| W. Hollar, *Pilsen / Plzen* (P812) | 1640s (TBV) | Fisher Library Toronto; Commons PDM | small profile, likely after Willenberg |
+| G. Bodenehr (attr.), *Plan und Ansicht … Pilsen* | c. 1700 | DHM Do 2002/81, CC BY-NC-ND 4.0; copy AMP G18 | copies Merian 1650 |
+| J. Lautner, bird's-eye view from SE | 1773 | ZČM (shelfmark TBV); PrP 1997/2, fig. 27 | state just before demolition |
+| TE plate, UB Augsburg 600 dpi scan | 1635 / 1618 | urn:nbn:de:bvb:384-uba000237-1 | Janata et al. 2013: 29 GCPs, RMSE 18 m (inner town), 107–227 m (sheet) |
+
+No F. B. Werner view of Plzeň was found (Werner drew Rokycany and Bor; a Plzeň sheet may
+exist — check Marsch 1995). Key catalogue for remaining ZČM holdings: Mergl 1995,
+*Plzeňské pohledy a veduty čtyř století 1500–1900*.
+
+### Fortification plans
+
+- **Plan of the core with fortification, 1703** — Archiv města Plzně inv. 2727/1-4; viewer
+  only (four-part B/W copy, east up), not among the REST services. Likely linked to the
+  "extensive reconstruction of the fortification" event of 3/1703 (Encyklopedie). Oldest
+  detailed bastion plan found; top request priority.
+- **du Portal atlas, French campaign 1741–42** (BnF, shelfmark TBV) — Nechvátal 2016
+  (*Archaeologia historica* 41/2, doi:10.5817/AH2016-2-11) says du Portal drew plans of Cheb,
+  Bor, Plzeň, Beroun and Prague; whether the Paris atlas holds the Plzeň sheet is TBV.
+- Royal Collection RCIN 728063.m (camp "near Alt Bilsen", 1742) — probably Starý Plzenec;
+  low value.
+- No Pilsen plan web-indexed at Kriegsarchiv (series KPS KS G Städtepläne, KPS GPA Inland C),
+  Krigsarkivet, Dresden, Berlin, VHA, Národní archiv.
+
+State of knowledge: bastion work began at the end of 1618 (Památkový katalog) and was
+carried out mainly under commander J. de la Corona / Lacron 1645–49 (suburb cleared 1647),
+completed by c. 1659 (engineer named "Ziznera" in the Encyklopedie — spelling TBV); deep
+moat flooded from the Radbuza, drawbridges, new Říšská gate; one pentagonal bastion (1645)
+survives in sady 5. května. No further investment in the 18th c. except 1703. Pražská
+bašta demolished 1795. **Bastion count, names, ravelins and moat width are not stated
+reliably in any online source**; a blog (Zestínu 2022, citing Anderle) places remains at
+about 6–8 locations around the ring (unverified).
+
+### Written sources
+
+| Source | Content | Access |
+|---|---|---|
+| Strnad (ed.), *Listář král. města Plzně* I, 1300–1450 (1891) | charters, town-book entries: houses, malt-houses, gate suburbs | NK Kramerius `uuid:d7daf450-40fc-11dd-8d2a-000d606f5dc6`, PD, page OCR |
+| *Listář* II, 1450–1526 (1905) | incl. 1457 charter on repairing ruined walls, 1453 plot before Litická brána | Internet Archive `listarkralovske01strngoog` (metadata mislabelled), PD, OCR |
+| Šimon Plachý z Třebnice, *Paměti plzeňské*, ed. Strnad (1883) | chronicle c. 1560–1609: fires, buildings | MZK `uuid:1456cc10-06fc-11eb-b34d-005056827e51`; IA `mimonaplachhoz00strn`, PD |
+| J. Schaller, *Topographie des Königreichs Böhmen* 9, *Pilsner Kreis* (1788) | 315 houses in town + 142 in Prague, Small and New suburbs | BSB `bsb11094711`; IA `11094711bsb`, PD, Fraktur OCR |
+| *Fontes rerum Bohemicarum* V (1893) | Hussite sieges 1421–34 | sources.cms.flu.cas.cz bookid 1103 |
+| *Sborník Městského historického musea* I–III (1909–14) | topographic studies (Strnad, Macháček) | SVK PK Kramerius, public |
+| Strnad, *O založení král. města Plzně* (1894) | founding plan | SVK PK, on-site only |
+| Orna & Dudková 2012, *Archaeologia historica* 37/1 | archaeology of the Hussite sieges | open, manual download (CAPTCHA) |
+| Kodera 2004; Bělohlávek et al. 1965 *Dějiny Plzně I*; *Minulostí Západočeského kraje* | 17th-c. fortification; synthesis | library / DNNT only — validation, not bulk mining |
+| Berní rula 1654, Theresian (1748–57) and Josephine (1785–89) cadastres | house lists | archives; nothing digitised found; Plzeň in Berní rula TBV |
+
+### Archaeology (AMČR)
+
+Querying the AIS CR digital archive for the box 49.743–49.752 N, 13.370–13.384 E returns
+**195 public fieldwork events** (leaders: Široký 58, Frýda 32, Postránecká 22, Nováček 17);
+25 mention walls, gates, moat or fortification; many give house number and street. Stored
+locally (not versioned) in `data/reference/plzen-amcr/` (CC BY-NC 4.0 metadata) and plotted
+on the 1781 / 1840 plans in the overview page.
+
+### Archive requests (ranked)
+
+1. Archiv města Plzně — scan of the 1703 plan with scale and author; 1703 reconstruction
+   file; other 17th–18th-c. fortification plans.
+2. ÖStA Kriegsarchiv — "Pilsen" in KPS GPA Inland C (Böhmen) and KS G Städtepläne (by e-mail).
+3. BnF — du Portal atlas shelfmark and Plzeň sheet.
+4. Krigsarkivet — manual search "Pilsen" (Sveriges krig; Utländska stads- och fästningsplaner).
+5. ZČM — photographs of Hauer (G 141), Seeblummer (G 182), Lautner (1773); Mergl 1995.
+6. Library — Kodera 2004, HAMČR 21 (2009), *Dějiny města Plzně I* (2014).
+
 ## Open questions
 
 - Licence for reuse of the city's `GIS_Historicke` rasters (rules point 4 says CC BY-SA 4.0
