@@ -32,6 +32,7 @@ function shell() {
       <span class="save" id="save"></span>
       <button type="button" id="undo">${t('btn.undo')}</button><button type="button" id="redo">${t('btn.redo')}</button>
       <a class="btnlink" href="/viewer3d.html">${t('v3d.open')}</a>
+      <a class="btnlink" href="/growth3d.html">${t('g3d.open')}</a>
       <button type="button" id="lang">${t('btn.lang')}</button>
     </div>
   </header>

@@ -15,66 +15,8 @@ import numpy as np
 
 raw, vil_path, out = sys.argv[1:4]
 os.makedirs(out, exist_ok=True)
-BBOX = (-826900, -1074200, -817900, -1065200); RES = 2.5; N = 3600
-CORE = (-822400, -1069700)
+from growth_rules import BBOX, RES, N, CORE, to_px, to_map, imread, rule, coverage, DENS_T, YEAR
 
-def imread(p):
-    im = cv2.imdecode(np.fromfile(p, np.uint8), cv2.IMREAD_UNCHANGED)
-    alpha = None
-    if im.ndim == 3 and im.shape[2] == 4: alpha = im[..., 3]; im = im[..., :3]
-    return im, alpha
-
-def to_px(X, Y): return int((X - BBOX[0]) / RES), int((BBOX[3] - Y) / RES)
-def to_map(c, r): return BBOX[0] + (c + 0.5) * RES, BBOX[3] - (r + 0.5) * RES
-
-def hsv(im):
-    h = cv2.cvtColor(im, cv2.COLOR_BGR2HSV); return h[..., 0].astype(int) * 2, h[..., 1] / 255, h[..., 2] / 255  # hue in degrees
-
-def dense(mask, k, thr):
-    """fraction of mask pixels in a k x k window above thr (for hatched / line drawings)."""
-    d = cv2.blur(mask.astype(np.float32), (k, k)); return d > thr
-
-ALPHA = None
-
-def rule(name, im):
-    H, S, V = hsv(im)
-    red = ((H < 22) | (H > 335)) & (S > 0.22) & (V > 0.35)
-    if name == '1840_cadastre':  # carmine buildings only (at 2.5 m/px the yellow wooden-building class collides with field colours)
-        return ((H < 15) | (H > 335)) & (S > 0.35) & (V > 0.4)
-    if name == '1840_vm2':      # settlements drawn red / carmine on a pale base, 1:28 800
-        return dense(((H < 20) | (H > 330)) & (S > 0.18) & (V > 0.3), 5, 0.35)
-    if name in ('1880_vm3', '1891', '1912'):  # black / dark brown block hatching
-        dark = V < (0.42 if name == '1880_vm3' else 0.45)
-        return dense(dark, 9, 0.5 if name == '1880_vm3' else 0.38)
-    if name == '1895':
-        return dense(red | (V < 0.40), 7, 0.4)
-    if name in ('1926', '1931', '1938'):
-        return red
-    if name == '1947':  # red / orange blocks in the west, grey-violet blocks in the east
-        return red | ((H >= 15) & (H < 40) & (S > 0.35) & (V > 0.55)) | ((H >= 250) & (H < 335) & (S > 0.10) & (V > 0.45) & (V < 0.85))
-    if name == '1953_orto':     # bright roofs + strong local texture (rough heuristic)
-        g = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY).astype(np.float32)
-        mu = cv2.blur(g, (9, 9)); sd = np.sqrt(np.maximum(cv2.blur(g * g, (9, 9)) - mu * mu, 0))
-        return dense((sd > 28) & (mu > 90), 15, 0.5)
-    if name == '2025_ruian':    # RÚIAN building polygons (ČÚZK map service, transparent background)
-        return ALPHA is not None and ALPHA > 0
-    if name == '2025_ztm':      # buildings dark grey, built-up area tint pink-grey
-        bld = (S < 0.12) & (V > 0.45) & (V < 0.78)
-        tint = ((H < 30) | (H > 320)) & (S > 0.06) & (S < 0.35) & (V > 0.75)
-        return dense(bld, 5, 0.25) | dense(tint, 9, 0.6)
-    return red
-
-def coverage(name, im, alpha):
-    if alpha is not None: m = alpha > 0
-    else: m = ~((im > 245).all(2))
-    return cv2.erode(m.astype(np.uint8), np.ones((15, 15), np.uint8)) > 0
-
-# 2nd military survey (1840_vm2): the CENIA rendering has no separable settlement colour at this
-# scale — kept as a visual layer only, not classified
-# density thresholds per epoch (share of building pixels in the 150 m window)
-DENS_T = {'1840_cadastre': 0.10, '1880_vm3': 0.30, '1891': 0.25, '1895': 0.25, '1912': 0.2, '1953_orto': 0.25, '2025_ruian': 0.15}
-YEAR = {'1840_cadastre': 1840, '1880_vm3': 1880, '1891': 1891, '1895': 1895, '1912': 1912, '1926': 1926,
-        '1931': 1931, '1938': 1938, '1947': 1947, '1953_orto': 1953, '2025_ruian': 2025}
 
 villages = json.load(open(vil_path, encoding='utf-8'))
 # S-JTSK via proj4-free Krovak is heavy: reuse the WGS84 → 5514 transform from GDAL if present, else pyproj
@@ -97,10 +39,9 @@ cr, cc = to_px(*CORE)[::-1]
 for name in sorted(YEAR, key=YEAR.get):
     f = next((x for x in os.listdir(raw) if x.split('.')[0] == name), None)
     if not f: continue
-    im, alpha = imread(os.path.join(raw, f)); ALPHA = alpha
+    im, alpha = imread(os.path.join(raw, f))
     cov = coverage(name, im, alpha) if name != '2025_ruian' else np.ones((N, N), bool)
-    globals()['ALPHA'] = alpha
-    b = rule(name, im) & cov
+    b = rule(name, im, alpha) & cov
     # settlement areas by building density: share of building pixels within ~150 m above a threshold
     # (merges blocks separated by streets and courtyards into continuous urban fabric)
     dens = cv2.blur(b.astype(np.float32), (61, 61))
@@ -153,7 +94,7 @@ json.dump({'type': 'FeatureCollection', 'name': 'Plzeň built-up by epoch', 'crs
 for k, v in vres.items():
     seq = [(YEAR[e], s) for e, s in v['epochs'].items() if s]
     v['first_joined'] = next((y for y, s in sorted(seq) if s == 'joined'), None)
-json.dump(vres, open(os.path.join(out, 'villages.json'), 'w'), indent=1, ensure_ascii=False)
+json.dump(vres, open(os.path.join(out, 'villages.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
 while len(tiles) % 4: tiles.append(np.full((450, 450, 3), 255, np.uint8))
 sheet = np.vstack([np.hstack(tiles[i:i + 4]) for i in range(0, len(tiles), 4)])
 cv2.imencode('.jpg', sheet, [cv2.IMWRITE_JPEG_QUALITY, 82])[1].tofile(os.path.join(out, '_growth.jpg'))

@@ -214,6 +214,55 @@ on the 1781 / 1840 plans in the overview page.
 5. ZČM — photographs of Hauer (G 141), Seeblummer (G 182), Lautner (1773); Mergl 1995.
 6. Library — Kodera 2004, HAMČR 21 (2009), *Dějiny města Plzně I* (2014).
 
+## 7. Origin of villages and buildings in the surroundings (third round, 2026-11-23)
+
+Goal: replace interpolated dates in the growth model (`docs/research/plzen-growth-model.md`)
+outside the old town. The checks were run on 2026-11-23. "Checked" means queried or opened. "Lead"
+means found in a catalogue or literature but not opened.
+
+### Village origin (first mention, size over time)
+
+| Source | What it gives | Access | Status |
+|---|---|---|---|
+| cs.wikipedia village articles | first written mention per village (used: 11 villages) | MediaWiki API, CC BY-SA | checked, used |
+| Wikidata P1249 (*time of earliest written record*) | 19 items within 6.5 km of the square, e.g. Křimice 1251, Malesice 1239, Bukovec 1379, Červený Hrádek 1384, Radobyčice 1444, Újezd 1115, Nová Hospoda 1720 | SPARQL `wikibase:around`, CC0 | checked. **Conflicts with Wikipedia**: Doubravka 1383 vs 1338, Hradiště 1414 vs hammer works 1686 (court vs hamlet). Needs source-level resolution (Profous) |
+| A. Profous, *Místní jména v Čechách* I–V (1947–60) | the standard dated attestations of every place name (year + charter) | print. No digitised copy found online (NDK / Kramerius not checked directly) | lead. **Best authority for first mentions**: 15–20 entries to transcribe by hand |
+| ČSÚ, *Historický lexikon obcí ČR 1869–2011* / dataset 170240-17 | **population and number of houses per municipality part** at every census 1869–2011 (Bolevec, Doubravka, Lobzy … are parts) | csu.gov.cz, open data (part-level edition = PDF / XLS TBV) | lead. **Highest value**: house counts per village per decade calibrate the interpolation (target counts per epoch instead of map pixels). Definitions differ by census (houses total vs. occupied 1961–80) |
+| Schaller, *Topographie* 9 (1788) | houses per village and suburb | BSB `bsb11094711`, PD, Fraktur OCR | in inventory. To extract: house counts per village for 1788 |
+| J. G. Sommer, *Das Königreich Böhmen* 6, *Pilsner Kreis* (1838) | houses and inhabitants per village c. 1837, owners, churches, mills | BSB scan (DDB, URN `urn:nbn:de:bvb:12-bsb10709663-4`), no-copyright / non-commercial | lead. Second calibration point before the 1840 cadastre |
+| Berní rula 1654, Kraj Plzeňský (edition vols 23–25) and the 1757 Theresian cadastre | settled / deserted farmsteads per village after the Thirty Years War | print edition; Národní archiv PDFs exist for some regions (`nacr.cz/…/Plzensko_cele_H_zamceno.pdf` — content TBV) | lead. Gives **1654 farmstead counts** (war damage), the only quantitative point between 1618 and 1788 |
+| ČÚZK archive (`ags.cuzk.gov.cz/archiv`, Archiv-WEB): indikační skici, císařské otisky per cadastral territory | colour-coded 1838–41 maps for Bolevec, Doubravka, Lobzy … with house numbers; also later reambulations | online viewer, per sheet | lead. The city mosaic used so far covers 77.5 km² of the 81 km² frame. The indication sketches would add **house numbers** (link to Sommer / Schaller) |
+| Müller's map of Bohemia (1720) and 1st military survey (1764–68) | presence and rough size of villages, mills, farmsteads before 1788 | geolab.cz (oldmaps moved to `geolab.cz/stare-mapy`), Arcanum Mapire (view only); CENIA has no 1st-survey WMS (HTTP 404) | checked: no open WMS found. Use as visual evidence only |
+| OpenHistoricalMap | administrative history of Plzeň (e.g. relation 2853498: Plzeň 1924–42 with Doubravka, Doudlevce, Lobzy) | API, CC0 | checked (search). Join dates of villages to the town as polygons |
+| Diploma thesis Hemanová (theses.cz `j0q9dd`), the medieval hinterland of Nová Plzeň | villages subject to the town (Lobzy, Doubravka …), medieval references | theses.cz PDF (download redirected, TBV) | lead |
+| Obecní kroniky (Porta fontium, SOA Plzeň; ≈ 5 100 chronicles) | local building events 1920s–1990s | online scans, handwritten | lead; low priority (manual reading) |
+
+### Building origin (individual buildings)
+
+| Source | What it gives | Access | Status |
+|---|---|---|---|
+| RÚIAN `dokonceni`, `pocetpodlazi` | completion year (or age class) for 15 868 of 32 425 buildings in the frame | open data | checked, used |
+| Wikidata P571 / P576 | 383 items with inception within 6.5 km, but mostly statues, plaques, bridges. Only ≈ 30 houses and churches; pre-1800 only 18 (century precision: "1400") | SPARQL, CC0 | checked. Low value for footprints; churches only |
+| NPÚ Památkový katalog | ≈ 390 monuments in Plzeň with dating ("datace od–do" fields added 2024) | web + Geoportál NPÚ (`geoportal.npu.cz`), no documented JSON API | lead. Bulk export on request (open question below) |
+| Encyklopedie dějin města Plzně | 362 buildings with "vznik" and building history; also entries for villages and their incorporation | crawlable HTML, no terms | in inventory; needs permission before reuse |
+| *Soupis památek historických a uměleckých* — Plzeň district volume | dated churches, castles, chapels of the villages (c. 1900) | other district volumes are on archive.org and Kramerius; Plzeň volume not located | lead |
+| AMČR (archaeology) | excavation evidence of early-medieval settlement (Doubravka, Košutka) | api.aiscr.cz, CC BY-NC 4.0 | in inventory; settlement presence, not buildings |
+| ČÚZK DMR 5G (`ags.cuzk.gov.cz/arcgis2/rest/services/dmr5g/ImageServer`) | terrain (lidar) | open | checked (service listed). Terrain for the 3D model, not dating |
+
+### Recommended order
+
+1. **ČSÚ house counts per municipality part, 1869–2011.** Turn them into target counts per
+   village and census. Then rescale the interpolated origin years so the model reproduces the
+   counts. This is the largest gain for 1869–1950, where the maps disagree.
+2. **Profous** (library) for the ≈ 20 villages and hamlets in the frame. It resolves the
+   Wikipedia / Wikidata conflicts.
+3. **Schaller 1788, Sommer 1838 and the 1654 Berní rula**: house and farmstead counts per
+   village. This gives three calibration points before 1840, including the war loss after
+   1618.
+4. **Indication sketches** for the village cadastres: house numbers on the 1840 footprints.
+5. **NPÚ export, Encyklopedie (with permission) and Wikidata churches**: exact dates for
+   landmark buildings.
+
 ## Open questions
 
 - Licence for reuse of the city's `GIS_Historicke` rasters (rules point 4 says CC BY-SA 4.0

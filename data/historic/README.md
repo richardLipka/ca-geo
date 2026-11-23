@@ -21,3 +21,6 @@ Derived data (also not versioned, regenerate with the scripts in `apps/historic-
 - `facets/te-1618/` — facet textures (walls, roofs) from the 1618 siege plate + `facets.json`.
 - `growth/raw/` — all map epochs in the common 9 x 9 km frame; `growth/builtup.geojson`,
   `growth/villages.json`, `growth/mask_*.png` — classified settlement areas per epoch.
+- `growth/web/` — growth model for `growth3d.html` (`model.json`, ground textures `ground_*.jpg`).
+- `growth/video/` — exported animation frames (`<run>/f_*.jpg`) and encoded MP4.
+- `../reference/plzen-ruian/buildings.geojson` — RÚIAN building footprints of the 9 × 9 km frame.

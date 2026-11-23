@@ -39,7 +39,10 @@ Image pane (left) and map pane (right, EPSG:5514). Tools (keyboard shortcut):
 Map layers also include the **growth layer** (settlement areas per map epoch, see
 `docs/research/plzen-first-model.md` §8) and AMČR fieldwork points. The **3D model**
 (`/viewer3d.html`, link in the header) shows the entities as prisms with heights and the facet
-textures cut from the 1618 plate, with a year filter.
+textures cut from the 1618 plate, with a year filter. The **growth model**
+(`/growth3d.html`, link in the header) animates all buildings of the town from 1295 to 2020
+(schematic positions, interpolated dates; method in `docs/research/plzen-growth-model.md`)
+and exports the animation as video frames.
 
 Source types and transforms:
 
@@ -96,7 +99,10 @@ versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM Vi
 | `ottheinrich_cuts.json`, `cut_pieces.py` | house-by-house outlines of the oldest veduta → cut-outs + annotations |
 | `facet_textures.py` | facet (wall / roof) textures from a georeferenced oblique view |
 | `render_view.py` | render the model from a panorama viewpoint under the veduta |
-| `growth_export.py`, `growth_tiles.py`, `growth_classify.py` | multi-epoch built-up growth in a 9 × 9 km frame |
+| `growth_export.py`, `growth_tiles.py`, `growth_classify.py`, `growth_rules.py` | multi-epoch built-up growth in a 9 × 9 km frame (shared classification rules) |
+| `ruian_buildings.py` | present building footprints with completion date and floors (RÚIAN, ČÚZK) |
+| `growth_model.py` | dates every building 1295–2020 from RÚIAN, the map epochs, the 1618 model and written sources → `data/historic/growth/web/` |
+| `encode_video.py` | H.264 MP4 from the frames exported by `growth3d.html` (ffmpeg from `imageio-ffmpeg` in `.venv`) |
 
 ## Licence
 

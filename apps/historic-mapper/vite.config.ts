@@ -22,6 +22,14 @@ function localData(): Plugin {
           res.setHeader('Content-Type', MIME[extname(file).toLowerCase()] ?? 'application/octet-stream');
           return createReadStream(file).pipe(res);
         }
+        const fm = url.match(/^\/api\/frame\/([\w-]+)\/(\d+)$/);
+        if (fm && req.method === 'PUT') { // exported animation frame (JPEG) → data/historic/growth/video/<run>/
+          const dir = join(dataRoot, 'historic', 'growth', 'video', fm[1]); mkdirSync(dir, { recursive: true });
+          const parts: Buffer[] = []; let size = 0;
+          req.on('data', (c: Buffer) => { parts.push(c); size += c.length; if (size > 50e6) req.destroy(); });
+          req.on('end', () => { writeFileSync(join(dir, `f_${fm[2].padStart(6, '0')}.jpg`), Buffer.concat(parts)); res.statusCode = 204; res.end(); });
+          return;
+        }
         const m = url.match(/^\/api\/project\/([\w-]+)$/);
         if (m) {
           const file = join(projectsDir, `${m[1]}.json`);
@@ -53,6 +61,6 @@ function localData(): Plugin {
 
 export default defineConfig({
   plugins: [localData()],
-  build: { rollupOptions: { input: { main: resolve(here, 'index.html'), viewer3d: resolve(here, 'viewer3d.html') } } },
+  build: { rollupOptions: { input: { main: resolve(here, 'index.html'), viewer3d: resolve(here, 'viewer3d.html'), growth3d: resolve(here, 'growth3d.html') } } },
   server: { port: 5218, strictPort: true },
 });
