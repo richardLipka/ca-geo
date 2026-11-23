@@ -47,9 +47,6 @@ def components(mask):
             else:
                 parent.append(nxt); lab[y, x] = nxt; nxt += 1
     roots = {find(i) for i in range(1, nxt)}
-    sizes = {}
-    for i in range(1, nxt):
-        pass
     flat = lab[lab > 0]
     if flat.size == 0:
         return 0, []
