@@ -15,8 +15,10 @@ selection accepted (ADR 0001: 6 core, 8 extension). Architecture baseline accept
 
 Rules — follow strictly:
 
-- No implementation code yet, no dependencies (no `package.json`, no `npm install`).
-  Interface sketches in architecture docs are allowed.
+- No engine implementation code yet. Interface sketches in architecture docs are allowed.
+  **Exception (approved by the author 2026-11-23):** data-preparation tools under `apps/`
+  may have code and dependencies — currently `apps/historic-mapper` (Vite + TypeScript,
+  standalone package, MIT, bilingual UI). Engine packages (`packages/`) are not started.
 - Downloads allowed only for: openly accessible papers (`literature/`, see its README —
   PDFs are never committed), reference test data
   (`data/reference/`, not committed) and shallow clones of reference implementations
@@ -45,7 +47,8 @@ docs/glossary.md          EN–CS terminology glossary
 docs/roadmap.md           project phases
 data/                     local data, not versioned (only README.md / .gitkeep)
 external/                 local clones of reference implementations, not versioned
-packages/  apps/          future code (README only for now)
+apps/historic-mapper/     georeferencing / building-identity tool (data preparation)
+packages/                 future engine code (README only for now)
 references.bib            BibTeX, filled in during the literature phase
 ```
 

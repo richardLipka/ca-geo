@@ -359,3 +359,21 @@ Definitions are short working definitions; to be reviewed before they are used i
 | weight matrix | váhová matice | Table of weights applied to the neighbourhood window. |  |
 | windward / leeward | návětrný / závětrný | On the side facing / turned away from the wind. |  |
 | zoning | územní regulace | Planning status allowing or forbidding a land use. | CZ: územní plán |
+
+## Historical sources and georeferencing (2026-11-23)
+
+| English | Czech | Note | Used in |
+|---|---|---|---|
+| annotation (image) | anotace (v obrazu) | A marked image location, optionally linked to an entity. | historic mapper |
+| bird's-eye view | ptačí perspektiva / ptačí pohled | Oblique view from above; approximated by a projective transform. | historic mapper |
+| control point (GCP) | vlícovací bod | Pair of corresponding image and map positions used to fit a transform. | historic mapper |
+| entity (historical object) | entita (historický objekt) | Real-world object with map geometry and lifetime (building, gate, wall). | historic mapper |
+| evidence | doklad | Annotation in a source that documents an entity. | historic mapper |
+| georeferencing | georeferencování | Fitting a source image to map coordinates. | historic mapper |
+| leave-one-out residual | křížová odchylka (vynechání jednoho bodu) | Error at a control point when the transform is fitted without it. | historic mapper |
+| panorama / veduta | panoráma / veduta | View of a town drawn from one viewpoint. | historic mapper |
+| projective transform (homography) | projektivní transformace (homografie) | Plane-to-plane perspective mapping (8 parameters). | historic mapper |
+| resection (from bearings) | protínání zpět (ze směrů) | Recovering the viewpoint from directions to known objects. | historic mapper |
+| stable cadastre | stabilní katastr | Austrian land cadastre of the 1820s–1840s; colour-coded building materials. | historic sources |
+| thin-plate spline | thin-plate spline (tenká deska) | Smooth interpolating warp through all control points. | historic mapper |
+| viewpoint | stanoviště | Position from which a view or panorama was drawn. | historic mapper |

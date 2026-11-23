@@ -1,0 +1,239 @@
+{
+ "format": "ca-geo/historic-mapper",
+ "version": 1,
+ "crs": "EPSG:5514",
+ "name": "plzen",
+ "sources": [
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "te-1618",
+   "title": "Theatrum Europaeum: Abbildung der Statt Pilsen … 1618 (Merian)",
+   "kind": "birdseye",
+   "made": "c. 1635",
+   "depicted": [
+    1618,
+    1618
+   ],
+   "holder": "Herzog August Bibliothek, Graph. C 945",
+   "licence": "CC BY-SA 3.0",
+   "page": "http://diglib.hab.de/?grafik=graph-c-945",
+   "file": "/data/historic/sources/te-1618.jpg",
+   "download": "http://diglib.hab.de/varia/grafik/graph-c-945/max/000001.jpg"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "isselburg-1618",
+   "title": "Isselburg / Hondius: Eigendlicher Abris der Stadt Pilsen … 1618",
+   "kind": "birdseye",
+   "made": "1618",
+   "depicted": [
+    1618,
+    1618
+   ],
+   "holder": "Herzog August Bibliothek, Graph. A1: 1109",
+   "licence": "CC BY-SA 3.0 DE",
+   "page": "http://diglib.hab.de/?grafik=graph-a1-1109",
+   "file": "/data/historic/sources/isselburg-1618.jpg",
+   "download": "http://diglib.hab.de/varia/grafik/graph-a1-1109/max/000001.jpg"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "keller-1619",
+   "title": "Georg Keller: Abriss der Statt Pilsen … (Halle impression)",
+   "kind": "birdseye",
+   "made": "1619",
+   "depicted": [
+    1618,
+    1618
+   ],
+   "holder": "Kunstmuseum Moritzburg Halle, MOIISt00199",
+   "licence": "Public Domain Mark (image)",
+   "page": "https://st.museum-digital.de/object/106386",
+   "file": "/data/historic/sources/keller-1619.jpg",
+   "download": "https://assets.museum-digital.org/san/images/17/106386-moiist00199/abriss_der_statt_pilsen_i/abriss-der-statt-pilsen-in-boehmen-wie-dieselbige-belaegert-gestuermt-undt-eingenohmen-wor-005399.jpg"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "hogenberg-1619",
+   "title": "Hogenberg workshop: Beleg van Pilsen, 1619 (key A–Y)",
+   "kind": "birdseye",
+   "made": "1619–1621",
+   "depicted": [
+    1618,
+    1618
+   ],
+   "holder": "Rijksmuseum, RP-P-OB-78.785-365",
+   "licence": "CC0",
+   "page": "http://hdl.handle.net/10934/RM0001.COLLECT.442264",
+   "file": "/data/historic/sources/hogenberg-1619.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Beleg_van_Pilsen,_1619_Serie_11_Varia_Buitenlandse_Gebeurtenissen,_1571-1631_(serietitel),_RP-P-OB-78.785-365.jpg?width=3000"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "merian-1650",
+   "title": "Merian: Pilsen (Topographia Bohemiae)",
+   "kind": "birdseye",
+   "made": "1650",
+   "depicted": [
+    1650,
+    1650
+   ],
+   "holder": "UB Düsseldorf scan (Wikimedia Commons)",
+   "licence": "Public domain",
+   "page": "https://commons.wikimedia.org/wiki/File:Bohemiae_Moraviae_et_Silesiae_(Merian)_088.jpg",
+   "file": "/data/historic/sources/merian-1650.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Bohemiae_Moraviae_et_Silesiae_(Merian)_088.jpg?width=3000"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "bodenehr-1700",
+   "title": "G. Bodenehr (attr.): Plan und Ansicht der böhmischen Stadt Pilsen",
+   "kind": "birdseye",
+   "made": "c. 1700",
+   "depicted": [
+    1650,
+    1700
+   ],
+   "holder": "Deutsches Historisches Museum, Do 2002/81",
+   "licence": "CC BY-NC-ND 4.0",
+   "page": "https://www.deutsche-digitale-bibliothek.de/item/6NCIZJS4C6EB24VWTT5JQA2YFPRK3CPB",
+   "file": "/data/historic/sources/bodenehr-1700.jpg",
+   "download": "https://iiif.deutsche-digitale-bibliothek.de/image/2/096a106e-f8cd-4f92-9be5-ad7cec9ec148/full/!3000,3000/0/default.jpg"
+  },
+  {
+   "method": "affine",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "vogt-1712",
+   "title": "J. G. (Mauritius) Vogt: plan of Plzeň",
+   "kind": "map",
+   "made": "1712",
+   "depicted": [
+    1712,
+    1712
+   ],
+   "holder": "Wikimedia Commons (original holder not stated)",
+   "licence": "CC BY-SA 3.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Pilsen_(Plzen)_Karte_von_Johann_Georg_Vogt_(Mauritius_Vogt)_1712.tiff",
+   "file": "/data/historic/sources/vogt-1712.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Pilsen_(Plzen)_Karte_von_Johann_Georg_Vogt_(Mauritius_Vogt)_1712.tiff?width=3000"
+  },
+  {
+   "method": "affine",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "zcm-1781",
+   "title": "Military plan of the town, 1781 (ZČM M97, north to the right)",
+   "kind": "map",
+   "made": "1781",
+   "depicted": [
+    1781,
+    1781
+   ],
+   "holder": "Západočeské muzeum v Plzni, M97",
+   "licence": "Public Domain Mark",
+   "page": "https://commons.wikimedia.org/wiki/File:Plzen_map_1781.jpg",
+   "file": "/data/historic/sources/zcm-1781.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Plzen_map_1781.jpg?width=2560"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "willenberg-1602",
+   "title": "Jan Willenberg: panorama of Plzeň",
+   "kind": "panorama",
+   "made": "1602",
+   "depicted": [
+    1602,
+    1602
+   ],
+   "holder": "Strahov Library, DT I. 30/II (Wikimedia Commons)",
+   "licence": "Public domain",
+   "page": "https://commons.wikimedia.org/wiki/File:Willenberg_Plzen_1602_1.jpg",
+   "file": "/data/historic/sources/willenberg-1602.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Willenberg_Plzen_1602_1.jpg?width=2560"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "ottheinrich-1536",
+   "title": "Ottheinrich travel album, sheet 23: Pilsen",
+   "kind": "panorama",
+   "made": "1536–1537",
+   "depicted": [
+    1536,
+    1537
+   ],
+   "holder": "UB Würzburg, Delin. VI,4,23 (Wikimedia Commons)",
+   "licence": "Public domain",
+   "page": "https://commons.wikimedia.org/wiki/File:Ottheinrich_Reisealbum_23_Pilsen.jpg",
+   "file": "/data/historic/sources/ottheinrich-1536.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Ottheinrich_Reisealbum_23_Pilsen.jpg?width=2560"
+  },
+  {
+   "method": "projective",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "hollar-p812",
+   "title": "W. Hollar: Pilsen / Plzeň (Bohemian views, P812)",
+   "kind": "panorama",
+   "made": "1640s (to be verified)",
+   "depicted": [
+    1602,
+    1640
+   ],
+   "holder": "Fisher Library, Univ. of Toronto (Wikimedia Commons)",
+   "licence": "Public Domain Mark",
+   "page": "https://commons.wikimedia.org/wiki/File:Wenceslas_Hollar_-_Bohemian_views_8.jpg",
+   "file": "/data/historic/sources/hollar-p812.jpg",
+   "download": "https://commons.wikimedia.org/wiki/Special:FilePath/Wenceslas_Hollar_-_Bohemian_views_8.jpg?width=1920"
+  },
+  {
+   "method": "affine",
+   "useLinks": true,
+   "overlay": true,
+   "opacity": 0.7,
+   "id": "schabat-1864",
+   "title": "H. Schabat: Plan der königlichen Kreisstadt Pilsen",
+   "kind": "map",
+   "made": "1864",
+   "depicted": [
+    1864,
+    1864
+   ],
+   "holder": "Map collection, Charles University (Kramerius UK)",
+   "licence": "Kramerius: public",
+   "page": "https://kramerius.cuni.cz/uk/view/uuid:a8623aa8-4d6d-11ec-aec1-fa163e4ea95f",
+   "file": "/data/historic/sources/schabat-1864.jpg",
+   "download": "kramerius-cuni:uuid:a8623aa8-4d6d-11ec-aec1-fa163e4ea95f"
+  }
+ ],
+ "gcps": {},
+ "entities": [],
+ "annotations": []
+}

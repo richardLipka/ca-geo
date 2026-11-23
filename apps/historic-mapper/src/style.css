@@ -1,0 +1,88 @@
+/* Desktop working tool: header toolbar, sources left, image | map split, inspector right.
+   Colours follow the cadastral palette used in the overview page (red = stone, blue = water). */
+:root {
+  --bg: #eef0ee; --panel: #fbfbfa; --ink: #1f2427; --muted: #66707a; --line: #d3d8d6;
+  --accent: #b3311f; --accent-ink: #fff; --sel: #e8590c; --ok: #2f9e44; --warn: #c27c0e;
+  --f: "Segoe UI", system-ui, -apple-system, sans-serif; --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #16191b; --panel: #1e2326; --ink: #e5e9eb; --muted: #9aa4aa; --line: #343c40; --accent: #e8664f; --accent-ink: #111; color-scheme: dark; }
+}
+* { box-sizing: border-box }
+html, body { height: 100%; margin: 0 }
+body {
+  font: 13px/1.4 var(--f); color: var(--ink); background: var(--bg);
+  display: grid; grid-template: "top top top top" auto "left panes panes insp" 1fr / 230px 1fr 1fr 330px; overflow: hidden;
+}
+button, select, input, textarea { font: inherit; color: inherit }
+button { cursor: pointer; background: var(--panel); border: 1px solid var(--line); border-radius: 5px; padding: 4px 9px }
+button:hover { border-color: var(--muted) }
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--sel); outline-offset: 1px }
+select, input[type=text], input[type=number], textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; width: 100% }
+h2, h3 { margin: 10px 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted) }
+
+header.top { grid-area: top; display: flex; gap: 16px; align-items: center; padding: 6px 12px; background: var(--panel); border-bottom: 1px solid var(--line) }
+.brand h1 { margin: 0; font-size: 15px }
+.brand span { color: var(--muted); font-size: 12px }
+.tools { display: flex; gap: 4px; flex-wrap: wrap }
+.tool kbd { margin-left: 6px; font: 10px var(--mono); color: var(--muted) }
+.tool.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+.tool.on kbd { color: inherit; opacity: .8 }
+.right { margin-left: auto; display: flex; gap: 6px; align-items: center }
+.save { font-size: 12px; color: var(--muted) } .save.saved { color: var(--ok) } .save.local, .save.error { color: var(--warn) }
+
+aside.left { grid-area: left; overflow: auto; padding: 4px 10px 10px; background: var(--panel); border-right: 1px solid var(--line) }
+.srclist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px }
+button.src { width: 100%; text-align: left; display: grid; gap: 1px; padding: 6px 8px }
+button.src.on { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent) }
+button.src small { color: var(--muted) }
+.k { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .05em }
+.k-map { color: #b3311f } .k-birdseye { color: #6b3fa0 } .k-panorama { color: #2e7d4f }
+.drop { display: block; margin-top: 10px; padding: 8px; border: 1px dashed var(--line); border-radius: 6px; text-align: center; cursor: pointer }
+.muted { color: var(--muted) } .small { font-size: 12px } .warn { color: var(--warn) }
+
+main.panes { grid-area: panes; display: grid; grid-template-columns: 1fr 1fr; min-width: 0; min-height: 0 }
+.pane { position: relative; overflow: hidden; min-width: 0; border-right: 1px solid var(--line) }
+.imgpane { background: repeating-conic-gradient(var(--bg) 0 25%, var(--panel) 0 50%) 0 0 / 20px 20px }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none }
+.mappane { background: #dfe3e0 }
+.mappane img.ref { position: absolute; pointer-events: none; user-select: none; max-width: none }
+.mappane canvas.gl { pointer-events: none }
+.hint { position: absolute; left: 8px; top: 8px; right: 8px; pointer-events: none; font-size: 12px; background: color-mix(in srgb, var(--panel) 88%, transparent); padding: 4px 8px; border-radius: 4px; width: fit-content; max-width: calc(100% - 16px) }
+.mapctl { position: absolute; right: 8px; bottom: 8px; display: grid; gap: 4px; width: 240px; background: color-mix(in srgb, var(--panel) 92%, transparent); padding: 8px; border-radius: 6px; border: 1px solid var(--line) }
+.mapctl label { display: grid; gap: 2px; font-size: 12px }
+.mapctl label.chk, .tabbody label.chk, label.chk { display: flex; gap: 6px; align-items: center }
+.coords { position: absolute; left: 8px; bottom: 34px; font: 11px var(--mono); background: color-mix(in srgb, var(--panel) 85%, transparent); padding: 2px 6px; border-radius: 3px }
+
+aside.inspector { grid-area: insp; overflow: auto; background: var(--panel); border-left: 1px solid var(--line); display: flex; flex-direction: column }
+.tabs { display: flex; position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--line); z-index: 1 }
+.tab { flex: 1; border: 0; border-radius: 0; border-bottom: 2px solid transparent; background: none; padding: 8px 4px }
+.tab.on { border-bottom-color: var(--accent); font-weight: 600 }
+.tabbody { padding: 8px 12px 16px; display: grid; gap: 8px }
+.tabbody label { display: grid; gap: 2px }
+.srchead { display: grid; gap: 2px; padding-bottom: 6px; border-bottom: 1px solid var(--line) }
+.srchead small { color: var(--muted) }
+.stat { margin: 0; padding: 6px 8px; background: var(--bg); border-radius: 4px; font-variant-numeric: tabular-nums }
+table.pts { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums }
+table.pts th, table.pts td { padding: 3px 4px; border-bottom: 1px solid var(--line); text-align: left }
+table.pts td.num { text-align: right; font-family: var(--mono); font-size: 12px }
+table.pts tr.sel { background: color-mix(in srgb, var(--sel) 15%, transparent) }
+table.pts tr.bad td.num { color: var(--warn); font-weight: 600 }
+button.lnk { border: 0; background: none; padding: 0; color: inherit; text-decoration: underline; text-underline-offset: 2px }
+button.x { padding: 0 6px; line-height: 1.2 }
+button.danger { color: #c92a2a; border-color: color-mix(in srgb, #c92a2a 40%, var(--line)) }
+.anns, .entlist { display: grid; gap: 3px }
+.annrow, .entrow { text-align: left; display: flex; gap: 6px; align-items: baseline }
+.annrow span { font: 600 12px var(--mono); min-width: 1.5em }
+.annrow small, .entrow small { color: var(--muted); margin-left: auto }
+.entrow.on { border-color: var(--sel) }
+.anned, .ented { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--sel); border-radius: 6px }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px }
+.btns { display: flex; flex-wrap: wrap; gap: 4px }
+.btncol { display: grid; gap: 6px }
+.ev { margin: 0; padding-left: 16px }
+i.sw { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none }
+.t-building { background: #c92a2a } .t-church { background: #862e9c } .t-tower { background: #5f3dc4 } .t-gate { background: #e67700 }
+.t-bastion { background: #2b8a3e } .t-wall { background: #495057 } .t-moat { background: #1864ab } .t-water { background: #1c7ed6 }
+.t-bridge { background: #a61e4d } .t-street { background: #868e96 } .t-other { background: #343a40 }

@@ -1,0 +1,82 @@
+# Historic mapper
+
+Browser tool for preparing data about the historical town of Plzeň: georeference
+historical maps and plans, overlay them on each other and on present-day layers, and link
+objects depicted in views, drawings and engravings (towers, gates, churches, houses,
+bastions) to positions on the map. The output — entities with geometry, lifetime and
+evidence — is the input for a later 3D / time model of the town.
+
+Analysis of the source material and of automation options:
+`docs/research/historic-image-processing.md`. Source inventory:
+`docs/research/data-sources/plzen-historical.md`.
+
+## Run
+
+```
+npm install
+npm run fetch-sources   # downloads source images into ../../data/historic/sources (not versioned)
+npm run dev             # http://localhost:5218
+npm test                # transform and i18n tests
+```
+
+The dev server also serves `../../data/` under `/data/` (source images, AMČR points) and
+saves the project to `projects/<name>.json` on every change (with a browser copy as
+fallback). Add sources by editing `sources.json` (id, title, kind, licence, download URL);
+new entries are merged into an existing project on the next start.
+
+## Workflow
+
+Image pane (left) and map pane (right, EPSG:5514). Tools (keyboard shortcut):
+
+| Tool | Use |
+|---|---|
+| Pan (V) | pan / zoom both panes, select markers |
+| Control point (G) | click in the image, then the same place on the map (or the reverse) → control point |
+| Identity (I) | click an object in the image → annotation; then click its entity on the map, or an empty place to create a new point entity |
+| Point / Line / Polygon (P, L, O) | draw entity geometry on the map; double-click or Enter finishes |
+
+Source types and transforms:
+
+- **Map / plan** — Helmert (similarity, with or without reflection), affine, projective,
+  2nd-order polynomial or thin-plate spline from control points; identity links to entities
+  can also act as control points. The warped image is drawn on the map (WebGL mesh warp)
+  with adjustable opacity, so several epochs can be overlaid.
+- **Bird's-eye view** — projective transform (homography) from identity links: valid for
+  the ground plane only, so tall objects are displaced; use it to predict where remaining
+  objects lie, not as exact geometry.
+- **Panorama / veduta** — 1D camera resection: from ≥ 4 identified objects the tool
+  estimates the viewpoint, heading and focal length from their image columns, draws the
+  viewpoint and sight lines on the map and shows vertical guide lines where every known
+  entity should appear in the image.
+
+Accuracy: the inspector reports fitted residuals and **leave-one-out residuals** per point
+(the transform refitted without that point). Use the LOO RMSE as the accuracy of a source;
+fitted residuals of flexible transforms (TPS) are always near zero. Points with LOO residuals
+above three times the RMSE are highlighted.
+
+Base layers: historical plans of the City of Plzeň (1781–1971, ArcGIS REST export), ČÚZK
+orthophoto and ZTM 10 (WMS); optional AMČR fieldwork events
+(`data/reference/plzen-amcr/akce-compact.json`). A year slider filters entities by
+`validFrom` / `validTo`.
+
+## Data model and exports
+
+`projects/<name>.json` (`format: ca-geo/historic-mapper`, `crs: EPSG:5514`):
+`sources`, `gcps` (per source), `entities` (name, type, geometry, house number,
+validFrom / validTo, notes) and `annotations` (source, image position, entity, legend label,
+confidence 1–3, note, use as control point).
+
+Exports: project JSON; entities GeoJSON in EPSG:5514 or WGS84 with an `evidence` list per
+feature; evidence table (CSV); GDAL commands (`gdal_translate -gcp …` + `gdalwarp`) and a
+QGIS Georeferencer `.points` file for the current source.
+
+## Scripts
+
+- `scripts/fetch-sources.mjs` — download source images listed in `sources.json`.
+- `scripts/segment_colours.py` — colour segmentation experiment for colour-coded plans
+  (stable cadastre: stone buildings red, wooden yellow, water blue); numpy + GDAL only.
+
+## Licence
+
+Code: MIT (repository licence). Source images keep their own licences (shown per source);
+they are never committed. Base layers are fetched live from their providers.
