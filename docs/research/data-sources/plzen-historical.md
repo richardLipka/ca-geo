@@ -181,6 +181,43 @@ bašta demolished 1795. **Bastion count, names, ravelins and moat width are not 
 reliably in any online source**; a blog (Zestínu 2022, citing Anderle) places remains at
 about 6–8 locations around the ring (unverified).
 
+### Fortification 1620–1780: third round (2026-11-23)
+
+Targeted search for views, paintings and plans that show the bastioned fortress between the
+1618 siege and the start of demolition (1795). "Checked" means opened or inspected; "lead" means
+found in a catalogue or literature only.
+
+| Item | Date | Holder / access | What it shows | Status |
+|---|---|---|---|---|
+| J. G. (Mauritius) Vogt, *Pilsen* plan (in *Das jetzt-lebende Königreich Böhmen*, 1712) | 1712 | Commons, CC BY-SA 3.0; local `data/historic/sources/vogt-1712.jpg` (1920 px) | complete bastioned trace in plan view: 5 bastions with ravelins and a covered way on the south / west, a hornwork-like front on the north, outer works and ravelin along the Radbuza in the east. Legend: Prager, Neue, Nürnberger, Blassen Thor; west is at the top. Schematic copper engraving | **checked**. Best available image of the full trace before 1781. Georeference it in the mapper (square, church, gates) and digitise it as the 1712 state |
+| J. Ch. Müller, manuscript map of Bohemia with *Ichnographica duarum … urbium … Budweis et Pilsen* (town plan 1:4 300) | c. 1718 | ÖNB Vienna, AB 55 a 1* Kar. (Čada & Vichrová 2009, *Kartografické listy* 17) | military engineer's ground plan of Plzeň with fortification | **lead, high value**. Not found online. Request a scan from the ÖNB Kartensammlung |
+| Müller's draft for the printed map, 25 sheets | 1721 | ÖNB FKB C.51:1-25 Kar. | town outline (small scale) | lead |
+| Military plan *Situations Plan der königl. Kreisstad Pilsen*, survey under Count Strassoldo, captain Th. de Kitelli | 1781 | ZČM MP 57 (OldMapsOnline record); = city GIS `GIS_HIS_Plzen_1781` | full fortification before demolition | **used** (`fort_1781.json`) |
+| Plan of the core with fortification | 1703 | Archiv města Plzně inv. 2727/1-4 (viewer only) | bastions after the 1703 reconstruction | lead (request; see §6) |
+| du Portal, plans from the French campaign | 1741–42 | BnF (shelfmark TBV); Nechvátal 2016 | plan of Plzeň during the French / Bavarian occupation | lead |
+| Austrian camp near "Alt Bilsen" | 1742 | Royal Collection RCIN 728063.m | army camp; probably Starý Plzenec | checked; low value |
+| Teutschmeister field camp near Pilsen | after 1696 | Landesarchiv BW, Staatsarchiv Sigmaringen (FAS PA plans) | camp layout near the town | lead; low value |
+| J. Lautner, bird's-eye view from the SE | 1773 | ZČM (photo in Průzkumy památek 1997/2, fig. 27) | town and works just before demolition | lead (ZČM scan) |
+| G. Bodenehr (attr.), *Plan und Ansicht … Pilsen* | c. 1700 | DHM Do 2002/81; local copy | copies Merian 1650 | checked; no independent value |
+| M. Merian, *Pilsen* (Topographia Bohemiae) | 1650 | BSB; local copy | the medieval double wall and towers. It does **not** show the bastions of 1645–49, so it follows an older model | checked; use for the walls, not the bastions |
+| *Abbildung der Statt Pilsen … durch Gen. von Mansfeld belägert* (re-issue) | c. 1700 | Mapová sbírka UK (Europeana) | 1618 siege plate re-issued | checked (record) |
+| Plan der Belagerung Pilsens 1618 | 1618 | MAK Vienna, collection online | siege plan | lead (one more 1618 variant) |
+| 1st military survey sheet | 1764–68 | Kriegsarchiv; view on Arcanum Mapire | fortress outline at 1:28 800 | lead (view only; no open WMS) |
+| F. B. Werner | c. 1740 | Mollova sbírka MZK holds Werner views (titles not resolvable automatically) | no Plzeň view confirmed | not found |
+| Votive / altar paintings with a view of the town (plague column 1681, Marian images) | 17th–18th c. | Muzeum církevního umění plzeňské diecéze, ZČM | none with a town view found online | not found |
+
+Europeana (API, 1600–1800, "Pilsen"/"Plzeň", 126 records) has otherwise only 1618–1634 news
+pamphlets, the Merian view, the Homann *Circulus Pilsnensis* (1769, small scale) and Schaller.
+
+**Assessment.** For the shape of the bastioned fortress, three sources are usable:
+1. **Vogt 1712** (online, schematic but complete);
+2. **Kitelli 1781** (online, surveyed);
+3. the **1703 AMP plan** and the **Müller c. 1718 ichnography**, both to be requested.
+
+Together with the 1821 / 1840 plans for the demolition sequence, they would allow a
+1659 → 1712 → 1781 → 1821 series. The views of 1650–1700 (Merian, Bodenehr) repeat an older
+model and should not be used for the bastions.
+
 ### Written sources
 
 | Source | Content | Access |
