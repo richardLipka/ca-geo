@@ -6,6 +6,7 @@
   (all objects intersecting the 9 x 9 km growth frame -826900, -1074200, -817900, -1065200, EPSG:5514;
   32 425 footprints, ≈ 17 MB, retrieved Nov 2026).
 - **Fields:** `kod`, `dokonceni` (completion date; 31 Dec 1919 / 1945 / 1960 / 1970 / 1980 / 1990 /
-  2000 are age-class placeholders), `pocetpodlazi` (floors incl. underground), `zpusobvyuzitikod`
+  2000 are age-class placeholders), `pocetpodlazi` (floors incl. underground), `castobce` (part of the
+  town), `isknbudovaid`, `identifikacniparcela` (join to the city 3D heights), `zpusobvyuzitikod`
   (use), `typstavebnihoobjektukod`, `zastavenaplocha`, `cisladomovni`, `druhkonstrukcekod`.
 - **Used by:** `apps/historic-mapper/scripts/growth_model.py` (growth model 1295–2020).

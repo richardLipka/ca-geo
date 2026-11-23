@@ -24,6 +24,16 @@
     #labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden }
     .vlabel { position: absolute; left: 0; top: 0; font: 600 12px system-ui; color: #1f2427; text-shadow: 0 0 3px #fff, 0 0 3px #fff; white-space: nowrap; margin: -8px 0 0 -20px }
     .muted { color: #66707a }
+    #vpanel { display: none; position: fixed; left: 0; top: 46px; bottom: 66px; width: 46%; background: #f6f6f4; border-right: 1px solid #d3d8d6; flex-direction: column; z-index: 2 }
+    body.vmode #vpanel { display: flex }
+    body.vmode #g3d { left: 46% }
+    body.vmode #legend, body.vmode #caption { display: none }
+    .vhead { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 6px 10px; border-bottom: 1px solid #d3d8d6 }
+    .vimg { position: relative; flex: 1; overflow: auto }
+    .vimg img { display: block; width: 100% }
+    .vimg canvas { position: absolute; left: 0; top: 0; cursor: crosshair }
+    .vhelp { padding: 6px 10px; font-size: 12px; border-top: 1px solid #d3d8d6 }
+    .vlabel.lm { color: #7a2e8c }
     button { font: inherit }
     @media (max-width: 700px) { .bottom { flex-wrap: wrap } #legend { display: none } }
   </style>

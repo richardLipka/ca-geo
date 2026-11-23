@@ -14,6 +14,7 @@ SERV = {
     '1840_vm2': ('https://gis.cenia.cz/mapcache/II_vojenske_mapovani/wms', 'II_vojenske_mapovani'),
     '1880_vm3': ('https://gis.cenia.cz/mapcache/III_vojenske_mapovani/wms', 'III_vojenske_mapovani'),
     '1953_orto': ('https://gis.cenia.cz/mapcache/ortofotomapa_historicka/wms', 'orto'),
+    '2001_orto': ('https://geoportal.cuzk.gov.cz/WMS_ORTOFOTO_ARCHIV/WMService.aspx', '2001'),  # ČÚZK archive orthophoto (Plzeň flown 2001)
 }
 for name, (base, layer) in SERV.items():
     p = os.path.join(out, name + '.jpg')

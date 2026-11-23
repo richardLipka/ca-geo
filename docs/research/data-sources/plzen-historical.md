@@ -263,6 +263,41 @@ means found in a catalogue or literature but not opened.
 5. **NPÚ export, Encyklopedie (with permission) and Wikidata churches**: exact dates for
    landmark buildings.
 
+Used since then:
+- ČSÚ *Historický lexikon obcí ČR 1869–2005* I. díl (censuses to 2001) (`13n106cd1.pdf`, 21 MB). It has house counts
+  and first mentions per part of Plzeň. The PDF text is shifted by 29 code points, so decode with
+  `chr(ord(c) + 29)`. Its house counts calibrate the growth model.
+- The 1869–2011 edition on csu.gov.cz offers only district- and ORP-level XLSX. Its part-level
+  section III is loaded dynamically and was not reachable.
+
+## 8. Postcards and photographs for façades (19th – early 20th century)
+
+Goal: images of house façades for texturing the model buildings, as façade facets like the TE
+1618 facets. A view of a known street has to be matched to RÚIAN buildings. The view mode of
+`growth3d.html` links an image point to a building id. A rectified façade texture would follow.
+
+| Source | Content | Access / licence | Status |
+|---|---|---|---|
+| ZČM — Národopisné muzeum Plzeňska, glass negatives (`negativy.zcm.cz`) | ≈ 800 plates of the Kroužek přátel starožitností (from 1910, "KPS") and Ladislav Lábek (from c. 1912, "L"): historic buildings, streets, interiors 1910–1950 | online database; reuse terms TBV | **checked (description page)**. Best single source of dated façade photographs of the old town; books *Plzeň očima Ladislava Lábka* (2003), *Plzeň na skleněných negativech* (2018) |
+| Archiv města Plzně, Digitální archiv (`digiarchiv.plzen.eu`) and Encyklopedie Plzně | photographs, building files and plans; period photos per building in the Encyklopedie | online; publication needs consent | lead (in inventory §3) |
+| Bayerisches Hauptstaatsarchiv / Sudetendeutsches Archiv, postcards in the Deutsche Digitale Bibliothek | "Gruß aus Pilsen" cards before 1900 and c. 1900: square, town hall with the Marian column, gymnasium, Smetana park, viaducts, Lochotín; publishers A. H. Bayer, W. Steinhauser, T. Marese | DDB item pages, scans, rights per item | **checked (search)**: [example](https://www.deutsche-digitale-bibliothek.de/item/VRDFMRZUNDCAV6AS7EUSP34KA7A4YAVK?lang=en) |
+| Europeana (API, `wskey=api2demo` for tests) | 110 image records "Pilsen OR Plzeň", 1860–1945 | API, per-record rights | **checked (count only)** |
+| Univerzita Karlova Kramerius: glass slides of vanished buildings, town hall, mill, portals (1900–45) | already in inventory §2 | Kramerius UK, public | lead |
+| Hungaricana (Szerencs postcard collection) | single cards, e.g. "Pozdrav z Plzně" | online, per item | checked (one item) |
+| Wikimedia Commons | old postcards / photographs of Plzeň (category names to resolve) | CC / PD | API returned nothing for the guessed category names; search by hand |
+| *Velká kniha plzeňských pohlednic* (Starý most, 2008) | printed postcard catalogue | print | reference for dating and locating cards |
+| SVK PK, Městská knihovna Plzeň, ZČM sbírky | possible postcard collections | not found online | ask |
+| Commercial (akpool, eBay, delcampe) | thousands of cards | view only, not reusable | dating and location aid only |
+
+Recommended workflow:
+1. Harvest the DDB / Europeana records (metadata + image URLs) into a list with street or
+   building keywords.
+2. Pick views with a known standpoint (square, Pražská, Solní, Riegrova; station; brewery).
+3. In the view mode, fix the camera and link 4 or more buildings, then rectify each façade:
+   homography of the four façade corners, as in `facet_textures.py`.
+4. Use the photographs of ZČM (Lábek) and the city archive after their terms of reuse are
+   confirmed.
+
 ## Open questions
 
 - Licence for reuse of the city's `GIS_Historicke` rasters (rules point 4 says CC BY-SA 4.0

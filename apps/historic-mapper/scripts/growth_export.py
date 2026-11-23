@@ -21,6 +21,12 @@ EPOCHS = [
     ('1891', city('GIS_HIS_Plzen_1891')), ('1895', city('GIS_HIS_Plzen_1895')), ('1912', city('GIS_HIS_Plzen_1912_50cm')),
     ('1926', city('GIS_HIS_Plze%C5%88_1926')), ('1931', city('GIS_HIS_Plzen_1931')), ('1938', city('GIS_HIS_Plzen_1938')),
     ('1947', city('GIS_HIS_Plzen_1947')),
+    # further city plans (added for the calibrated growth model)
+    ('1781', city('GIS_HIS_Plzen_1781')), ('1821', city('GIS_HIS_Plzen_1821')), ('1864', city('GIS_HIS_Plzen_1864')),
+    ('1873', city('GIS_HIS_Plzen_1873')), ('1877_mesto', city('GIS_HIS_Plzen_1877_mesto')), ('1877_lochotin', city('GIS_HIS_Plzen_1877_Lochotin')),
+    ('1881', city('GIS_HIS_Plzen_1881')), ('1893', city('GIS_HIS_Plzen_1893')), ('1902', city('GIS_HIS_Plzen_1902')),
+    ('1908', city('GIS_HIS_Plzen_1908')), ('1950', city('GIS_HIS_Plzen_1950')), ('1951', city('GIS_HIS_Plzen_1951')),
+    ('1971', city('GIS_HIS_Plzen_1971')), ('1972', city('GIS_HIS_Plzen_1972')),
     ('1953_orto', wms('https://gis.cenia.cz/mapcache/ortofotomapa_historicka/wms', 'orto', 'image/jpeg')),
     ('2025_ztm', wms('https://ags.cuzk.gov.cz/arcgis1/services/ZTM/ZTM10/MapServer/WMSServer', '0')),
 ]

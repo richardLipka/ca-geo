@@ -7,7 +7,7 @@ import json, sys, time, urllib.parse, urllib.request
 
 BBOX = (-826900, -1074200, -817900, -1065200)
 URL = 'https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/MapServer/3/query'
-FIELDS = 'kod,dokonceni,pocetpodlazi,zpusobvyuzitikod,typstavebnihoobjektukod,zastavenaplocha,cisladomovni,druhkonstrukcekod'
+FIELDS = 'kod,dokonceni,pocetpodlazi,zpusobvyuzitikod,typstavebnihoobjektukod,zastavenaplocha,cisladomovni,druhkonstrukcekod,castobce,isknbudovaid,identifikacniparcela'
 
 
 def get(params):

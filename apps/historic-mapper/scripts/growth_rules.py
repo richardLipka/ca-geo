@@ -38,6 +38,20 @@ def rule(name, im, alpha=None):
         return red
     if name == '1947':  # red / orange blocks in the west, grey-violet blocks in the east
         return red | ((H >= 15) & (H < 40) & (S > 0.35) & (V > 0.55)) | ((H >= 250) & (H < 335) & (S > 0.10) & (V > 0.45) & (V < 0.85))
+    if name == '1821':          # carmine / dark pink buildings (fields are paler salmon)
+        return ((H < 6) | (H > 335)) & (S > 0.25) & (V > 0.55)
+    if name == '1877_mesto':    # buildings filled dark grey
+        return dense((S < 0.22) & (V < 0.5), 3, 0.6)
+    if name == '1881':          # maroon (stone) and magenta / pink (other) buildings
+        return ((H > 295) | (H < 12)) & (S > 0.28) & (V < 0.85)
+    if name == '1902':          # salmon-red houses, black industrial buildings
+        return (((H < 22) | (H > 345)) & (S > 0.33) & (V > 0.55)) | dense(V < 0.22, 3, 0.7)
+    if name == '1908':          # pink old town, orange / yellow newer buildings
+        return (((H < 12) | (H > 340)) & (S > 0.25) & (V > 0.6)) | ((H >= 22) & (H < 58) & (S > 0.55) & (V > 0.7))
+    if name == '2001_orto':     # same texture heuristic as the 1953 orthophoto
+        g = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY).astype(np.float32)
+        mu = cv2.blur(g, (9, 9)); sd = np.sqrt(np.maximum(cv2.blur(g * g, (9, 9)) - mu * mu, 0))
+        return dense((sd > 18) & (mu > 115), 11, 0.45)
     if name == '1953_orto':     # bright roofs + strong local texture (rough heuristic)
         g = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY).astype(np.float32)
         mu = cv2.blur(g, (9, 9)); sd = np.sqrt(np.maximum(cv2.blur(g * g, (9, 9)) - mu * mu, 0))
@@ -60,4 +74,4 @@ def coverage(name, im, alpha):
 # density thresholds per epoch (share of building pixels in the 150 m window)
 DENS_T = {'1840_cadastre': 0.10, '1880_vm3': 0.30, '1891': 0.25, '1895': 0.25, '1912': 0.2, '1953_orto': 0.25, '2025_ruian': 0.15}
 YEAR = {'1840_cadastre': 1840, '1880_vm3': 1880, '1891': 1891, '1895': 1895, '1912': 1912, '1926': 1926,
-        '1931': 1931, '1938': 1938, '1947': 1947, '1953_orto': 1953, '2025_ruian': 2025}
+        '1931': 1931, '1938': 1938, '1947': 1947, '1953_orto': 1953, '2025_ruian': 2025}  # epochs of the settlement-area classification

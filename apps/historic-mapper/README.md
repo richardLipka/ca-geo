@@ -42,7 +42,10 @@ Map layers also include the **growth layer** (settlement areas per map epoch, se
 textures cut from the 1618 plate, with a year filter. The **growth model**
 (`/growth3d.html`, link in the header) animates all buildings of the town from 1295 to 2020
 (schematic positions, interpolated dates; method in `docs/research/plzen-growth-model.md`)
-and exports the animation as video frames.
+and exports the animation as video frames. It stands on the DMR 5G terrain with per-epoch water,
+shows the epoch maps as ground by their validity and has a **view mode**: the model seen from the
+viewpoint of a veduta or bird's-eye plate next to the drawing; click a building in 3D and then the
+object in the drawing to store a link (annotation) in the project.
 
 Source types and transforms:
 
@@ -101,7 +104,10 @@ versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM Vi
 | `render_view.py` | render the model from a panorama viewpoint under the veduta |
 | `growth_export.py`, `growth_tiles.py`, `growth_classify.py`, `growth_rules.py` | multi-epoch built-up growth in a 9 × 9 km frame (shared classification rules) |
 | `ruian_buildings.py` | present building footprints with completion date and floors (RÚIAN, ČÚZK) |
-| `growth_model.py` | dates every building 1295–2020 from RÚIAN, the map epochs, the 1618 model and written sources → `data/historic/growth/web/` |
+| `growth_model.py` | dates every building 1295–2020 from RÚIAN, 16 map epochs, census house counts (ČSÚ), the 1618 model, the 1781 fortification and written sources; validation against the maps; terrain and water → `data/historic/growth/web/` |
+| `fort_1781.json` | Zwinger and bastioned works digitised from the 1781 plan, with demolition years |
+| `city_heights.py` | building heights of the City of Plzeň 3D model 2024 (attributes, joined by parcel) |
+| `fetch_terrain.py` | ČÚZK DMR 5G terrain for the growth frame |
 | `encode_video.py` | H.264 MP4 from the frames exported by `growth3d.html` (ffmpeg from `imageio-ffmpeg` in `.venv`) |
 
 ## Licence
