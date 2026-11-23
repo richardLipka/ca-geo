@@ -34,6 +34,7 @@ export interface Entity {
   type: EntityType;
   geom: { type: GeomType; coords: Vec2[] } | null; // Point: 1 coord; Polygon: ring without closing vertex
   cp?: string; // house number (číslo popisné) with part of town, free text
+  height?: number; // approximate height above ground in metres (for 3D views)
   validFrom?: number;
   validTo?: number;
   notes?: string;
@@ -48,7 +49,12 @@ export interface Annotation {
   confidence: 1 | 2 | 3; // 1 uncertain, 2 probable, 3 certain
   note?: string;
   useAsControl: boolean; // counts as a control point when the source uses links
+  shape?: Vec2[]; // outline of the object in the image (polygon, pixels)
+  kind?: AnnotationKind; // what the outlined piece shows
 }
+
+export type AnnotationKind = 'house' | 'roof' | 'tower' | 'church' | 'gate' | 'wall' | 'bridge' | 'other';
+export const ANNOTATION_KINDS: AnnotationKind[] = ['house', 'roof', 'tower', 'church', 'gate', 'wall', 'bridge', 'other'];
 
 export interface Project {
   format: 'ca-geo/historic-mapper';

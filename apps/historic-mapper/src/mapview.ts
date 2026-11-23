@@ -15,6 +15,9 @@ export const TYPE_COLOUR: Record<EntityType, string> = {
   moat: '#1864ab', water: '#1c7ed6', bridge: '#a61e4d', street: '#868e96', other: '#343a40',
 };
 
+interface GrowthFeature { properties: { epoch: string; year: number; town_km2: number }; geometry: { coordinates: number[][][][] }; town_parts: number[] }
+interface Village { xy: [number, number]; epochs: Record<string, string | null>; first_joined: number | null }
+
 interface Amcr { id: string; y: string; lat: number; lon: number; fort: boolean; loc: string }
 
 export class MapView {
@@ -27,6 +30,8 @@ export class MapView {
   private drag: { x: number; y: number; c: Vec2; moved: boolean } | null = null;
   private amcr: (Amcr & { p: Vec2 })[] | null = null;
   private mouse: Vec2 | null = null;
+  private growth: GrowthFeature[] | null = null;
+  private villages: Record<string, Village> | null = null;
 
   constructor(private root: HTMLElement, private vec: HTMLCanvasElement, gl: HTMLCanvasElement, private hint: HTMLElement, private coords: HTMLElement) {
     this.ctx = vec.getContext('2d')!;
@@ -157,6 +162,23 @@ export class MapView {
     this.render();
   }
 
+  async toggleGrowth(on: boolean) {
+    if (on && !this.growth) {
+      try {
+        this.growth = ((await (await fetch('/data/historic/growth/builtup.geojson')).json()).features as GrowthFeature[]).sort((a, b) => a.properties.year - b.properties.year);
+        this.villages = await (await fetch('/data/historic/growth/villages.json')).json();
+      } catch { this.growth = []; }
+    }
+    this.render();
+  }
+
+  /** Latest growth epoch not after the selected year (or the latest one). */
+  growthEpoch(): GrowthFeature | null {
+    if (!this.growth || !this.growth.length) return null;
+    const y = store.ui.year ?? 9999;
+    return [...this.growth].reverse().find(f => f.properties.year <= y) ?? this.growth[0];
+  }
+
   render() {
     const w = this.vec.clientWidth, h = this.vec.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
     if (this.vec.width !== Math.round(w * dpr) || this.vec.height !== Math.round(h * dpr)) { this.vec.width = Math.round(w * dpr); this.vec.height = Math.round(h * dpr); }
@@ -176,6 +198,24 @@ export class MapView {
 
     const g = this.ctx; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
     const ui = store.ui;
+    // built-up growth (settlement areas of the chosen epoch; the town in red, other settlements in orange)
+    const ge = store.ui.showGrowth ? this.growthEpoch() : null;
+    if (ge) {
+      ge.geometry.coordinates.forEach((poly, i) => {
+        const town = ge.town_parts.includes(i);
+        g.beginPath();
+        for (const ring of poly) ring.forEach(([x, y], k) => { const q = this.toScr([x, y]); if (k) g.lineTo(q[0], q[1]); else g.moveTo(q[0], q[1]); });
+        g.fillStyle = town ? 'rgba(201,42,42,.32)' : 'rgba(240,140,0,.30)'; g.fill('evenodd');
+        g.lineWidth = 1; g.strokeStyle = town ? 'rgba(201,42,42,.8)' : 'rgba(200,110,0,.8)'; g.stroke();
+      });
+      if (this.villages) for (const [name, v] of Object.entries(this.villages)) {
+        const st = v.epochs[ge.properties.epoch]; const q = this.toScr(v.xy);
+        g.beginPath(); g.arc(q[0], q[1], 5, 0, 7); g.fillStyle = st === 'joined' ? '#c92a2a' : st === 'separate' ? '#f08c00' : '#868e96'; g.fill(); g.strokeStyle = '#fff'; g.stroke();
+        label(g, q, name, '#343a40');
+      }
+      g.font = '600 13px system-ui'; g.fillStyle = '#212529';
+      g.fillText(t('map.growthEpoch', { y: ge.properties.year, a: ge.properties.town_km2 }), 12, 52);
+    }
     // AMČR archaeology
     if (ui.showAmcr && this.amcr) for (const o of this.amcr) {
       const q = this.toScr(o.p); g.beginPath(); g.arc(q[0], q[1], o.fort ? 5 : 3.5, 0, 7);
@@ -193,7 +233,7 @@ export class MapView {
         if (e.geom.type === 'Polygon') { g.closePath(); g.fillStyle = hexA(sel ? '#e8590c' : col, 0.18); g.fill(); }
         g.stroke();
       }
-      const a = entityAnchor(e); if (a && (sel || this.res < 1.5)) label(g, this.toScr(a), e.name, sel ? '#e8590c' : col);
+      const a = entityAnchor(e); if (a && (sel || (e.type !== 'building' && this.res < 2.5))) label(g, this.toScr(a), e.name, sel ? '#e8590c' : col);
     }
     // control points of the current source + predicted position of the selected annotation
     const src = store.source;

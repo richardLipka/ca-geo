@@ -14,3 +14,10 @@ npm --prefix apps/historic-mapper run fetch-sources
 - Wikimedia Commons rate-limits automated downloads (HTTP 429) and serves only standard
   thumbnail widths (e.g. 1920, 3840) to scripts; if a download fails, fetch it later or
   through another network.
+
+Derived data (also not versioned, regenerate with the scripts in `apps/historic-mapper/scripts/`):
+
+- `cutouts/<source>/` — house-by-house cut-outs of vedute (PNG with transparency) and a contact sheet.
+- `facets/te-1618/` — facet textures (walls, roofs) from the 1618 siege plate + `facets.json`.
+- `growth/raw/` — all map epochs in the common 9 x 9 km frame; `growth/builtup.geojson`,
+  `growth/villages.json`, `growth/mask_*.png` — classified settlement areas per epoch.

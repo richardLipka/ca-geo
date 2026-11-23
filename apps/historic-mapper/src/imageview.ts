@@ -27,6 +27,7 @@ export class ImageView {
       if (this.drag.moved) { this.ox = this.drag.ox + dx; this.oy = this.drag.oy + dy; this.userMoved = true; this.render(); }
     });
     canvas.addEventListener('pointerup', e => { const d = this.drag; this.drag = null; if (d && !d.moved) this.onClick(e); });
+    canvas.addEventListener('dblclick', e => { e.preventDefault(); this.finishOutline(); });
   }
 
   toImg(e: MouseEvent): Vec2 { const r = this.canvas.getBoundingClientRect(); return [(e.clientX - r.left - this.ox) / this.scale, (e.clientY - r.top - this.oy) / this.scale]; }
@@ -61,6 +62,7 @@ export class ImageView {
       } else store.setUi({ pendingImg: p });
       return;
     }
+    if (ui.tool === 'outline') { store.ui.outline.push(p); this.render(); return; }
     if (ui.tool === 'identify') {
       const hit = this.hitAnnotation(p);
       if (hit) { store.setUi({ selAnnotation: hit.id, selEntity: hit.entityId, tab: 'identity', pendingImg: null }); return; }
@@ -71,6 +73,17 @@ export class ImageView {
     }
     const hit = this.hitAnnotation(p);
     store.setUi({ selAnnotation: hit?.id ?? null, selEntity: hit?.entityId ?? store.ui.selEntity });
+  }
+
+  /** Close the outline being drawn into a new annotation (centroid = marker position). */
+  finishOutline() {
+    const src = store.source, pts = store.ui.outline;
+    if (!src || store.ui.tool !== 'outline') return;
+    if (pts.length < 3) { store.setUi({ outline: [] }); return; }
+    const c: Vec2 = [pts.reduce((s, q) => s + q[0], 0) / pts.length, pts.reduce((s, q) => s + q[1], 0) / pts.length];
+    const id = uid('a');
+    store.change(pr => pr.annotations.push({ id, sourceId: src.id, img: c, shape: pts.slice(), kind: 'house', entityId: null, confidence: 2, useAsControl: false }));
+    store.setUi({ outline: [], selAnnotation: id, tab: 'identity' });
   }
 
   render() {
@@ -98,6 +111,7 @@ export class ImageView {
     if (res.fit) {
       const linked = new Set(store.annotationsOf(src.id).map(a => a.entityId));
       for (const e of store.project.entities) {
+        if (e.type === 'building' && e.id !== store.ui.selEntity) continue; // too many to show as hints
         const m = entityAnchor(e); if (!m || linked.has(e.id)) continue;
         const q = this.toScr(res.fit.inverse(m));
         if (q[0] < -20 || q[1] < -20 || q[0] > w + 20 || q[1] > h + 20) continue;
@@ -107,6 +121,7 @@ export class ImageView {
     if (res.pano) { // vertical guide lines at predicted columns
       g.save(); g.setLineDash([4, 4]); g.lineWidth = 1;
       for (const e of store.project.entities) {
+        if (e.type === 'building' && e.id !== store.ui.selEntity) continue;
         const m = entityAnchor(e); if (!m) continue;
         const x = res.pano.project(m); if (x === null) continue;
         const sx = x * this.scale + this.ox; if (sx < 0 || sx > w) continue;
@@ -126,11 +141,23 @@ export class ImageView {
       const r = resid.get(gp.id);
       this.label(q, `G${i + 1}${r !== undefined && Number.isFinite(r) ? ` · ${r.toFixed(1)} m` : ''}`, COL.gcp);
     });
-    // annotations
+    // annotations (outlines first, then markers)
+    for (const a of store.annotationsOf(src.id)) {
+      if (!a.shape) continue;
+      const sel = a.id === store.ui.selAnnotation, pts = a.shape.map(p => this.toScr(p));
+      g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.closePath();
+      g.fillStyle = sel ? 'rgba(232,89,12,.22)' : a.entityId ? 'rgba(25,113,194,.14)' : 'rgba(134,142,150,.12)'; g.fill();
+      g.lineWidth = sel ? 2.5 : 1.5; g.strokeStyle = sel ? COL.sel : a.entityId ? COL.ann : '#495057'; g.stroke();
+    }
+    if (store.ui.outline.length) {
+      const pts = store.ui.outline.map(p => this.toScr(p));
+      g.setLineDash([5, 4]); g.strokeStyle = COL.sel; g.lineWidth = 2; g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]))); g.stroke(); g.setLineDash([]);
+      pts.forEach(q => this.dot(q, COL.sel, 3));
+    }
     for (const a of store.annotationsOf(src.id)) {
       const q = this.toScr(a.img), e = store.entity(a.entityId), sel = a.id === store.ui.selAnnotation || (e && e.id === store.ui.selEntity);
       this.ring(q, sel ? COL.sel : e ? COL.ann : COL.annFree, sel ? 9 : 7);
-      const txt = [a.label, e?.name].filter(Boolean).join(' · ') || t('ann.unlinked');
+      const txt = [a.label, e?.name ?? (a.kind ? t('kind.ann.' + a.kind) : '')].filter(Boolean).join(' · ') || t('ann.unlinked');
       this.label(q, txt, sel ? COL.sel : e ? COL.ann : COL.annFree);
     }
     if (store.ui.pendingImg) this.cross(this.toScr(store.ui.pendingImg), COL.pending, 9);

@@ -17,7 +17,7 @@ function toSource(s: SeedSource): Source {
 }
 
 const TOOLS: { id: Tool; key: string }[] = [
-  { id: 'navigate', key: 'v' }, { id: 'gcp', key: 'g' }, { id: 'identify', key: 'i' },
+  { id: 'navigate', key: 'v' }, { id: 'gcp', key: 'g' }, { id: 'identify', key: 'i' }, { id: 'outline', key: 'u' },
   { id: 'draw-point', key: 'p' }, { id: 'draw-line', key: 'l' }, { id: 'draw-polygon', key: 'o' },
 ];
 
@@ -31,6 +31,7 @@ function shell() {
     <div class="right">
       <span class="save" id="save"></span>
       <button type="button" id="undo">${t('btn.undo')}</button><button type="button" id="redo">${t('btn.redo')}</button>
+      <a class="btnlink" href="/viewer3d.html">${t('v3d.open')}</a>
       <button type="button" id="lang">${t('btn.lang')}</button>
     </div>
   </header>
@@ -45,6 +46,7 @@ function shell() {
         <label>${t('ref.label')}<select id="ref">${REF_LAYERS.map(l => `<option value="${l.id}">${l.labelKey ? t(l.labelKey) : l.label}</option>`).join('')}</select></label>
         <label>${t('ref.opacity')}<input type="range" id="refop" min="0" max="1" step="0.05"></label>
         <label class="chk"><input type="checkbox" id="amcr"> ${t('map.amcr')}</label>
+        <label class="chk"><input type="checkbox" id="growth"> ${t('map.growth')}</label>
         <label>${t('map.year')} <output id="yearout"></output><input type="range" id="year" min="1290" max="2030" step="1"></label>
         <label class="chk"><input type="checkbox" id="allyears"> ${t('map.allYears')}</label>
       </div>
@@ -77,7 +79,7 @@ function build() {
   mountSources(document.getElementById('sources')!);
   mountInspector(document.getElementById('inspector')!, { centreImage: p => img.centreOn(p), centreMap: p => map.centreOn(p) });
 
-  document.querySelectorAll<HTMLButtonElement>('button.tool').forEach(b => b.onclick = () => store.setUi({ tool: b.dataset.tool as Tool, pendingImg: null, pendingMap: null, drawing: [], redraw: false }));
+  document.querySelectorAll<HTMLButtonElement>('button.tool').forEach(b => b.onclick = () => store.setUi({ tool: b.dataset.tool as Tool, pendingImg: null, pendingMap: null, drawing: [], outline: [], redraw: false }));
   (document.getElementById('undo') as HTMLButtonElement).onclick = () => store.undo();
   (document.getElementById('redo') as HTMLButtonElement).onclick = () => store.redo();
   (document.getElementById('lang') as HTMLButtonElement).onclick = () => { setLang(getLang() === 'cs' ? 'en' : 'cs'); build(); };
@@ -88,6 +90,9 @@ function build() {
   const amcr = document.getElementById('amcr') as HTMLInputElement;
   amcr.checked = store.ui.showAmcr;
   amcr.onchange = () => { store.setUi({ showAmcr: amcr.checked }); map.toggleAmcr(amcr.checked); };
+  const growth = document.getElementById('growth') as HTMLInputElement;
+  growth.checked = store.ui.showGrowth;
+  growth.onchange = () => { store.setUi({ showGrowth: growth.checked }); map.toggleGrowth(growth.checked); };
   const year = document.getElementById('year') as HTMLInputElement, all = document.getElementById('allyears') as HTMLInputElement, out = document.getElementById('yearout')!;
   const syncYear = () => { all.checked = store.ui.year === null; year.disabled = all.checked; year.value = String(store.ui.year ?? 1700); out.textContent = store.ui.year === null ? '' : String(store.ui.year); };
   syncYear();
@@ -100,6 +105,7 @@ function build() {
 function render() {
   if (!views) return;
   document.querySelectorAll<HTMLButtonElement>('button.tool').forEach(b => b.classList.toggle('on', b.dataset.tool === store.ui.tool));
+  const ref = document.getElementById('ref') as HTMLSelectElement | null; if (ref && ref.value !== store.ui.refLayer) ref.value = store.ui.refLayer;
   const sv = document.getElementById('save'); if (sv) { sv.textContent = t('save.' + store.ui.saveState); sv.className = 'save ' + store.ui.saveState; }
   views.img.render(); views.map.render();
 }
@@ -111,10 +117,10 @@ window.addEventListener('keydown', e => {
   if (/^(INPUT|SELECT|TEXTAREA)$/.test(tag)) return;
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? store.redo() : store.undo(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); store.redo(); return; }
-  if (e.key === 'Escape') { store.setUi({ pendingImg: null, pendingMap: null, drawing: [], redraw: false }); return; }
-  if (e.key === 'Enter') { views?.map.finishDrawing(); return; }
+  if (e.key === 'Escape') { store.setUi({ pendingImg: null, pendingMap: null, drawing: [], outline: [], redraw: false }); return; }
+  if (e.key === 'Enter') { if (store.ui.tool === 'outline') views?.img.finishOutline(); else views?.map.finishDrawing(); return; }
   const tool = TOOLS.find(x => x.key === e.key.toLowerCase());
-  if (tool && !e.ctrlKey && !e.metaKey && !e.altKey) store.setUi({ tool: tool.id, pendingImg: null, pendingMap: null, drawing: [], redraw: false });
+  if (tool && !e.ctrlKey && !e.metaKey && !e.altKey) store.setUi({ tool: tool.id, pendingImg: null, pendingMap: null, drawing: [], outline: [], redraw: false });
 });
 
 start();

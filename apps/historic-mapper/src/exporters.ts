@@ -19,7 +19,7 @@ export function entitiesGeoJson(p: Project, wgs: boolean): string {
     const g = e.geom!, cs = g.coords.map(tr);
     const geometry = g.type === 'Point' ? { type: 'Point', coordinates: cs[0] } : g.type === 'LineString' ? { type: 'LineString', coordinates: cs } : { type: 'Polygon', coordinates: [[...cs, cs[0]]] };
     const evidence = p.annotations.filter(a => a.entityId === e.id).map(a => ({ source: a.sourceId, img: a.img.map(v => Math.round(v)), label: a.label ?? null, confidence: a.confidence, note: a.note ?? null }));
-    return { type: 'Feature', id: e.id, geometry, properties: { name: e.name, type: e.type, cp: e.cp ?? null, valid_from: e.validFrom ?? null, valid_to: e.validTo ?? null, notes: e.notes ?? null, evidence } };
+    return { type: 'Feature', id: e.id, geometry, properties: { name: e.name, type: e.type, cp: e.cp ?? null, height_m: e.height ?? null, valid_from: e.validFrom ?? null, valid_to: e.validTo ?? null, notes: e.notes ?? null, evidence } };
   });
   const fc: Record<string, unknown> = { type: 'FeatureCollection', name: p.name, features };
   if (!wgs) fc.crs = { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::5514' } };

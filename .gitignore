@@ -30,3 +30,6 @@ desktop.ini
 # Local clones of third-party implementations (reference only, not versioned)
 external/**
 !external/README.md
+
+# Local Python environment for image processing (OpenCV, PyTorch)
+.venv/

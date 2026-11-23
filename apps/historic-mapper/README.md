@@ -33,7 +33,13 @@ Image pane (left) and map pane (right, EPSG:5514). Tools (keyboard shortcut):
 | Pan (V) | pan / zoom both panes, select markers |
 | Control point (G) | click in the image, then the same place on the map (or the reverse) → control point |
 | Identity (I) | click an object in the image → annotation; then click its entity on the map, or an empty place to create a new point entity |
+| Outline (U) | outline an object in the image (house, roof, tower, church, gate, wall…) — stored as an annotation with a polygon; double-click or Enter finishes |
 | Point / Line / Polygon (P, L, O) | draw entity geometry on the map; double-click or Enter finishes |
+
+Map layers also include the **growth layer** (settlement areas per map epoch, see
+`docs/research/plzen-first-model.md` §8) and AMČR fieldwork points. The **3D model**
+(`/viewer3d.html`, link in the header) shows the entities as prisms with heights and the facet
+textures cut from the 1618 plate, with a year filter.
 
 Source types and transforms:
 
@@ -75,6 +81,22 @@ QGIS Georeferencer `.points` file for the current source.
 - `scripts/fetch-sources.mjs` — download source images listed in `sources.json`.
 - `scripts/segment_colours.py` — colour segmentation experiment for colour-coded plans
   (stable cadastre: stone buildings red, wooden yellow, water blue); numpy + GDAL only.
+
+Image-processing scripts use the repository's local Python environment `.venv` (not
+versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM ViT-H weights in
+`data/models/`):
+
+| Script | Purpose |
+|---|---|
+| `plzen_1618.py` | landmark table, 1618 plate homography with LOO residuals, veduta viewpoint tests (metric + ordinal) |
+| `overlay_check.py` | warp a source onto a map raster and draw residuals (visual georeference check) |
+| `sam_buildings.py` | building footprints from a colour-coded plan with Segment Anything (GPU) |
+| `build_1618_project.py` | seed the project with the c. 1536–1618 model (ids `g1618-…`) |
+| `sam_view.py` | automatic SAM masks on a veduta region |
+| `ottheinrich_cuts.json`, `cut_pieces.py` | house-by-house outlines of the oldest veduta → cut-outs + annotations |
+| `facet_textures.py` | facet (wall / roof) textures from a georeferenced oblique view |
+| `render_view.py` | render the model from a panorama viewpoint under the veduta |
+| `growth_export.py`, `growth_tiles.py`, `growth_classify.py` | multi-epoch built-up growth in a 9 × 9 km frame |
 
 ## Licence
 

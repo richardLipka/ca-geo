@@ -53,5 +53,6 @@ function localData(): Plugin {
 
 export default defineConfig({
   plugins: [localData()],
+  build: { rollupOptions: { input: { main: resolve(here, 'index.html'), viewer3d: resolve(here, 'viewer3d.html') } } },
   server: { port: 5218, strictPort: true },
 });

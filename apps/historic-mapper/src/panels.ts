@@ -4,7 +4,7 @@
 import { download, entitiesGeoJson, evidenceCsv, gdalScript, qgisPoints } from './exporters';
 import { getImage, imageFailed } from './images';
 import { t } from './i18n';
-import { ENTITY_TYPES, activeIn, entityAnchor, normaliseProject, type EntityType, type Source, type SourceKind } from './model';
+import { ANNOTATION_KINDS, ENTITY_TYPES, activeIn, entityAnchor, normaliseProject, type AnnotationKind, type EntityType, type Source, type SourceKind } from './model';
 import { store } from './store';
 import type { Method, Vec2 } from './transform';
 
@@ -109,9 +109,10 @@ function identityTab(): string {
   const ents = [...store.project.entities].sort((a, b) => a.name.localeCompare(b.name));
   return `${sourceHeader(s)}<h3>${t('ann.title')}</h3><div class="anns">${anns.map(a => {
     const sel = a.id === store.ui.selAnnotation;
-    if (!sel) { const e = store.entity(a.entityId); return `<button type="button" class="annrow" data-act="selann" data-id="${a.id}"><span>${esc(a.label || '·')}</span> ${esc(e?.name ?? t('ann.unlinked'))} <small>${t('conf.' + a.confidence)}</small></button>`; }
+    if (!sel) { const e = store.entity(a.entityId); return `<button type="button" class="annrow" data-act="selann" data-id="${a.id}"><span>${esc(a.label || (a.shape ? '▱' : '·'))}</span> ${esc(e?.name ?? (a.kind ? t('kind.ann.' + a.kind) : t('ann.unlinked')))} <small>${t('conf.' + a.confidence)}</small></button>`; }
     return `<div class="anned" data-id="${a.id}">
       <label>${t('ann.label')}<input type="text" id="ann-label" data-act="annlabel" value="${esc(a.label ?? '')}"></label>
+      <label>${t('ann.kind')}<select id="ann-kind" data-act="annkind"><option value="">—</option>${ANNOTATION_KINDS.map(k => `<option value="${k}"${k === a.kind ? ' selected' : ''}>${t('kind.ann.' + k)}</option>`).join('')}</select></label>
       <label>${t('ann.entity')}<select id="ann-entity" data-act="annentity"><option value="">${t('ann.noEntity')}</option>${ents.map(e => `<option value="${e.id}"${e.id === a.entityId ? ' selected' : ''}>${esc(e.name)} (${t('type.' + e.type)})</option>`).join('')}</select></label>
       <label>${t('ann.confidence')}<select id="ann-conf" data-act="annconf">${[1, 2, 3].map(c => `<option value="${c}"${c === a.confidence ? ' selected' : ''}>${t('conf.' + c)}</option>`).join('')}</select></label>
       <label class="chk"><input type="checkbox" data-act="annctrl"${a.useAsControl ? ' checked' : ''}> ${t('ann.control')}</label>
@@ -132,7 +133,8 @@ function entitiesTab(): string {
     <label>${t('ent.type')}<select id="ent-type" data-act="enttype">${ENTITY_TYPES.map(k => `<option value="${k}"${k === e.type ? ' selected' : ''}>${t('type.' + k)}</option>`).join('')}</select></label>
     <div class="row2"><label>${t('ent.from')}<input type="number" id="ent-from" data-act="entfrom" value="${e.validFrom ?? ''}"></label>
     <label>${t('ent.to')}<input type="number" id="ent-to" data-act="entto" value="${e.validTo ?? ''}"></label></div>
-    <label>${t('ent.cp')}<input type="text" id="ent-cp" data-act="entcp" value="${esc(e.cp ?? '')}"></label>
+    <div class="row2"><label>${t('ent.cp')}<input type="text" id="ent-cp" data-act="entcp" value="${esc(e.cp ?? '')}"></label>
+    <label>${t('ent.height')}<input type="number" id="ent-height" data-act="entheight" min="0" step="0.5" value="${e.height ?? ''}"></label></div>
     <label>${t('ent.notes')}<textarea id="ent-notes" data-act="entnotes" rows="3">${esc(e.notes ?? '')}</textarea></label>
     <div class="btns"><button type="button" data-act="entzoom">${t('ent.zoom')}</button>
       <button type="button" data-act="entredraw">${t('ent.redraw')}</button>
@@ -172,6 +174,7 @@ function wire(el: HTMLElement, hooks: PanelHooks) {
   on('selann', 'click', x => { const a = store.project.annotations.find(q => q.id === x.dataset.id); store.setUi({ selAnnotation: x.dataset.id!, selEntity: a?.entityId ?? null, tab: 'identity' }); if (a) hooks.centreImage(a.img); });
   on('annlabel', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.label = x.value || undefined; }); });
   on('annentity', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.entityId = x.value || null; }); store.setUi({ selEntity: x.value || null }); });
+  on('annkind', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.kind = (x.value || undefined) as AnnotationKind | undefined; }); });
   on('annconf', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.confidence = +x.value as 1 | 2 | 3; }); });
   on('annctrl', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.useAsControl = x.checked; }); });
   on('annnote', 'change', x => { const a = selAnn(); if (a) store.change(() => { a.note = x.value || undefined; }); });
@@ -182,6 +185,7 @@ function wire(el: HTMLElement, hooks: PanelHooks) {
   on('entfrom', 'change', x => { const e = selEnt(); if (e) store.change(() => { e.validFrom = x.value === '' ? undefined : +x.value; }); });
   on('entto', 'change', x => { const e = selEnt(); if (e) store.change(() => { e.validTo = x.value === '' ? undefined : +x.value; }); });
   on('entcp', 'change', x => { const e = selEnt(); if (e) store.change(() => { e.cp = x.value || undefined; }); });
+  on('entheight', 'change', x => { const e = selEnt(); if (e) store.change(() => { e.height = x.value === '' ? undefined : +x.value; }); });
   on('entnotes', 'change', x => { const e = selEnt(); if (e) store.change(() => { e.notes = x.value || undefined; }); });
   on('entzoom', 'click', () => { const e = selEnt(), m = e && entityAnchor(e); if (m) hooks.centreMap(m); });
   on('entredraw', 'click', () => { const e = selEnt(); if (!e) return; const tool = e.geom?.type === 'LineString' ? 'draw-line' : e.geom?.type === 'Polygon' ? 'draw-polygon' : 'draw-point'; store.setUi({ tool, redraw: true, drawing: [] }); });

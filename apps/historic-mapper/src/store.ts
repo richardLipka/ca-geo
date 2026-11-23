@@ -4,7 +4,7 @@
 import { type Annotation, type Entity, type Project, type Source, emptyProject, entityAnchor, normaliseProject } from './model';
 import { fit, fitPanorama, MIN_POINTS, type Fit, type PanoFit, type Vec2 } from './transform';
 
-export type Tool = 'navigate' | 'gcp' | 'identify' | 'draw-point' | 'draw-line' | 'draw-polygon';
+export type Tool = 'navigate' | 'gcp' | 'identify' | 'outline' | 'draw-point' | 'draw-line' | 'draw-polygon';
 
 export interface Ui {
   sourceId: string | null;
@@ -15,11 +15,13 @@ export interface Ui {
   pendingImg: Vec2 | null; // first click of a GCP / identity pair on the image
   pendingMap: Vec2 | null; // first click on the map
   drawing: Vec2[]; // vertices of an entity being drawn
+  outline: Vec2[]; // vertices of an image outline being drawn
   redraw: boolean; // drawing replaces the geometry of the selected entity
   year: number | null; // time filter for entities; null = all
   refLayer: string;
   refOpacity: number;
   showAmcr: boolean;
+  showGrowth: boolean;
   tab: 'points' | 'identity' | 'entities' | 'export';
   saveState: 'saved' | 'saving' | 'local' | 'error';
 }
@@ -33,8 +35,8 @@ class Store {
   project: Project = emptyProject('plzen');
   ui: Ui = {
     sourceId: null, tool: 'navigate', selEntity: null, selAnnotation: null, selGcp: null,
-    pendingImg: null, pendingMap: null, drawing: [], redraw: false, year: null, refLayer: 'city-GIS_HIS_Plzen_1781', refOpacity: 1,
-    showAmcr: false, tab: 'points', saveState: 'saved',
+    pendingImg: null, pendingMap: null, drawing: [], outline: [], redraw: false, year: null, refLayer: 'city-GIS_HIS_Plzen_1781', refOpacity: 1,
+    showAmcr: false, showGrowth: false, tab: 'points', saveState: 'saved',
   };
   private listeners = new Set<Listener>();
   private undoStack: string[] = [];

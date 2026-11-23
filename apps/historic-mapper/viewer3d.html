@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Historic mapper 3D</title>
+  <style>
+    html, body { margin: 0; height: 100%; font: 13px/1.4 "Segoe UI", system-ui, sans-serif; color: #1f2427; background: #dfe6ea }
+    #v3d { position: fixed; inset: 0 }
+    .v3dbar { position: fixed; left: 10px; top: 10px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+      background: rgba(251,251,250,.92); border: 1px solid #d3d8d6; border-radius: 6px; padding: 6px 10px; max-width: calc(100% - 40px) }
+    .v3dbar label { display: inline-flex; gap: 6px; align-items: center }
+    .muted { color: #66707a }
+  </style>
+</head>
+<body>
+  <script type="module" src="/src/viewer3d.ts"></script>
+</body>
+</html>
