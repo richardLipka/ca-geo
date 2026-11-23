@@ -35,6 +35,7 @@ for (const s of sources) {
   if (only.length && !only.includes(s.id)) continue;
   const file = join(out, s.file);
   if (existsSync(file)) { console.log(`skip  ${s.id} (exists)`); continue; }
+  if (s.download.startsWith('hiu-atlas:')) { console.log(`skip  ${s.id} (render from the HAM Plzeň PDF: python scripts/atlas_pages.py)`); continue; }
   try {
     const url = s.download.startsWith('kramerius-cuni:') ? await kramerius(s.download.slice('kramerius-cuni:'.length)) : s.download;
     const buf = await get(url);

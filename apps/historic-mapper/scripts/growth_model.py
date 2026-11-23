@@ -19,7 +19,7 @@ Evidence, in order of trust:
 5. Buildings of the stable cadastre that no longer exist → historic-only footprints; their
    demolition is the first later epoch where the place is empty.
 6. Fortification: medieval wall ring, towers and gates (model c. 1536-1618); Zwinger and the
-   bastioned works of 1645-1659 digitised from the 1781 plan (fort_1781.json), demolition dates
+   works of 1645-1658 (the "Schantzen" of the 1658 plan) digitised from the 1781 plan (fort_1781.json), defunct by 1781, demolition dates
    from the 1821 / 1840 plans and written sources; moat.
 Within an interval the year follows the growth front: places closer to the built-up area of the
 previous epoch are dated earlier. Terrain: ČÚZK DMR 5G; water per epoch from the maps.
@@ -87,7 +87,9 @@ EVENTS = [
     (1433, 'Husitské obléhání 1433–34, předměstí zničena', 'Hussite siege 1433–34, suburbs destroyed'),
     (1532, 'Vodárenská věž', 'Water tower'),
     (1618, 'Obléhání Mansfeldem 19. 9. – 21. 11. 1618, předměstí vypálena (Theatrum Europaeum, leg. D)', 'Siege by Mansfeld 19 Sep – 21 Nov 1618, suburbs burned (Theatrum Europaeum, legend D)'),
-    (1645, 'Bastionové opevnění (Lacron 1645–49, dokončeno 1659; stav podle plánů 1703 a 1781), 1647 vyklizeno předpolí', 'Bastioned fortification (Lacron 1645–49, completed 1659; state of the 1703 and 1781 plans), glacis cleared 1647'),
+    (1645, 'Šance a raveliny před hradbou (de la Corona 1645–58; plán 1658), 1647 vyklizeno předpolí', 'Earthwork bastions and ravelins (de la Corona 1645–58; plan of 1658), glacis cleared 1647'),
+    (1703, 'Zizner obnovuje opevnění (březen–prosinec 1703), rozsah nových děl nejistý', 'Zizner repairs the fortification (March–December 1703); extent of new works uncertain'),
+    (1760, 'Díla chátrají (plán 1781: „eingegangene Vestungswerker“)', 'The works decay (1781 plan: "eingegangene Vestungswerker")'),
     (1788, 'Schaller: 315 domů ve městě, 142 na předměstích', 'Schaller: 315 houses in the town, 142 in the suburbs'),
     (1795, 'Začíná bourání hradeb, zasypávání příkopů (1795–1822)', 'Wall demolition begins, moats filled (1795–1822)'),
     (1804, 'Zbořena Litická brána', 'Litice gate demolished'), (1822, 'Zbořena Pražská brána', 'Prague gate demolished'),
@@ -376,6 +378,36 @@ for i in range(1, n):
     it = {'ring': ring, 'x': X, 'y': Y, 'h1': 9.0 if WALL.contains(Point(X, Y)) else 5.5, 'gaps': [], 'basis': 'map 1840, demolished (maps)',
           'to': (lo or 1840) + ((hi - (lo or 1840)) * rng.uniform(0.15, 0.85)), 'hi': 1840, 'house': a >= 60, 'id': f'h1840:{len(hist)}'}
     hist.append(it)
+# ---------- demolitions 1942-2008 in the centre (HAM Plzeň map 65, ham_demolitions.py) ----------
+HAM = os.path.join(ROOT, 'data', 'historic', 'growth', 'ham65_demolitions.json')
+bombs = []
+if os.path.exists(HAM):
+    hf = json.load(open(HAM, encoding='utf-8'))['features']
+    bombs = [(f['geometry']['coordinates'], f['properties']['radius_m']) for f in hf if f['geometry']['type'] == 'Point']
+    nh = 0
+    for f in hf:
+        if f['geometry']['type'] != 'Polygon': continue
+        ring = f['geometry']['coordinates'][0]
+        fp = footprint(ring, dil=0)
+        if fp is None: continue
+        sl, m = fp
+        if ruian_mask[sl][m].mean() > 0.3: continue  # replaced on the same footprint: the RÚIAN building carries it
+        poly = Polygon(ring); c = poly.representative_point()
+        st = states(*footprint(ring))
+        k = split_built(st)
+        bombed = any(math.hypot(c.x - b[0][0], c.y - b[0][1]) < b[1] + 15 for b in bombs)
+        # demolition year: last map showing the place built (1947, 1953, 2001), within 1945-2008
+        kg = split_gone(st); glo, ghi = interval(kg)
+        lo_d, hi_d = max(1945.5, glo or 1945.5), min(2008.0, ghi if ghi > (glo or 0) else 2008.0)
+        to = 1945.3 if bombed else (rng.uniform(lo_d, hi_d) if hi_d > lo_d else rng.uniform(1950, 1990))
+        it = {'ring': ring, 'x': c.x, 'y': c.y, 'h1': 10.0, 'gaps': [], 'to': to, 'house': poly.area >= 40, 'id': f'ham65:{nh}',
+              'basis': 'HAM map 65 demolition' + (' (air raid 1945)' if bombed else '')}
+        if k <= K40: it['hi'] = interval(k)[1]; hist.append(it)
+        else:
+            lo, hi = interval(k); hi = min(hi, to - 1)
+            it['from'] = rng.uniform(lo or 1840, max((lo or 1840) + 0.5, hi)); it['lo'], it['hi'] = lo, hi; it['h0'] = it['h1']; recs.append(it)
+        nh += 1
+    print('HAM map 65:', nh, 'demolished buildings added,', len(bombs), 'air-raid sites')
 pre1840(pre + hist)
 for it in pre + hist:
     if 'h0' not in it:
@@ -383,6 +415,9 @@ for it in pre + hist:
         if it['h1'] > it['h0'] + 1 and 'tR' not in it: it['tR'] = rng.uniform(1850, 1919)
 recs += pending + hist
 
+for it in recs:  # present buildings inside an air-raid circle of map 65: damaged 1945, rebuilt 1946-50
+    if it.get('id', '').startswith('ruian:') and it['from'] < 1945 and any(math.hypot(it['x'] - bb[0][0], it['y'] - bb[0][1]) < bb[1] for bb in bombs):
+        it['tR'] = min(it.get('tR', 9999), rng.uniform(1946, 1950)); it.setdefault('h0', it['h1'])
 # ---------- parts of the town for buildings without a house number (nearest numbered building) ----------
 G = 50.0
 grid = {}
@@ -486,26 +521,25 @@ for ln in FORT['lines']:  # Zwinger and outer walls (1781 plan)
         poly = LineString([p0, p1]).buffer(1.1, cap_style=2)
         recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': ln['from'] + rng.uniform(-8, 8), 'to': dem + rng.uniform(-3, 0),
                      'h0': ln['h'], 'h1': ln['h'], 'gaps': [], 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + ln['id']})
-for wk in FORT['works']:  # bastions, ravelins, redoubt, outer rampart: completed 1645-1659
+DECAY = 1760  # the 1781 legend calls the works "eingegangene Vestungswerker" (defunct): lowered from about 1760
+for wk in FORT['works']:  # bastions, ravelins, redoubt: the "Schantzen" of the 1658 plan, built 1645-1658
     ring = wk['poly'] + [wk['poly'][0]]; c = Polygon(ring).centroid
-    recs.append({'ring': ring, 'x': c.x, 'y': c.y, 'from': rng.uniform(1645, 1659), 'to': float(wk['to']), 'h0': wk['h'], 'h1': wk['h'], 'gaps': [],
-                 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + wk['id']})
-# moat around the wall (Zwinger moat before 1420, deepened and flooded 1645-49), filled 1795-1822
-moat = WALL.buffer(24, join_style=2).difference(WALL.buffer(9, join_style=2))
-cx0, cy0 = WALL.centroid.x, WALL.centroid.y
-for s in range(36):
-    a0, a1 = 2 * math.pi * s / 36, 2 * math.pi * (s + 1) / 36
-    wedge = Polygon([(cx0, cy0), (cx0 + 2000 * math.cos(a0), cy0 + 2000 * math.sin(a0)), (cx0 + 2000 * math.cos((a0 + a1) / 2), cy0 + 2000 * math.sin((a0 + a1) / 2)),
-                     (cx0 + 2000 * math.cos(a1), cy0 + 2000 * math.sin(a1))])
-    part = moat.intersection(wedge)
-    if part.is_empty: continue
-    geoms = list(part.geoms) if hasattr(part, 'geoms') else [part]
-    for gpart in geoms:
-        if gpart.geom_type != 'Polygon' or gpart.area < 20: continue
-        c = gpart.centroid
-        fill = min(max(wall_demolition((c.x, c.y)), 1795), 1822)
-        recs.append({'ring': list(gpart.exterior.coords), 'x': c.x, 'y': c.y, 'from': 1420.0, 'to': fill + rng.uniform(-2, 0), 'h0': 0.35, 'h1': 0.35,
-                     'gaps': [], 'cls': 'moat', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:moat'})
+    recs.append({'ring': ring, 'x': c.x, 'y': c.y, 'from': rng.uniform(1645, 1658), 'to': float(wk['to']), 'h0': wk['h'], 'h1': wk['h_decayed'],
+                 'tR': DECAY + rng.uniform(-10, 10), 'gaps': [], 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + wk['id']})
+for bd in FORT['bands']:  # ramparts along the rivers, cut into pieces
+    for p0, p1, mid in line_pieces(bd['line'], 25.0):
+        poly = LineString([p0, p1]).buffer(bd['half'], cap_style=2)
+        recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': rng.uniform(1645, 1658), 'to': bd['to'] + rng.uniform(-3, 0),
+                     'h0': bd['h'], 'h1': bd['h_decayed'], 'tR': DECAY + rng.uniform(-10, 10), 'gaps': [], 'cls': 'fort',
+                     'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + bd['id']})
+# moat and ditches as drawn (blue) on the 1781 plan; Zwinger moat before 1420, filled 1795-1822 by section
+for wt in FORT['water']:
+    for p0, p1, mid in line_pieces(wt['line'], 30.0):
+        poly = LineString([p0, p1]).buffer(wt['half'], cap_style=2)
+        fill = wt['to'] or min(max(wall_demolition(mid), 1795), 1822)
+        start = 1420.0 if wt['id'].startswith('moat') else rng.uniform(1645, 1658)
+        recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': start, 'to': fill + rng.uniform(-2, 0), 'h0': 0.35, 'h1': 0.35,
+                     'gaps': [], 'cls': 'moat', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + wt['id']})
 for k, e in ENT.items():
     if e['type'] not in ('gate', 'tower') or not e.get('geom') or e['geom']['type'] != 'Point': continue
     xy = tuple(e['geom']['coords'][0])

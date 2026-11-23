@@ -335,6 +335,52 @@ Recommended workflow:
 4. Use the photographs of ZČM (Lábek) and the city archive after their terms of reuse are
    confirmed.
 
+## 9. Historický atlas měst ČR 21 – Plzeň (HIÚ AV ČR 2009) and other sources (2026-11-24)
+
+The atlas is a free PDF of 141 pages, 60 MB:
+`obchod.hiu.cas.cz/user_uploads/Knihy ke stažení/historicky_atlas_mesta_plzne.pdf`.
+It contains a historical overview (pp. 6–41), 67 maps on map sheets (pp. 42–103) and map
+commentaries (pp. 112–124). It is stored locally in `data/reference/hiu-atlas/` and not
+versioned, because it is © HIÚ AV ČR and the holders; it is used for research only. Map pages
+are rendered with `scripts/atlas_pages.py` (sources `ham-*` in the mapper).
+
+### Maps relevant to the model
+
+| Map | Content | Use |
+|---|---|---|
+| 5 | *Delineation der Stadt Pilsen, wie die anitzo sich befunden thuet …*, Prague, 23 Feb 1658; plan and profile, ÖStA-KA. The state "as it is now" and the proposal of General de la Corona to add works and ravelins *ad interim*; works lettered a–h | **used**: the 1781 works correspond to works a–h, so they existed by 1658 (built 1645–58). The profile gives wall / rampart heights |
+| 6 | J. Ch. Zizner, *Grund-Ris … in A. 1703*, ÖStA-KA GPA Inland C IV α Pilsen Nr. 2, 695 × 515 mm, west at the top | **analysed**: further bastions and ravelins on the south and west fronts. The legend separates realised from planned works. The atlas says it is uncertain whether 1703 brought more than repairs, and the works are absent in 1781, so they are not modelled. Vogt 1712 is a simplified copy of this plan |
+| 9 | 1st military survey, sectio 156 (1780–83), ÖStA-KA | town outline at 1:28 800 (check against 1781) |
+| 10 | Kitelli / Strassoldo 1781 (ZČM MP 57) = city GIS `GIS_HIS_Plzen_1781` | **used**. Legend: 7 Blinde Thor, 8 Neuthor, 9 Pragerthor, 10 Kleinthor, 14 Zeughaus, **13 "Eingegangene Vestungswerker"** (defunct works) |
+| 12 | Josef z Točenovic, *Situationsplan … 1821* (AMP M 679), c. 1:2 510 | = city GIS 1821. It separates old / new houses, barns and garden houses, so it is the best pre-cadastre source for buildings |
+| 46–50 | vertical aerial photographs 1938, **1945 (USAAF, 9 Apr 1945)**, 1972, **1988**, 2008 (VGHMÚř / Škoda archive / GEOREAL) | 1972 / 1988 cover the northern estates; usable for checking dates (not georeferenced; atlas quality) |
+| 57 | topography of medieval Nová Plzeň c. 1410 (R. Široký, M. Wasková): walls, gates after the 1658 plan, extent of the suburbs from written sources | basis for replacing the zone rule for medieval suburbs (next step) |
+| 58 | extent of the 1507 fires (M. Wasková) | event layer (next step) |
+| **65** | **demolitions of historic buildings in central Plzeň 1945–2008 and air-raid damage 1942–45** (P. Domanický) | **used**: `scripts/ham_demolitions.py` registers the page to RÚIAN, then extracts 184 demolished-building polygons and 30 air-raid sites. The registration is an initial scale-bar similarity followed by coarse-to-fine ECC, correlation 0.55; the rotation of 8.6° is the meridian convergence of S-JTSK. 105 of the polygons do not overlap a present building and are added to the model |
+| 2–4, 21–28, 32–44 | Müller 1720, Kreybich 1830, plans c. 1840–1947, regulation plans, Škoda, brewery, 1988 territorial plan | context; the city GIS has most of the plans georeferenced |
+
+**Map 66.** Map 66 (second cellars in the western part of the core) and the commentaries
+(fortification phases, demolitions, suburbs) are worth reading in full for the next round.
+
+### Müller's map (c. 1720), detail "Bolevec"
+
+The Commons file `Müllerovo mapování - Bolevec.png` is 325 × 336 px, public domain. It shows
+Pilsen as a walled town with a schematic star-shaped fortification, Malice ("Omn. Sanct."),
+Bolevec ponds, Radčice, Skvrňany, the post house and "Kodiken" (Kotíkov).
+Small scale (1:132 000), so it confirms existence but not shape. Stored in
+`data/reference/mueller/`. The manuscript ichnography 1:4 300 (ÖNB) remains the source to
+request.
+
+### ČÚZK archive (`ags.cuzk.gov.cz/archiv/`)
+
+The application shows archival maps (indikační skici, císařské otisky, reambulations) and the
+archive of aerial survey photographs. Its image services (`arcgis4/rest/services/Archiv/
+archiv_nespojene_{stable,nonstable,skici}/ImageServer`) need a short-lived token that the web
+application generates for itself. The scans are offered for viewing; downloads go through the
+ČÚZK e-shop. They were **not** harvested by script. Ordering the indication sketches of Plzeň and
+the villages from the e-shop, or confirming that the terms allow automated use, is the owner's
+decision.
+
 ## Open questions
 
 - Licence for reuse of the city's `GIS_Historicke` rasters (rules point 4 says CC BY-SA 4.0

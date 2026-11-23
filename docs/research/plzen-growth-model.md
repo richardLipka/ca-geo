@@ -12,7 +12,8 @@ of 1840 shown earlier: the medieval town did not have exactly these houses. The 
 order and the pace of growth. It is not a reconstruction of individual houses.
 
 Changes in version 2:
-- bastioned fortification from the 1781 plan;
+- fortification from the 1781 plan (0.5 m), phased by the 1658 and 1703 plans of the Historický atlas;
+- demolitions 1942–2008 and air-raid damage in the centre (Historický atlas, map 65);
 - calibration to census house counts;
 - six more map epochs, including the 2001 orthophoto;
 - validation of the model against every map at its own year;
@@ -77,7 +78,8 @@ Valcha c. 1352 is from cs.wikipedia.
 |---|---|
 | Stable cadastre 1840 buildings without a present building | 760 historic-only footprints; demolition = first later epoch where the place is empty |
 | Model c. 1536–1618 (`projects/plzen.json`) | wall ring, towers, gates (demolition years), churches, Dominican monastery (–1785) |
-| **1781 plan** (city GIS) checked against the 1821 and 1840 plans; `scripts/fort_1781.json` | Zwinger lines and bastioned works, see §2.6 |
+| **1781 plan** (city GIS = Kitelli / Strassoldo, ZČM MP 57) checked against the 1821 and 1840 plans; `scripts/fort_1781.json` | Zwinger, outer works, ramparts and moat, see §2.6 |
+| Historický atlas měst ČR 21 – Plzeň (HIÚ AV ČR 2009): maps 5 (1658), 6 (Zizner 1703), 65 (demolitions since 1942) | phases of the fortification; demolished buildings in the centre |
 | Written sources (`data-sources/plzen-historical.md`) | founding 1295; sieges 1433–34 and 1618; bastions 1645–49, completed 1659; glacis cleared 1647; walls demolished 1795–1849, last section 1893–99 |
 | ČÚZK DMR 5G (`fetch_terrain.py`, 5 m) | terrain, building base heights |
 
@@ -104,24 +106,35 @@ Valcha c. 1352 is from cs.wikipedia.
    - later suburbs 1650–1840;
    - villages from their first mention, the core first;
    - isolated buildings 1650–1838.
-6. **Fortification.**
+6. **Fortification.** Positions come from the 1781 plan, which is surveyed. It was digitised by
+   eye at 0.5 m/px, so expect an error of about 3–8 m. The phases come from the 1658 and 1703
+   plans (§9 of the source inventory).
 
-   | Work | Built | Removed |
-   |---|---|---|
-   | Medieval wall (30 m pieces) | c. 1320 | year of the nearest gate; west 1828, museum piece 1896 |
-   | Zwinger N / W / S | c. 1420 | W 1828; others by the nearest gate |
-   | East outer wall along the mill race | 1645 | 1822 |
-   | West bastion ("Schanze") | 1645–1659 | 1828 (on the 1821 plan, gone on the 1840 plan) |
-   | NW ravelin | 1645–1659 | 1810 (gone by 1821) |
-   | SW bastion | 1645–1659 | 1805 (gone by 1821) |
-   | S bastion | 1645–1659 | 1800 (gone by 1821) |
-   | SE redoubt | 1645–1659 | 1833 |
-   | NE outer rampart | 1645–1659 | 1822 |
-   | NE bastion | 1645–1659 | survives (sady 5. května) |
-   | Moat (36 sectors, 9–24 m from the wall) | 1420 | filled 1795–1822 by sector |
+   | Work | Built | 1781 | Removed |
+   |---|---|---|---|
+   | Medieval wall (30 m pieces) | c. 1320 | standing | year of the nearest gate; west 1828, museum piece 1896 |
+   | Zwinger N / W / S | c. 1420 | standing | W 1828; others by the nearest gate |
+   | West bastion at the round tower (1658: b) | 1645–58 | defunct (13) | 1828 (on the 1821 plan, gone on the 1840 plan) |
+   | NW ravelin (1658: d) | 1645–58 | defunct | 1810 (gone by 1821) |
+   | SW hexagonal work (1658: c) | 1645–58 | defunct | 1805 (gone by 1821) |
+   | S pentagonal work (1658: a) | 1645–58 | defunct | 1800 (gone by 1821) |
+   | SE redoubt (1658: h) | 1645–58 | defunct | 1833 |
+   | N, NE and E ramparts along the rivers | 1645–58 | defunct | 1822 |
+   | NE bastion by the arsenal | 1645–58 | defunct | survives (sady 5. května) |
+   | Moat and the ditch of the W bastion (as drawn in blue in 1781) | 1420 / 1645–58 | water | filled 1795–1822 by section; ditch 1828 |
 
-   The plan is digitised by eye at 1 m/px, so expect about 5–10 m error.
-7. **Calibration to the censuses** (12 groups: the town and 11 villages).
+   - The 1781 legend calls all outer works *"Eingegangene Vestungswerker"*. The model lowers
+     them by about a third from c. 1760 (rebuild attribute `tR`).
+   - The 1703 bastions of Zizner are not modelled: their completion is uncertain and they are
+     absent in 1781.
+7. **Demolitions 1942–2008 in the centre** (HAM map 65, `ham_demolitions.py`).
+   - 184 demolished historic buildings are registered to RÚIAN (ECC 0.55). 105 of them do not
+     overlap a present building and become historic-only footprints.
+   - Their origin is dated by the maps. Their demolition is the last map that shows them, clamped
+     to 1945–2008.
+   - Inside the 30 air-raid circles of 1942–45, demolished buildings end in 1945. Present
+     buildings there are rebuilt in 1946–50.
+8. **Calibration to the censuses** (12 groups: the town and 11 villages).
    - Houses are buildings with a house number (RÚIAN `typstavebnihoobjektukod` 1–2) and
      historic-only footprints of at least 60 m².
    - Buildings without a number get the part of the nearest numbered building.
@@ -131,7 +144,7 @@ Valcha c. 1352 is from cs.wikipedia.
      census curve (births = target + demolitions so far).
    - Each year is clamped to the building's admissible interval. Exact dates and pre-1840 places
      are not moved.
-8. **Landmarks.** St Bartholomew from 1320 (tower 102 m), Franciscans 1300, water tower 1532,
+9. **Landmarks.** St Bartholomew from 1320 (tower 102 m), Franciscans 1300, water tower 1532,
    St Nicholas 1400, All Saints (older than the town), Dominican monastery 1300–1785.
 
 ## 3. Results

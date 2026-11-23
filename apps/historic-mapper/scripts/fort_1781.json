@@ -1,156 +1,146 @@
 {
- "source": "City of Plzeň GIS_HIS_Plzen_1781 (military plan 1781), checked against GIS_HIS_Plzen_1821 and _1840; digitised by eye at 1 m/px (positional error ~5–10 m)",
- "built": "bastioned works 1645–1659 (Lacron 1645–49, completed c. 1659; plans 1703 and 1781 show the completed state); Zwinger before 1420",
+ "source": "City of Plzeň GIS_HIS_Plzen_1781 = Kitelli / Strassoldo military plan 1781 (ZČM MP 57), digitised by eye at 0.5 m/px (positional error ~ 3–8 m); checked against the 1821 and 1840 plans",
+ "legend": "\"13. Eingegangene Vestungswerker\" (defunct fortification works) in the 1781 legend",
+ "phases": "The works are the \"Schantzen\" already shown on the plan of 23 Feb 1658 (Kriegsarchiv Wien; HAM Plzeň map 5: works a–h) → built 1645–1658 under J. de la Corona (Lacron). The 1703 plan of J. Ch. Zizner (Kriegsarchiv, GPA Inland C IV α Pilsen 2; HAM map 6) shows further bastions and ravelins on the south and west fronts; whether they were completed is uncertain (HAM commentary) and they are absent in 1781, so they are not modelled. By 1781 the works are defunct (legend 13); the model lowers them from 1760.",
  "works": [
   {
    "id": "bastion_w",
-   "name": "West bastion (\"Schanze\" on the 1821 plan)",
+   "name": "West bastion / lunette at the round tower (\"Schanze\" on the 1821 plan); work b of the 1658 plan",
    "kind": "bastion",
    "h": 7,
+   "h_decayed": 4,
    "poly": [
     [
-     -822718,
-     -1069598
+     -822720.0,
+     -1069612.5
     ],
     [
-     -822690,
-     -1069582
+     -822655.0,
+     -1069601.5
     ],
     [
-     -822645,
-     -1069592
+     -822648.5,
+     -1069637.5
     ],
     [
-     -822630,
-     -1069650
-    ],
-    [
-     -822655,
-     -1069690
-    ],
-    [
-     -822695,
-     -1069688
-    ],
-    [
-     -822715,
-     -1069640
+     -822671.5,
+     -1069677.5
     ]
    ],
    "to": 1828,
-   "to_basis": "present on the 1821 plan, absent on the 1840 plan; western walls → ring park 1828"
+   "to_basis": "on the 1821 plan, gone on the 1840 plan; western walls → ring park 1828"
   },
   {
    "id": "ravelin_nw",
-   "name": "North-west ravelin",
+   "name": "North-west ravelin; work d of the 1658 plan",
    "kind": "ravelin",
    "h": 6,
+   "h_decayed": 3.5,
    "poly": [
     [
-     -822612,
-     -1069418
+     -822610.0,
+     -1069421.5
     ],
     [
-     -822582,
-     -1069428
+     -822571.0,
+     -1069430.0
     ],
     [
-     -822578,
-     -1069468
-    ],
-    [
-     -822600,
-     -1069455
+     -822577.5,
+     -1069470.0
     ]
    ],
    "to": 1810,
-   "to_basis": "absent on the 1821 plan; demolition 1795–1821"
+   "to_basis": "gone on the 1821 plan; demolition 1795–1821"
   },
   {
    "id": "bastion_sw",
-   "name": "South-west bastion (hexagonal)",
+   "name": "South-west hexagonal work; work c of the 1658 plan",
    "kind": "bastion",
    "h": 7,
+   "h_decayed": 4,
    "poly": [
     [
-     -822740,
-     -1069850
+     -822736.0,
+     -1069875.0
     ],
     [
-     -822720,
-     -1069833
+     -822720.0,
+     -1069857.5
     ],
     [
-     -822690,
-     -1069840
+     -822694.0,
+     -1069859.0
     ],
     [
-     -822682,
-     -1069870
+     -822681.5,
+     -1069885.0
     ],
     [
-     -822700,
-     -1069895
+     -822699.0,
+     -1069905.0
     ],
     [
-     -822732,
-     -1069890
+     -822729.0,
+     -1069898.5
     ]
    ],
    "to": 1805,
-   "to_basis": "absent on the 1821 plan; demolition 1795–1821"
+   "to_basis": "gone on the 1821 plan; demolition 1795–1821"
   },
   {
    "id": "bastion_s",
-   "name": "South bastion (pentagonal)",
+   "name": "South pentagonal work; work a of the 1658 plan",
    "kind": "bastion",
    "h": 7,
+   "h_decayed": 4,
    "poly": [
     [
-     -822597,
-     -1069947
+     -822598.5,
+     -1069964.0
     ],
     [
-     -822528,
-     -1069957
+     -822525.0,
+     -1069972.5
     ],
     [
-     -822535,
-     -1069985
+     -822530.0,
+     -1070000.0
     ],
     [
-     -822565,
-     -1070000
+     -822576.5,
+     -1070009.0
     ],
     [
-     -822595,
-     -1069985
+     -822597.5,
+     -1069991.5
     ]
    ],
    "to": 1800,
-   "to_basis": "absent on the 1821 plan; demolition 1795–1821"
+   "to_basis": "gone on the 1821 plan; demolition 1795–1821"
   },
   {
    "id": "redoubt_se",
-   "name": "South-east redoubt",
+   "name": "South-east redoubt (work h of the 1658 plan, by the Imperial / Litice gate)",
    "kind": "redoubt",
    "h": 6,
+   "h_decayed": 3.5,
    "poly": [
     [
-     -822335,
-     -1070005
+     -822432.5,
+     -1070027.5
     ],
     [
-     -822300,
-     -1070005
+     -822397.5,
+     -1070028.5
     ],
     [
-     -822300,
-     -1070050
+     -822397.5,
+     -1070080.0
     ],
     [
-     -822335,
-     -1070050
+     -822434.0,
+     -1070066.0
     ]
    ],
    "to": 1833,
@@ -158,116 +148,136 @@
   },
   {
    "id": "bastion_ne",
-   "name": "North-east bastion (preserved, sady 5. května)",
+   "name": "North-east bastion by the arsenal (preserved, sady 5. května)",
    "kind": "bastion",
    "h": 7,
+   "h_decayed": 5,
    "poly": [
     [
-     -822100,
-     -1069625
+     -822197.5,
+     -1069642.5
     ],
     [
-     -822060,
-     -1069610
+     -822150.0,
+     -1069650.0
     ],
     [
-     -822048,
-     -1069650
+     -822149.0,
+     -1069697.5
     ],
     [
-     -822065,
-     -1069688
+     -822187.5,
+     -1069702.5
     ],
     [
-     -822095,
-     -1069685
+     -822200.0,
+     -1069680.0
     ]
    ],
    "to": 9999,
-   "to_basis": "one pentagonal bastion of 1645 survives in sady 5. května (Památkový katalog)"
-  },
+   "to_basis": "one pentagonal bastion survives in sady 5. května (Památkový katalog)"
+  }
+ ],
+ "bands": [
   {
-   "id": "outerwork_ne",
-   "name": "North-east outer rampart",
+   "id": "rampart_ne",
+   "name": "North-east corner rampart",
    "kind": "rampart",
    "h": 6,
-   "poly": [
+   "h_decayed": 3.5,
+   "line": [
     [
-     -822255,
-     -1069505
+     -822350.0,
+     -1069502.5
     ],
     [
-     -822170,
-     -1069522
+     -822270.0,
+     -1069530.0
     ],
     [
-     -822115,
-     -1069548
+     -822220.0,
+     -1069545.0
     ],
     [
-     -822100,
-     -1069585
+     -822200.0,
+     -1069565.0
     ],
     [
-     -822102,
-     -1069690
+     -822200.0,
+     -1069600.0
     ],
     [
-     -822112,
-     -1069690
+     -822227.5,
+     -1069650.0
     ],
     [
-     -822112,
-     -1069592
-    ],
-    [
-     -822125,
-     -1069562
-    ],
-    [
-     -822175,
-     -1069535
-    ],
-    [
-     -822258,
-     -1069518
+     -822250.0,
+     -1069692.5
     ]
    ],
-   "to": 1822,
-   "to_basis": "by the Prague gate (demolished 1822)"
+   "half": 4.5,
+   "to": 1822
+  },
+  {
+   "id": "rampart_n",
+   "name": "North outer rampart along the Mže",
+   "kind": "rampart",
+   "h": 5,
+   "h_decayed": 3,
+   "line": [
+    [
+     -822400.0,
+     -1069420.0
+    ],
+    [
+     -822340.0,
+     -1069445.0
+    ],
+    [
+     -822290.0,
+     -1069470.0
+    ],
+    [
+     -822250.0,
+     -1069495.0
+    ]
+   ],
+   "half": 5,
+   "to": 1822
+  },
+  {
+   "id": "rampart_e",
+   "name": "East outer rampart between the moat (mill race) and the Radbuza",
+   "kind": "rampart",
+   "h": 5,
+   "h_decayed": 3,
+   "line": [
+    [
+     -822250.0,
+     -1069752.5
+    ],
+    [
+     -822262.5,
+     -1069800.0
+    ],
+    [
+     -822270.0,
+     -1069875.0
+    ],
+    [
+     -822277.5,
+     -1069950.0
+    ],
+    [
+     -822270.0,
+     -1069995.0
+    ]
+   ],
+   "half": 10,
+   "to": 1822
   }
  ],
  "lines": [
-  {
-   "id": "outer_wall_e",
-   "name": "East outer wall along the mill race",
-   "kind": "outer_wall",
-   "h": 6,
-   "line": [
-    [
-     -822215,
-     -1069722
-    ],
-    [
-     -822240,
-     -1069780
-    ],
-    [
-     -822255,
-     -1069870
-    ],
-    [
-     -822265,
-     -1069960
-    ],
-    [
-     -822272,
-     -1070010
-    ]
-   ],
-   "from": 1645,
-   "to": 1822
-  },
   {
    "id": "zwinger_n",
    "name": "Zwinger wall, north",
@@ -275,16 +285,16 @@
    "h": 5,
    "line": [
     [
-     -822545,
-     -1069412
+     -822545.0,
+     -1069412.5
     ],
     [
-     -822400,
-     -1069442
+     -822425.0,
+     -1069407.5
     ],
     [
-     -822255,
-     -1069505
+     -822350.0,
+     -1069500.0
     ]
    ],
    "from": 1420,
@@ -297,20 +307,16 @@
    "h": 5,
    "line": [
     [
-     -822555,
-     -1069412
+     -822552.5,
+     -1069420.0
     ],
     [
-     -822600,
-     -1069520
+     -822590.0,
+     -1069550.0
     ],
     [
-     -822622,
-     -1069620
-    ],
-    [
-     -822638,
-     -1069700
+     -822610.0,
+     -1069600.0
     ]
    ],
    "from": 1420,
@@ -323,36 +329,122 @@
    "h": 5,
    "line": [
     [
-     -822638,
-     -1069700
+     -822665.0,
+     -1069775.0
     ],
     [
-     -822675,
-     -1069760
+     -822662.5,
+     -1069840.0
     ],
     [
-     -822675,
-     -1069820
+     -822645.0,
+     -1069885.0
     ],
     [
-     -822645,
-     -1069880
+     -822610.0,
+     -1069915.0
     ],
     [
-     -822580,
-     -1069925
+     -822550.0,
+     -1069940.0
     ],
     [
-     -822460,
-     -1069960
+     -822475.0,
+     -1069962.5
     ],
     [
-     -822340,
-     -1070000
+     -822405.0,
+     -1069982.5
     ]
    ],
    "from": 1420,
    "to": null
+  }
+ ],
+ "water": [
+  {
+   "id": "moat_wsn",
+   "name": "Moat west – south – north",
+   "line": [
+    [
+     -822420.0,
+     -1069406.0
+    ],
+    [
+     -822550.0,
+     -1069411.0
+    ],
+    [
+     -822597.5,
+     -1069560.0
+    ],
+    [
+     -822620.0,
+     -1069630.0
+    ],
+    [
+     -822647.5,
+     -1069680.0
+    ],
+    [
+     -822677.5,
+     -1069750.0
+    ],
+    [
+     -822682.5,
+     -1069825.0
+    ],
+    [
+     -822669.0,
+     -1069875.0
+    ],
+    [
+     -822645.0,
+     -1069905.0
+    ],
+    [
+     -822610.0,
+     -1069931.0
+    ],
+    [
+     -822550.0,
+     -1069953.5
+    ],
+    [
+     -822475.0,
+     -1069976.0
+    ],
+    [
+     -822400.0,
+     -1069997.5
+    ]
+   ],
+   "half": 6,
+   "to": null
+  },
+  {
+   "id": "ditch_w",
+   "name": "Ditch of the west bastion",
+   "line": [
+    [
+     -822697.5,
+     -1069692.5
+    ],
+    [
+     -822739.0,
+     -1069650.0
+    ],
+    [
+     -822724.0,
+     -1069616.5
+    ],
+    [
+     -822639.0,
+     -1069587.0
+    ]
+   ],
+   "half": 4,
+   "to": 1828
   }
  ]
 }
