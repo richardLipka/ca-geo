@@ -273,7 +273,7 @@ async function main() {
     if (M.water?.length) { const wf = ([...M.water].reverse().find(w => w.year <= year + 0.01) ?? M.water[0]).file; groundUni.uWater.value = waterTex(wf); }
     stat.textContent = t('g3d.stat', { n: Math.round(atStep(counts, year)), g: gr.year > Y0 ? gr.year : '–' });
   };
-  yr.oninput = () => setYear(+yr.value);
+  yr.oninput = () => { if (!exporting) setYear(+yr.value); };
   mapg.onchange = () => setYear(year);
   const startPlay = () => { if (year >= Y1 - 0.01) setYear(Y0); playing = true; playBtn.textContent = '❚❚'; };
   const stopPlay = () => { playing = false; playBtn.textContent = '▶'; };
@@ -285,7 +285,8 @@ async function main() {
   };
 
   // ---------- one animation step (shared by the live loop and the frame export) ----------
-  const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); drawChart(); };
+  let exporting = false;
+  const resize = () => { if (exporting) return; const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); drawChart(); };
   addEventListener('resize', resize); resize();
   let az = -2.4;
   setYear(1295);
@@ -309,10 +310,9 @@ async function main() {
 
   // ---------- video export: deterministic frames (fixed 30 fps time step) with overlays drawn in ----------
   // frames are saved by the dev server to data/historic/growth/video/<run>/ and encoded by scripts/encode_video.py
-  let exporting = false;
   const comp = document.createElement('canvas');
   const composite = () => {
-    const src = renderer.domElement, W = src.width, H = src.height, k = W / host.clientWidth;
+    const src = renderer.domElement, W = src.width, H = src.height, k = W / (exporting ? EXP_W : host.clientWidth);
     comp.width = W; comp.height = H; const g = comp.getContext('2d')!;
     g.drawImage(src, 0, 0);
     g.textBaseline = 'top';
@@ -344,9 +344,14 @@ async function main() {
     g.fillText(t('g3d.credits'), W - 14 * k, H - 22 * k); g.textAlign = 'left';
     return comp;
   };
+  const EXP_W = 1600, EXP_H = 900;
   const exportVideo = async (fps = 30) => {
     if (exporting) { exporting = false; return; }
     exporting = true; renderer.setAnimationLoop(null);
+    // fixed output size, independent of the window; no user input while exporting
+    const prevRatio = renderer.getPixelRatio();
+    renderer.setPixelRatio(1); renderer.setSize(EXP_W, EXP_H, false); cam.aspect = EXP_W / EXP_H; cam.updateProjectionMatrix();
+    ctl.enabled = false; playBtn.disabled = true; yr.disabled = true;
     const run = `plzen-growth-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
     recBtn.textContent = `■ ${t('g3d.stop')}`;
     setYear(Y0); auto.checked = true; playing = true; az = -2.4;
@@ -361,6 +366,7 @@ async function main() {
       n++; if (n % 30 === 0) stat.textContent = `${t('g3d.export')}: ${n} · ${Math.floor(year)}`;
     }
     exporting = false; recBtn.textContent = `● ${t('g3d.record')}`;
+    ctl.enabled = true; playBtn.disabled = false; yr.disabled = false; renderer.setPixelRatio(prevRatio); resize();
     stat.textContent = t('g3d.saved', { f: `data/historic/growth/video/${run}/ (${n})` });
     (window as unknown as Record<string, unknown>).__g3dExport = { run, frames: n };
     startLoop();
