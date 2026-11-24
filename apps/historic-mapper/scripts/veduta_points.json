@@ -1,0 +1,474 @@
+{
+ "_comment": "Points of the vedute for veduta_views.py: image px of model objects (at = top: tip of the tower / object height, mid: half height, ground: foot). Merian and Bodenehr: the links of the Theatrum Europaeum plate transferred by SIFT + local homographies (the plates are copies of it); Isselburg, Keller and Hogenberg: identified by eye on the plates (Hogenberg swaps the labels of the two monasteries, the position is used); panoramas: the St Bartholomew tower and unidentified prominent towers, matched automatically by the direction search. 2026-11-24.",
+ "sources": {
+  "isselburg-1618": {
+   "kind": "birdseye",
+   "points": [
+    {
+     "e": "g1618-bartholomew",
+     "img": [
+      1047,
+      866
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-dominican",
+     "img": [
+      1115,
+      640
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-franciscan",
+     "img": [
+      1050,
+      1125
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_litice",
+     "img": [
+      780,
+      1032
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_reich",
+     "img": [
+      833,
+      712
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_north",
+     "img": [
+      1338,
+      753
+     ],
+     "at": "mid"
+    }
+   ]
+  },
+  "merian-1650": {
+   "kind": "birdseye",
+   "points": [
+    {
+     "e": "g1618-bartholomew",
+     "img": [
+      1869.6,
+      1305.0
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-dominican",
+     "img": [
+      1911.6,
+      920.8
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-franciscan",
+     "img": [
+      1903.7,
+      1766.1
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_prague",
+     "img": [
+      2522.9,
+      1397.1
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_north",
+     "img": [
+      2328.3,
+      1094.7
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_litice",
+     "img": [
+      1415.1,
+      1522.2
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_1",
+     "img": [
+      1733.3,
+      820.5
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_2",
+     "img": [
+      1283.6,
+      1239.8
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_3",
+     "img": [
+      1450.5,
+      1522.7
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_4",
+     "img": [
+      2445.6,
+      1361.1
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_5",
+     "img": [
+      2329.9,
+      1063.3
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_6",
+     "img": [
+      1475.7,
+      1030.0
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_7",
+     "img": [
+      1368.9,
+      897.6
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_8",
+     "img": [
+      2549.9,
+      1276.5
+     ],
+     "at": "top"
+    }
+   ]
+  },
+  "bodenehr-1700": {
+   "kind": "birdseye",
+   "points": [
+    {
+     "e": "g1618-bartholomew",
+     "img": [
+      1213.1,
+      843.1
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-dominican",
+     "img": [
+      1251.1,
+      560.4
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-franciscan",
+     "img": [
+      1228.7,
+      1184.5
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_prague",
+     "img": [
+      1692.8,
+      934.5
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_north",
+     "img": [
+      1553.5,
+      700.5
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-gate_litice",
+     "img": [
+      876.9,
+      996.1
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_1",
+     "img": [
+      1125.3,
+      483.4
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_2",
+     "img": [
+      781.4,
+      779.7
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_3",
+     "img": [
+      903.1,
+      996.4
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_4",
+     "img": [
+      1637.2,
+      905.8
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_5",
+     "img": [
+      1554.8,
+      676.6
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_6",
+     "img": [
+      933.1,
+      627.9
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_7",
+     "img": [
+      859.3,
+      531.0
+     ],
+     "at": "top"
+    },
+    {
+     "e": "g1618-te_tower_8",
+     "img": [
+      1712.0,
+      836.3
+     ],
+     "at": "top"
+    }
+   ]
+  },
+  "keller-1619": {
+   "kind": "birdseye",
+   "points": [
+    {
+     "e": "g1618-bartholomew",
+     "img": [
+      1025,
+      772
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-dominican",
+     "img": [
+      1093,
+      501
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-franciscan",
+     "img": [
+      1063,
+      1028
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_north",
+     "img": [
+      1315,
+      606
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_litice",
+     "img": [
+      697,
+      915
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_reich",
+     "img": [
+      776,
+      580
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_prague",
+     "img": [
+      1300,
+      920
+     ],
+     "at": "mid"
+    }
+   ]
+  },
+  "hogenberg-1619": {
+   "kind": "birdseye",
+   "points": [
+    {
+     "e": "g1618-bartholomew",
+     "img": [
+      1970,
+      1490
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-dominican",
+     "img": [
+      2050,
+      1110
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-franciscan",
+     "img": [
+      2000,
+      1880
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_north",
+     "img": [
+      2370,
+      1280
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_litice",
+     "img": [
+      1540,
+      1800
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_reich",
+     "img": [
+      1615,
+      1210
+     ],
+     "at": "mid"
+    },
+    {
+     "e": "g1618-gate_prague",
+     "img": [
+      2565,
+      1780
+     ],
+     "at": "mid"
+    }
+   ]
+  },
+  "willenberg-1602": {
+   "kind": "panorama",
+   "bart": [
+    1968,
+    50
+   ],
+   "ground_row": 410,
+   "towers": [
+    [
+     2542,
+     56
+    ],
+    [
+     1260,
+     267
+    ],
+    [
+     88,
+     293
+    ],
+    [
+     1784,
+     292
+    ],
+    [
+     2303,
+     267
+    ]
+   ]
+  },
+  "hollar-p812": {
+   "kind": "panorama",
+   "bart": [
+    861,
+    213
+   ],
+   "ground_row": 930,
+   "towers": [
+    [
+     1509,
+     281
+    ],
+    [
+     244,
+     432
+    ],
+    [
+     761,
+     363
+    ],
+    [
+     1056,
+     466
+    ],
+    [
+     1351,
+     466
+    ]
+   ]
+  }
+ }
+}

@@ -1449,6 +1449,159 @@
    },
    "cs": "Klášter s ambitem stojí od středověku; RÚIAN uvádí jen datum rekonstrukce (2010).",
    "en": "The monastery with its cloister stands from the Middle Ages; RÚIAN gives only the date of the reconstruction (2010)."
+  },
+  {
+   "id": "out-vv-te-1618",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Theatrum Europaeum 1618 → model",
+   "title": "Theatrum Europaeum 1618: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_te-1618.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1618 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera ze 14 vazeb projektu; odchylka 2.7 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1618 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from the 14 links of the project; error 2.7 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-isselburg-1618",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Isselburg 1618 → model",
+   "title": "Isselburg 1618: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_isselburg-1618.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1618 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera ze 6 dominant určených na listu; odchylka 2.1 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1618 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from 6 landmarks identified on the sheet; error 2.1 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-keller-1619",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Keller 1619 → model",
+   "title": "Keller 1619: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_keller-1619.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1618 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera ze 7 dominant určených na listu; odchylka 2.9 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1618 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from 7 landmarks identified on the sheet; error 2.9 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-hogenberg-1619",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Hogenberg 1619 → model",
+   "title": "Hogenberg 1619: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_hogenberg-1619.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1618 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera ze 7 dominant určených na listu (legenda listu zaměňuje oba kláštery, rozhodla poloha); odchylka 3.2 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1618 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from 7 landmarks identified on the sheet (its legend swaps the two monasteries; the position decided); error 3.2 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-merian-1650",
+   "group": "derived",
+   "lic": "own",
+   "basis": "merian-1650",
+   "year": [
+    1650,
+    1650
+   ],
+   "short": "Merian 1650 → model",
+   "title": "Merian 1650: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_merian-1650.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1650 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera z vazeb rytiny 1618 přenesených automaticky (SIFT, lokální homografie) – Merian ji kopíruje; odchylka 2.7 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1650 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from the links of the 1618 plate transferred automatically (SIFT, local homographies) – Merian copies it; error 2.7 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-bodenehr-1700",
+   "group": "derived",
+   "lic": "own",
+   "basis": "bodenehr-1700",
+   "year": [
+    1650,
+    1650
+   ],
+   "short": "Bodenehr 1700 → model",
+   "title": "Bodenehr 1700: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_bodenehr-1700.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1650 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera z vazeb rytiny 1618 přenesených automaticky (SIFT) – Bodenehr kopíruje Meriana; odchylka 2.8 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1650 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from the links of the 1618 plate transferred automatically (SIFT) – Bodenehr copies Merian; error 2.8 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-willenberg-1602",
+   "group": "derived",
+   "lic": "own",
+   "basis": "willenberg-1602",
+   "year": [
+    1602,
+    1602
+   ],
+   "short": "Willenberg 1602 → model",
+   "title": "Willenberg 1602: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_willenberg-1602.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1602 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera automatickým hledáním směru: věž sv. Bartoloměje na kreslenou věž, ostatní výrazné věže na nejbližší dominanty modelu; pohled od severu; odchylka 10.0 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1602 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera by an automatic search of the direction: the St Bartholomew tower on its drawn tower, the other prominent towers on the nearest landmarks of the model; view from the north; error 10.0 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-ottheinrich-1536",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ottheinrich-1536",
+   "year": [
+    1536,
+    1536
+   ],
+   "short": "Ottheinrich 1536 → model",
+   "title": "Ottheinrich 1536: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_ottheinrich-1536.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1536 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera z 11 vazeb projektu; autor město rozšířil, takže kamera sedí jen přibližně; odchylka 7.3 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1536 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera from 11 links of the project; the artist widened the town, so the camera fits only roughly; error 7.3 % of the sheet height. An automatic estimate, not an exact reconstruction."
+  },
+  {
+   "id": "out-vv-hollar-p812",
+   "group": "derived",
+   "lic": "own",
+   "basis": "hollar-p812",
+   "year": [
+    1602,
+    1602
+   ],
+   "short": "Hollar → model",
+   "title": "Hollar: model v pohledu veduty",
+   "img": {
+    "src": "data/historic/growth/shots/vedview_hollar-p812.jpg"
+   },
+   "cs": "Nahoře veduta s promítnutými budovami modelu z roku 1602 (modře domy, oranžově opevnění, červeně dominanty se jmény, zeleně body použité pro kameru); dole syntetický pohled na model z odhadnuté kamery. Kamera automatickým hledáním směru jako u Willenberga; jen orientační; odchylka 10.1 % výšky listu. Automatický odhad, ne přesná rekonstrukce.",
+   "en": "Top: the veduta with the model buildings of 1602 projected into it (blue: houses, orange: fortification, red: landmarks with names, green: points used for the camera); bottom: a synthetic view of the model from the estimated camera. Camera by an automatic search of the direction as for Willenberg; indicative only; error 10.1 % of the sheet height. An automatic estimate, not an exact reconstruction."
   }
  ],
  "stills": [
@@ -1512,7 +1665,10 @@
     "out-synth",
     "out-blocks1500",
     "out-sq1500",
-    "out-sq1600"
+    "out-sq1600",
+    "out-vv-ottheinrich-1536",
+    "out-vv-willenberg-1602",
+    "out-vv-hollar-p812"
    ]
   },
   {
@@ -1538,7 +1694,13 @@
     "out-facets",
     "out-reg1658",
     "out-fort1665",
-    "out-fort1640"
+    "out-fort1640",
+    "out-vv-te-1618",
+    "out-vv-isselburg-1618",
+    "out-vv-keller-1619",
+    "out-vv-hogenberg-1619",
+    "out-vv-merian-1650",
+    "out-vv-bodenehr-1700"
    ]
   },
   {

@@ -593,9 +593,12 @@ if os.path.isdir(_LOGO):
 
 page = f"""<!doctype html>
 <html lang="cs" data-lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Plzeň 1295–2020: průvodce</title><style>{CSS}</style></head><body>
+<title>Plzeň 1295–2020: průvodce</title>
+<meta name="description" content="Růst Plzně 1295–2020: animace a interaktivní 3D model podle historických map, plánů a vedut / Growth of Plzeň 1295–2020: animation and interactive 3D model after historical maps, plans and vedute.">
+<meta property="og:title" content="Růst Plzně 1295–2020 / Growth of Plzeň 1295–2020"><meta property="og:type" content="website"><meta property="og:image" content="img/still_1900_t.jpg"><style>{CSS}</style></head><body>
 <div class="wrap">
 <aside>
+<div class="links"><a class="cs" href="https://home.zcu.cz/~lipka/">← home.zcu.cz/~lipka</a><a class="en" href="https://home.zcu.cz/~lipka/en/">← home.zcu.cz/~lipka</a></div>
 <h1>{L("Růst Plzně 1295–2020", "Growth of Plzeň 1295–2020")}</h1>
 <p class="lead">{L("Průvodce animací: co video ukazuje a z jakých podkladů vzniklo.", "A guide to the animation: what the video shows and what it is made from.")}</p>
 <video id="vid" controls preload="metadata" src="../video/plzen-growth-1295-2020.mp4"></video>

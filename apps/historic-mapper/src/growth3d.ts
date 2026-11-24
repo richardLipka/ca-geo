@@ -503,12 +503,19 @@ async function main() {
   };
   recBtn.onclick = () => { void exportVideo(); };
   // one still at the export size (for documentation): saved as data/historic/growth/video/<run>/f_<n>.jpg
-  const snap = async (run: string, n: number) => {
+  // opts (synthetic views of the vedute, scripts/veduta_views.py): output size, a fixed camera (pos, quaternion
+  // x y z w, vertical fov) and plain = the rendering only, without legend, year and logos
+  const snap = async (run: string, n: number, opts: { w?: number; h?: number; pos?: number[]; quat?: number[]; fov?: number; plain?: boolean } = {}) => {
     await preload(); setYear(year);
     renderer.setAnimationLoop(null); const prevRatio = renderer.getPixelRatio(); exporting = true;
-    renderer.setPixelRatio(1); renderer.setSize(EXP_W, EXP_H, false); cam.aspect = EXP_W / EXP_H; cam.updateProjectionMatrix();
-    ctl.update(); renderer.render(scene, cam);
-    const blob = await new Promise<Blob | null>(res => composite().toBlob(res, 'image/jpeg', 0.92));
+    const W_ = opts.w ?? EXP_W, H_ = opts.h ?? EXP_H;
+    const keep = { p: cam.position.clone(), q: cam.quaternion.clone(), f: cam.fov, far: cam.far };
+    renderer.setPixelRatio(1); renderer.setSize(W_, H_, false); cam.aspect = W_ / H_;
+    if (opts.pos && opts.quat) { cam.position.fromArray(opts.pos); cam.quaternion.fromArray(opts.quat); if (opts.fov) cam.fov = opts.fov; cam.far = Math.max(cam.far, 20000); }
+    else ctl.update();
+    cam.updateProjectionMatrix(); renderer.render(scene, cam);
+    const blob = await new Promise<Blob | null>(res => (opts.plain ? renderer.domElement : composite()).toBlob(res, 'image/jpeg', 0.92));
+    if (opts.pos && opts.quat) { cam.position.copy(keep.p); cam.quaternion.copy(keep.q); cam.fov = keep.f; cam.far = keep.far; cam.updateProjectionMatrix(); }
     const ok = !!blob && (await fetch(`/api/frame/${run}/${n}`, { method: 'PUT', body: blob }).catch(() => null))?.ok;
     exporting = false; renderer.setPixelRatio(prevRatio); resize(); startLoop();
     return ok;

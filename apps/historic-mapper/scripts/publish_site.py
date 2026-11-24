@@ -8,9 +8,13 @@ data/historic/growth/publish/ (not versioned: the maps include quoted third-part
   model/data/model.json, mesh.bin.0…n (parts < 14 MB for hosts with a file-size limit), ground_*.jpg, water_*.png, …
 The folder can be served by any static web server (e.g. scripts/serve_site.py → http://localhost:5219/publish/).
 
-usage: python publish_site.py        (after growth_model.py, the video and sources_site.py; needs node / npm)
+usage: python publish_site.py [--homepage DIR]
+       (after growth_model.py, the video and sources_site.py; needs node / npm)
+  --homepage DIR   also install the bundle into the author's website (Astro project, OsobniWeb/Old):
+                   DIR/web/public/Models/Plzen is made equal to the bundle (served as
+                   https://home.zcu.cz/~lipka/Models/Plzen/ after `python deploy.py` there); all links are relative
 """
-import json, os, shutil, subprocess, sys
+import argparse, json, os, shutil, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 APP = os.path.abspath(os.path.join(HERE, '..'))
@@ -21,6 +25,7 @@ SITE = os.path.join(ROOT, 'data', 'historic', 'growth', 'site')
 VIDEO = os.path.join(ROOT, 'data', 'historic', 'growth', 'video', 'plzen-growth-1295-2020.mp4')
 OUT = os.path.join(PUB, 'model')
 PART = 14 * 1024 * 1024
+ap = argparse.ArgumentParser(); ap.add_argument('--homepage'); ARGS = ap.parse_args()
 
 npx = 'npx.cmd' if sys.platform == 'win32' else 'npx'
 subprocess.run([npx, 'vite', 'build', '--outDir', os.path.join(APP, 'dist')], cwd=APP, check=True)
@@ -47,3 +52,10 @@ if M.get('mesh'):
 json.dump(M, open(os.path.join(OUT, 'data', 'model.json'), 'w', encoding='utf-8'), separators=(',', ':'), ensure_ascii=False)
 size = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(PUB) for f in fs)
 print('published to', PUB, f'{size / 1e6:.1f} MB,', len(os.listdir(os.path.join(OUT, 'data'))), 'data files')
+
+if ARGS.homepage:   # install into the website: the target folder mirrors the bundle (nothing else is touched)
+    tgt = os.path.join(os.path.abspath(ARGS.homepage), 'web', 'public', 'Models', 'Plzen')
+    if not os.path.isdir(os.path.join(os.path.abspath(ARGS.homepage), 'web', 'public')): sys.exit(f'not the website project: {ARGS.homepage}')
+    if os.path.isdir(tgt): shutil.rmtree(tgt)
+    shutil.copytree(PUB, tgt)
+    print('installed into', tgt, '→ https://home.zcu.cz/~lipka/Models/Plzen/ after deploy.py')
