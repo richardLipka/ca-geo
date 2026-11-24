@@ -21,7 +21,33 @@
    "licence": "CC BY-SA 3.0",
    "page": "http://diglib.hab.de/?grafik=graph-c-945",
    "file": "/data/historic/sources/te-1618.jpg",
-   "download": "http://diglib.hab.de/varia/grafik/graph-c-945/max/000001.jpg"
+   "download": "http://diglib.hab.de/varia/grafik/graph-c-945/max/000001.jpg",
+   "view": {
+    "pos": [
+     -216.78,
+     3000.0,
+     3581.87
+    ],
+    "target": [
+     -203.76,
+     2805.29,
+     3354.01
+    ],
+    "fov": 15.14,
+    "year": 1618,
+    "quat": [
+     -0.345885,
+     0.024571,
+     0.128748,
+     0.929077
+    ],
+    "aspect": 1.0971,
+    "fit": {
+     "rms": 63.6,
+     "n": 14,
+     "by": "veduta_fit.py"
+    }
+   }
   },
   {
    "method": "projective",

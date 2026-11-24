@@ -45,7 +45,12 @@ textures cut from the 1618 plate, with a year filter. The **growth model**
 and exports the animation as video frames. It stands on the DMR 5G terrain with per-epoch water,
 shows the epoch maps as ground by their validity and has a **view mode**: the model seen from the
 viewpoint of a veduta or bird's-eye plate next to the drawing; click a building in 3D and then the
-object in the drawing to store a link (annotation) in the project.
+object in the drawing to store a link (annotation, with the clicked 3D surface point) in the project.
+*Fit camera* solves the draughtsman's camera (position, rotation, focal length) from ≥ 5 links by
+robust least squares; *Project drawing* then paints the drawing from that camera onto façades, roofs
+and terrain, with a depth test so surfaces hidden from the draughtsman stay unpainted. Present
+buildings use their real shape from the City of Plzeň 3D model (`mesh.bin`), kept for their whole
+life in the model.
 
 Source types and transforms:
 
@@ -107,8 +112,18 @@ versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM Vi
 | `growth_model.py` | dates every building 1295–2020 from RÚIAN, 16 map epochs, census house counts (ČSÚ), the 1618 model, the 1781 fortification and written sources; validation against the maps; terrain and water → `data/historic/growth/web/` |
 | `fort_1781.json` | Zwinger and bastioned works digitised from the 1781 plan, with demolition years |
 | `city_heights.py` | building heights of the City of Plzeň 3D model 2024 (attributes, joined by parcel) |
+| `check_epochs.py` | footprint check of the model against every ground / epoch map at its first year (support by the map, buildings standing on one place at once) → `data/historic/growth/site/check/` |
+| `publish_site.py` | builds the publishable bilingual page (viewer in public mode: model, timeline, maps under the model) with its data → `data/historic/growth/publish/` |
+| `review_items.py` | yes / no review page for the footprint tiles of every map and the veduta links (`site/check/review.html`; decisions saved by `serve_site.py` to `site/check/review.json`) |
+| `veduta_fit.py` | fits the camera of the vedute to the model and estimates tower / gate heights → `veduta_heights.json`, saves the fitted views to the project |
+| `ham57.py` | registers HAM map 57 (medieval topography c. 1410) and vectorises its blocks, suburbs, suburb walls, moat, churches and rivers → `ham57_map.json` |
+| `fabric.py` | generated houses (gabled, perimeter blocks, scattered suburbs) and watertight earth bodies / ditches for `growth_model.py` |
+| `fort_plans.py` | registers the 1658 and 1703 fortification plans (HAM maps 5, 6) by their wall ring and converts the works traced on them (`fort_plans.json`) to `fort_plans_map.json` |
+| `city3d_mesh.py` | the City of Plzeň 3D model 2024 as triangle meshes (multipatch `binaryPatches` decoded and triangulated) → `data/reference/plzen-3d/mesh.npz` |
 | `fetch_terrain.py` | ČÚZK DMR 5G terrain for the growth frame |
 | `encode_video.py` | H.264 MP4 from the frames exported by `growth3d.html` (ffmpeg from `imageio-ffmpeg` in `.venv`) |
+| `sources_site.py` | guide to the growth video: chapters with short texts, video jumps, stills, overview and fortification timelines, previews of every source with licence labels; catalogue and chapters in `sources_site.json`; writes `data/historic/growth/site/` (not versioned: quoted third-party maps) |
+| `serve_site.py` | local server for the guide page with HTTP Range (video seeking): `http://localhost:5219/site/` |
 
 ## Licence
 

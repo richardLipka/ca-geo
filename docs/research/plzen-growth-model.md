@@ -21,6 +21,76 @@ Changes in version 2:
 - terrain and per-epoch water;
 - view mode for mapping vedute onto buildings.
 
+Changes in version 3:
+- real building shapes from the City of Plzeň 3D model 2024 (31 367 buildings), held back in time;
+- camera fit and projective texturing of vedute onto the 3D model (view mode);
+- guide page to the video (`sources_site.py`).
+
+Changes in version 5:
+- generated historic fabric (`fabric.py`): gabled burgher houses around the blocks of HAM map 57 inside the walls
+  until 1750–1800 (square complete from 1295; present buildings replace them per block, or later when their own date
+  is later); organic suburbs of small houses in the suburb blocks of map 57 (from the gates, burned 1433 and 1618,
+  glacis cleared 1647); outside the walls the houses of the historic database appear only when the baroque walls fall
+  (by sector 1796–1835), villages 1825–1845, with small generated houses at their places before;
+- two growth modes: inside the walls the whole plan stands from the founding (low timber houses on all plots of map 57)
+  and the houses grow in height on their plots, after the isometric views of 1618 / 1650 (Theatrum Europaeum, Merian:
+  gable to the street, rear tracts and courtyard wings glued to the front houses, double roofs on wide plots):
+  low timber houses 1295–1390 → Gothic stone houses (eaves 6–7.5 m, steep roofs, half with a rear tract) →
+  Renaissance 1530–1620 on 75 % of the plots and the whole square (eaves 7.5–11 m, double roofs, side wings,
+  back houses) until the present model replaces them (`fabric.burgher_complex`); the suburbs grow organically from the gates
+  along the roads (frontage of the suburb blocks first, the insides later) until they fill the blocks of map 57;
+- epoch evidence first: a present building with a later rebuild date (RÚIAN date / class) appears only then, an older
+  generated house stands on its plot before;
+- the baroque fortification as one star (plans of 1703 and 1658, Vogt 1712 as a check): main rampart around the
+  Zwinger (1618–20), bastions joined to it (1645–49, 1658–59), detached ravelins and lunettes (1703), one ditch per
+  phase following the outline, the medieval moat of map 57 before 1620; rampart and ditches split by sector (shared
+  vertices, local terrain base, staggered demolition);
+- Dominican monastery: church outline of map 57 next to point B of the 1618 plate, church = the 3D model of the
+  Franciscan church turned and scaled, cloister of four wings; 1300 to c. 1800 (hospital from 1786, HAM map 8);
+- barracks of the 35th regiment with a courtyard;
+- river courses per epoch: the base is the present river network only (ZTM water bridged over bridges, long thin
+  components with compactness 4πA/P² < 0.12, so ponds, reservoirs and sewage tanks drop out); until 1840 the courses
+  of map 57 inside its field (wide confluence), plus the water drawn on the 1658 plan; 1840, 1908, 1926, 1938 and
+  1947 add the water detected on their maps within 300 m of the rivers (old meanders, mill races, ponds when drawn);
+  the full present water (Bolevec ponds, České údolí reservoir, sewage works) only from 1953; the opening map shows
+  rivers only;
+- ground maps: map 57 (from 1300), the Theatrum Europaeum plate (homography, 1618), plans 1658 and 1703;
+- guide page: map flipbook of 30 registered maps with the dated model on top; the four 1618 siege plates as one source.
+- the square: generated houses there are taller (8.5–11 m eaves); from the town hall (1554–59) the present models of
+  the houses on the square and of the town hall (čp. 1) stand; the Franciscan monastery with its Gothic cloister
+  (RÚIAN 24142204, date 2010 = reconstruction) stands from 1300;
+- vedute: `veduta_fit.py` fits the draughtsman's camera and the heights of linked towers and gates together (robust
+  least squares, prior σ 35 % around the 1618 model, camera within 6 km, field of view ≥ 8°). Theatrum Europaeum
+  1618: 14 links, 63 px RMS (3.4 % of the sheet) → wall towers 14–17.5 m, gates 21–28 m, applied to the model; the
+  fitted camera is saved as the view of the plate. Ottheinrich 1536 cannot be fitted (11 % RMS; the town is drawn
+  widened), so it gives no heights.
+- consistency pass before writing (growth_model.py) and a check per map (`check_epochs.py` → site/check/):
+  duplicates of the 1840 cadastre and map 65 merged; the maps with reliable building detection (1840, 1891, 1912,
+  1926, 1931, 1938) are binding at their year (generated houses they do not show end before them, real buildings
+  without an exact date start after them); no two buildings on one place at one time (priority history > RÚIAN
+  exact date > other real > generated). Result: extra buildings on the reliable maps 0–20 of 1 000–7 000, no
+  overlaps. On the maps with weak detectors (1821, 1877, 1881, 1895–1908, 1947, orthophotos) "extra" mostly
+  means a missed detection and is reviewed visually.
+- dated individual buildings: town hall (čp. 1) and the houses on the square (the open square without its streets)
+  from 1554–75 (history, not moved by the maps); museum complex on Kopeckého sady 1896–98; the court (Veleslavínova)
+  only after the Dominican monastery is gone; present × present buildings never displace each other;
+- buildings of the 1902 plan around the barracks (city GIS export at 0.5 m; black = military / public, solid red =
+  others) that the model lacked: 191 footprints from 1899–1902, the barracks group removed in 1969, others when the
+  later maps no longer show them;
+- shapes from the 1536 veduta (Ottheinrich cut-outs, `fabric.silhouette_profile` / `loft` / `extrude_profile`): wall
+  towers after the corner tower, gates after the gate tower, the Dominican church (nave and choir with the steep
+  facade gable as cross-section, tower 45 m after the tall tower) on the outline of map 57;
+- publishable page (`publish_site.py` → data/historic/growth/publish/): the viewer in public mode (`public3d.html`)
+  with the timeline of events, the map under the model (by year, none, or any of the 18 maps) with dimming, cs / en;
+  mesh split into parts < 14 MB;
+- Not done: villages from the 1st military survey (HAM map 9) – automatic registration to the 2nd survey failed
+  (ECC correlation < 0.2); needs manual control points.
+
+Changes in version 4:
+- the 1658 and 1703 plans registered to the model (`fort_plans.py`) and used for the phases and for the 1703-only works;
+- fortification in 3D: earthwork bodies with scarp, parapet and terreplein, sunk moats with water and terrain cut-outs;
+- barracks of the 35th regiment (1823–1969); 39 dated captions; maps dimmed in the video; slower pace 1600–1720 and 1780–1840.
+
 ## 1. Evidence
 
 ### Present buildings
@@ -109,24 +179,43 @@ Valcha c. 1352 is from cs.wikipedia.
 6. **Fortification.** Positions come from the 1781 plan, which is surveyed. It was digitised by
    eye at 0.5 m/px, so expect an error of about 3–8 m. The phases come from the 1658 and 1703
    plans (§9 of the source inventory).
+   - **Registration of the 1658 and 1703 plans** (`fort_plans.py`, traces in `fort_plans.json`): the
+     medieval wall ring traced on each plan (west at the top) is aligned to the wall ring of the
+     model by ECC on blurred masks, from a similarity start. Ring IoU 0.95 (1658) and 0.92 (1703);
+     St Bartholomew and the Prague / Saxon gates of the 1703 plan land 19–32 m from the model.
+     Check images: `data/historic/growth/fort/_reg_1658.jpg`, `_reg_1703.jpg`.
+   - **Phases from the 1658 plan.** Around the SW, S and SE works and the NE bastion the 1658 plan
+     draws small olive cores (existing) inside larger pale outlines (the proposals of 1658). Cores →
+     built 1645–1649 (La Corona); the west bastion (Turkish redoubt) and the NW ravelin exist only as
+     proposals → built 1658–59, the third stage named in the atlas commentary. Ramparts 1639–1649.
+   - **Works of the 1703 plan.** Its south bastion and its bastion by the Mže road coincide with
+     the 1781 S work and SE redoubt. The redan between them and two outer lunettes at the SW
+     corner are not on the 1781 plan: modelled 1703 (March–December) to 1765–1780, lowered from
+     1725–1745, basis "plan 1703 (Zizner), realisation uncertain".
+   - **3D shapes.** Works and ramparts are earth bodies (`profile_mesh`): scarp to 86 % of the
+     height at 1.6 m inset, parapet crest at 3.6 m, terreplein at 82 % (works 7 m, 1703 works 5 m,
+     ramparts 5–6 m). The moat (16 m wide, 5 m deep) and the ditch of the W bastion (12 m, 3.5 m)
+     are troughs in ~120 m sections with a water surface; while a section exists the terrain above
+     it is cut out (`cuts.png`, `model.json` → `cuts`). Walls, Zwinger and gates stay extruded
+     masonry. Colours in the viewer: earthworks olive, masonry grey, water blue.
 
    | Work | Built | 1781 | Removed |
    |---|---|---|---|
    | Medieval wall (30 m pieces) | c. 1320 | standing | year of the nearest gate; west 1828, museum piece 1896 |
    | Zwinger N / W / S | c. 1420 | standing | W 1828; others by the nearest gate |
-   | West bastion at the round tower (1658: b) | 1645–58 | defunct (13) | 1828 (on the 1821 plan, gone on the 1840 plan) |
-   | NW ravelin (1658: d) | 1645–58 | defunct | 1810 (gone by 1821) |
-   | SW hexagonal work (1658: c) | 1645–58 | defunct | 1805 (gone by 1821) |
-   | S pentagonal work (1658: a) | 1645–58 | defunct | 1800 (gone by 1821) |
-   | SE redoubt (1658: h) | 1645–58 | defunct | 1833 |
-   | N, NE and E ramparts along the rivers | 1645–58 | defunct | 1822 |
-   | NE bastion by the arsenal | 1645–58 | defunct | survives (sady 5. května) |
-   | Moat and the ditch of the W bastion (as drawn in blue in 1781) | 1420 / 1645–58 | water | filled 1795–1822 by section; ditch 1828 |
+   | West bastion, Turkish redoubt (1658: proposal) | 1658–59 | defunct (13) | levelled c. 1822 for the barracks of the 35th regiment (1823–1969) |
+   | NW ravelin (1658: proposal) | 1658–59 | defunct | 1810 (gone by 1821) |
+   | SW hexagonal work (1658: core) | 1645–49 | defunct | 1805 (gone by 1821) |
+   | S pentagonal work (1658: core) | 1645–49 | defunct | 1800 (gone by 1821) |
+   | SE redoubt (1658: core) | 1645–49 | defunct | 1833 |
+   | N, NE and E ramparts along the rivers | 1639–49 | defunct | 1822 |
+   | NE bastion by the arsenal (1658: core) | 1645–49 | defunct | survives (sady 5. května) |
+   | 1703 redan (south front), two outer lunettes (SW) | 1703 | absent | 1765–1780 |
+   | Moat and the ditch of the W bastion (as drawn in blue in 1781) | 1420 / 1658–59 | water | filled 1795–1822 by section; ditch 1822 |
 
    - The 1781 legend calls all outer works *"Eingegangene Vestungswerker"*. The model lowers
      them by about a third from c. 1760 (rebuild attribute `tR`).
-   - The 1703 bastions of Zizner are not modelled: their completion is uncertain and they are
-     absent in 1781.
+   - The Mansfeld earthworks of 1618–1620 are named in a caption only; their shape is unknown.
 7. **Demolitions 1942–2008 in the centre** (HAM map 65, `ham_demolitions.py`).
    - 184 demolished historic buildings are registered to RÚIAN (ECC 0.55). 105 of them do not
      overlap a present building and become historic-only footprints.
@@ -209,9 +298,16 @@ that are built on the map.
 
 ## 4. Viewer, terrain and water
 
-- **Display.** Merged mesh with a vertex shader. Buildings stand on the terrain (base = lowest
-  terrain point under the footprint). They rise over 3 years, sink at demolition, vanish during
+- **Display.** Merged mesh with a vertex shader. Per vertex only the position (relative height
+  0–1) and the building index; dates, heights, base, gaps and colours come from a per-building float
+  texture. Buildings stand on the terrain (base = lowest terrain point under the footprint). They rise over 3 years, sink at demolition, vanish during
   the siege gaps and change height when rebuilt. New buildings flash yellow. The moat is blue.
+- **City 3D models.** Present buildings with a multipatch in the City of Plzeň 3D model 2024
+  (`city3d_mesh.py`; 37 467 objects matched by containment to 31 367 RÚIAN buildings) are drawn with
+  their real triangles instead of an extruded footprint. The shape is kept for the whole life of the
+  building in the model (no lower pre-rebuild height, `tR` dropped), so St Bartholomew has its present
+  form from 1320 on and its separate tower block is removed. This is schematic: older states of the
+  buildings are not reconstructed.
 - **Terrain.** DMR 5G at 10 m: a 450 × 450 mesh, heights in `terrain.png` (16 bit in R / G,
   0.1 m).
 - **Water per epoch.**
@@ -235,7 +331,18 @@ that are built on the map.
   - Click a building in 3D (GPU picking), then the same object in the drawing. This creates an
     annotation (`entityId` = `ruian:<kód>`, `h1840:<n>`, `g1618-…`, `fort:…`) in
     `projects/plzen.json`, so the mapper and the exports see it.
-  - *Save view* stores the adjusted camera in the source (`view`).
+  - The link stores the 3D surface point under the click (`xyz`, second picking pass into a float
+    target).
+  - *Fit camera* solves position, rotation and focal length of the draughtsman's camera from ≥ 5
+    links: Levenberg–Marquardt on the image residuals, Huber-like weights, start from the current
+    3D camera. Older links without `xyz` use the top (towers, churches, gates) or 70 % of the height
+    (houses) of the linked building with a lower weight. Residuals are drawn on the drawing (green
+    < 15 px, orange < 40 px, red). First result: Theatrum Europaeum 1618, 14 usable links, 65 px RMS
+    on a 3 000 px plate.
+  - *Project drawing* paints the drawing from the fitted camera onto buildings and terrain
+    (projective texturing; a depth map rendered from the fitted camera hides surfaces the
+    draughtsman could not see).
+  - *Save view* stores the camera in the source (`view`, with `quat`, `aspect` and the fit).
 - **Video export.** Fixed 30 fps steps. Frames carry the year, caption, legend, labels and
   credits. Encode them with `encode_video.py` (ffmpeg from `imageio-ffmpeg`).
 

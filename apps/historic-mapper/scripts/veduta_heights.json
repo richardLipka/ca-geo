@@ -1,0 +1,23 @@
+{
+ "note": "tower / gate heights estimated from the vedute (veduta_fit.py); clamped to 0.7\u20131.5 \u00d7 the previous height",
+ "heights": {
+  "g1618-gate_litice": 28.0,
+  "g1618-gate_north": 20.9,
+  "g1618-gate_prague": 26.9,
+  "g1618-te_tower_1": 15.4,
+  "g1618-te_tower_2": 16.9,
+  "g1618-te_tower_3": 17.4,
+  "g1618-te_tower_4": 17.5,
+  "g1618-te_tower_5": 16.5,
+  "g1618-te_tower_6": 14.2,
+  "g1618-te_tower_7": 16.0,
+  "g1618-te_tower_8": 16.2
+ },
+ "views": {
+  "te-1618": {
+   "rms": 63.6,
+   "n": 14,
+   "by": "veduta_fit.py"
+  }
+ }
+}

@@ -13,11 +13,12 @@ interface Model {
   grounds: { year: number; file: string; label?: string }[]; water?: { year: number; file: string }[]; n: number;
   terrain?: { file: string; size: number; zmin: number; scale: number };
   rings: number[][]; from: number[]; to: number[]; h0: number[]; h1: number[]; tR: number[]; gaps: number[][]; cls: number[]; basisIdx: number[];
-  z?: number[]; ids?: string[];
+  z?: number[]; ids?: string[]; mesh?: { file: string; files?: string[]; buildings: number };
+  cuts?: { bits?: boolean; file: string; box: [number, number, number, number]; periods: [number, number][] };
 }
 interface ProjSource { id: string; title: string; kind: string; file: string; depicted?: [number, number]; made?: string; view?: View }
-interface View { pos: number[]; target: number[]; fov: number; year: number }
-interface Ann { id: string; sourceId: string; img: [number, number]; entityId: string | null; label?: string; confidence: 1 | 2 | 3; note?: string; useAsControl: boolean; kind?: string }
+interface View { pos: number[]; target: number[]; fov: number; year: number; quat?: number[]; aspect?: number; fit?: { rms: number; n: number } }
+interface Ann { id: string; sourceId: string; img: [number, number]; xyz?: number[]; entityId: string | null; label?: string; confidence: 1 | 2 | 3; note?: string; useAsControl: boolean; kind?: string }
 
 // default viewpoints for the views (direction from the town to the viewer in degrees from north,
 // distance and height in metres); adjust in the page and save to the project
@@ -34,7 +35,24 @@ const VIEW_DEFAULTS: Record<string, { az: number; dist: number; h: number; fov: 
 };
 const CLS_KIND: Record<string, string> = { landmark: 'church', fort: 'wall', inner: 'house', suburb: 'house', glacis: 'house', village: 'house', rural: 'house', town: 'house', moat: 'other' };
 
-const DATA = '/data/historic/growth/web/';
+// public mode (public3d.html: <html data-mode="public">): a self-contained page with the model, the timeline and the maps,
+// without the authoring tools; data next to the page in data/
+const PUBLIC = document.documentElement.dataset.mode === 'public';
+const DATA = PUBLIC ? 'data/' : '/data/historic/growth/web/';
+// names of the ground maps (model.json grounds: label, year)
+const GROUND_NAME = (g: { label?: string; year: number }, lang: string) => {
+  const L = g.label ?? ''; const cs = lang === 'cs';
+  if (L === 'base') return cs ? 'bez mapy (terén a řeky)' : 'no map (terrain and rivers)';
+  if (L.startsWith('map 57')) return cs ? 'mapa 57: středověká Plzeň kolem 1410 (Historický atlas měst ČR 21)' : 'map 57: medieval Plzeň c. 1410 (Historical Atlas of Czech Towns 21)';
+  if (L.startsWith('Theatrum')) return 'Theatrum Europaeum: Abbildung der Statt Pilsen, 1618';
+  if (L === 'plan 1658') return cs ? 'plán opevnění 1658 (ÖStA – Kriegsarchiv; HAM mapa 5)' : 'fortification plan 1658 (ÖStA – Kriegsarchiv; HAM map 5)';
+  if (L === 'plan 1703') return cs ? 'plán opevnění 1703, J. Ch. Zizner (HAM mapa 6)' : 'fortification plan 1703, J. Ch. Zizner (HAM map 6)';
+  if (L === '1840_cadastre') return cs ? 'stabilní katastr, kolem 1840' : 'stable cadastre, c. 1840';
+  if (L === '1953_orto') return cs ? 'letecké snímky 50. let (CENIA)' : 'aerial images of the 1950s (CENIA)';
+  if (L === '2001_orto') return cs ? 'letecké snímky 2001 (ČÚZK)' : 'aerial images 2001 (ČÚZK)';
+  if (L === '2025_ztm') return cs ? 'Základní topografická mapa 1 : 10 000 (ČÚZK)' : 'Base topographic map 1:10,000 (ČÚZK)';
+  return cs ? `plán města ${g.year} (GIS města Plzně)` : `town plan ${g.year} (City of Plzeň GIS)`;
+};
 // colour by period of origin (place first built)
 const PERIODS: [number, number, string][] = [
   [1295, 0xa9533f, 'g3d.p.medieval'], [1500, 0xb0603a, 'g3d.p.early'], [1650, 0xc98f4a, 'g3d.p.baroque'], [1840, 0xd9b86a, 'g3d.p.c19a'],
@@ -44,6 +62,7 @@ const periodCol = (y: number) => { let c = PERIODS[0][1]; for (const [s, col] of
 // colour by kind of evidence (how the date was obtained)
 const BASIS_COL = (b: string) => b === 'history' || b.startsWith('model 1618') ? 0x7a2e8c
   : b.startsWith('RÚIAN date') ? 0x1f7a4d : b.includes('RÚIAN') ? 0x4f9a6a : b.startsWith('map 1840') ? 0xc77d2a : 0x9aa3ab;
+const FORT_KEYS: [number, string][] = [[0x7d8f45, 'g3d.k.earth'], [0x9a948a, 'g3d.k.wall'], [0x3f86c4, 'g3d.k.moat']];
 const BASIS_KEYS: [number, string][] = [[0x7a2e8c, 'g3d.b.history'], [0x1f7a4d, 'g3d.b.ruian'], [0x4f9a6a, 'g3d.b.ruianmap'], [0xc77d2a, 'g3d.b.pre1840'], [0x9aa3ab, 'g3d.b.map']];
 
 async function main() {
@@ -53,11 +72,15 @@ async function main() {
     <label>${t('g3d.colour')} <select id="mode"><option value="0">${t('g3d.byPeriod')}</option><option value="1">${t('g3d.byBasis')}</option></select></label>
     <label><input type="checkbox" id="mapg"> ${t('g3d.mapGround')}</label>
     <label><input type="checkbox" id="auto" checked> ${t('g3d.autoCam')}</label>
-    <label>${t('g3d.view')} <select id="vsel"><option value="">–</option></select></label>
-    <a href="./">${t('v3d.back')}</a> <button type="button" id="lang">${t('btn.lang')}</button></div>
+    ${PUBLIC ? `<label>${t('g3d.mapSel')} <select id="gsel"></select></label><label>${t('g3d.fade')} <input type="range" id="gfade" min="0" max="1" step="0.05" value="0.9"></label>`
+    : `<label>${t('g3d.view')} <select id="vsel"><option value="">–</option></select></label><a href="./">${t('v3d.back')}</a>`}
+    <button type="button" id="lang">${t('btn.lang')}</button></div>
+  ${PUBLIC ? `<div id="tlpanel"><b>${t('g3d.timeline')}</b><ol id="evlist"></ol></div><div id="ginfo"></div>` : ''}
   <div id="vpanel"><div class="vhead"><b id="vtitle"></b>
       <label>${t('g3d.opacity')} <input type="range" id="vop" min="0" max="1" step="0.05" value="1"></label>
       <label><input type="checkbox" id="vsil"> ${t('g3d.silhouette')}</label>
+      <button type="button" id="vfit">${t('g3d.fit')}</button>
+      <label><input type="checkbox" id="vproj"> ${t('g3d.project')}</label>
       <button type="button" id="vsave">${t('g3d.saveView')}</button></div>
     <div class="vimg"><img id="vimg" alt=""><canvas id="vcan"></canvas></div>
     <div class="vhelp muted" id="vhelp">${t('g3d.vhelp')}</div></div>
@@ -68,7 +91,7 @@ async function main() {
     <output id="yo" class="year"></output>
     <div class="tl"><canvas id="chart"></canvas><input type="range" id="yr" min="1295" max="2020" step="0.1" value="1295"></div>
     <label>${t('g3d.speed')} <select id="speed"><option value="a" selected>${t('g3d.adaptive')}</option><option value="5">5</option><option value="15">15</option><option value="40">40</option></select></label>
-    <button type="button" id="rec">● ${t('g3d.record')}</button>
+    <button type="button" id="rec"${PUBLIC ? ' hidden' : ''}>● ${t('g3d.record')}</button>
     <span id="stat" class="muted"></span></div>`;
   (document.getElementById('lang') as HTMLButtonElement).onclick = () => { setLang(getLang() === 'cs' ? 'en' : 'cs'); location.reload(); };
   const M = (await (await fetch(DATA + 'model.json')).json()) as Model;
@@ -115,12 +138,50 @@ async function main() {
     const c = Math.min(hsize - 1, Math.max(0, Math.round(u * (hsize - 1)))), r = Math.min(hsize - 1, Math.max(0, Math.round(w * (hsize - 1))));
     return heights[r * hsize + c];
   };
-  const groundUni = { uWater: { value: null as THREE.Texture | null }, uDepth: { value: 2.0 } };
+  // projection of a veduta from its fitted camera (view mode): texture + depth map of the scene seen by that camera
+  const vedUni = { uVedOn: { value: 0 }, uVedOp: { value: 0.9 }, uVedM: { value: new THREE.Matrix4() },
+    uVedTex: { value: null as THREE.Texture | null }, uVedDepth: { value: null as THREE.Texture | null } };
+  const VED_V = 'uniform mat4 uVedM; varying vec4 vVed;';
+  const VED_F = `uniform float uVedOn; uniform float uVedOp; uniform sampler2D uVedTex; uniform sampler2D uVedDepth; varying vec4 vVed;
+    vec4 vedColor() {
+      if (uVedOn < 0.5 || vVed.w <= 0.0) return vec4(0.0);
+      vec3 n = vVed.xyz / vVed.w;
+      if (abs(n.x) > 1.0 || abs(n.y) > 1.0 || abs(n.z) > 1.0) return vec4(0.0);
+      vec2 uv = n.xy * 0.5 + 0.5;
+      float d = texture2D(uVedDepth, uv).r;
+      if (n.z * 0.5 + 0.5 > d + 0.0004) return vec4(0.0);   // hidden from the drawing's viewpoint
+      return vec4(texture2D(uVedTex, uv).rgb, uVedOp);
+    }`;
+  // ground: maps faded (desaturated, lightened) so the buildings stand out; terrain cut out over the moats
+  // while they exist (cuts.png: index per moat section → periods)
+  const NCUT = 64, cutP = Array.from({ length: NCUT }, () => new THREE.Vector2(9999, 9999));
+  (M.cuts?.periods ?? []).slice(0, 8).forEach(([a, b], i) => cutP[i].set(a, b));   // bit i of cuts.png = period i
+  const cutTex = M.cuts ? loader.load(DATA + M.cuts.file) : new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+  cutTex.magFilter = THREE.NearestFilter; cutTex.minFilter = THREE.NearestFilter; cutTex.generateMipmaps = false; cutTex.colorSpace = THREE.NoColorSpace; cutTex.needsUpdate = true;
+  const cb = M.cuts?.box ?? [0, 0, 1, 1];
+  const groundUni = { uWater: { value: null as THREE.Texture | null }, uDepth: { value: 2.0 }, uFade: { value: 0.9 },
+    uCut: { value: cutTex }, uCutBox: { value: new THREE.Vector4(cb[0], cb[1], cb[2], cb[3]) }, uCutP: { value: cutP }, uCutYear: { value: 1295 } };
   groundMat.onBeforeCompile = sh => {
-    Object.assign(sh.uniforms, groundUni);
+    Object.assign(sh.uniforms, groundUni, vedUni);
     sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform sampler2D uWater; uniform float uDepth;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y -= uDepth * texture2D(uWater, uv).r;');
+      .replace('#include <common>', `#include <common>\nuniform sampler2D uWater; uniform float uDepth; varying vec3 vWp; ${VED_V}`)
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y -= uDepth * texture2D(uWater, uv).r;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\nvVed = uVedM * modelMatrix * vec4(transformed, 1.0); vWp = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform float uFade; uniform sampler2D uCut; uniform vec4 uCutBox; uniform vec2 uCutP[${NCUT}]; uniform float uCutYear; varying vec3 vWp;
+        ${VED_F}`)
+      .replace('void main() {', `void main() {
+        { vec2 q = vec2((vWp.x - uCutBox.x) / (uCutBox.z - uCutBox.x), (-vWp.z - uCutBox.y) / (uCutBox.w - uCutBox.y));
+          if (q.x > 0.0 && q.x < 1.0 && q.y > 0.0 && q.y < 1.0) {
+            int ci = int(texture2D(uCut, q).r * 255.0 + 0.5);
+            for (int i = 0; i < 8; i++) if (((ci >> i) & 1) == 1 && uCutYear >= uCutP[i].x && uCutYear < uCutP[i].y) discard;
+          } }`)
+      .replace('#include <map_fragment>', `#include <map_fragment>
+        { float l = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+          diffuseColor.rgb = mix(diffuseColor.rgb, vec3(l), 0.6 * uFade);
+          diffuseColor.rgb = diffuseColor.rgb * (1.0 - 0.38 * uFade) + 0.03 * uFade; }
+        vec4 ved = vedColor(); diffuseColor.rgb = mix(diffuseColor.rgb, ved.rgb, ved.a);`);
   };
   const wtex = new Map<string, THREE.Texture>();
   const waterTex = (f: string) => { let x = wtex.get(f); if (!x) { x = loader.load(DATA + f); x.colorSpace = THREE.NoColorSpace; wtex.set(f, x); } return x; };
@@ -130,94 +191,112 @@ async function main() {
   ground.position.set((fx0 + fx1) / 2 - OX, -0.05, -((fy0 + fy1) / 2 - OY)); scene.add(ground);
 
   // ---------- merged building mesh ----------
+  // Per-vertex data is only the position (x, relative height 0–1, z) and the building index aB; everything
+  // else (dates, heights, base, gaps, colours) is read in the shader from a per-building float texture.
+  // Present buildings with a city 3D model (mesh.bin) use its triangles; the others an extruded footprint.
+  // city 3D models
+  const meshOf = new Map<number, { v: Float32Array; t: Uint16Array }>();
+  if (M.mesh) {
+    const parts = await Promise.all((M.mesh.files ?? [M.mesh.file]).map(async f => new Uint8Array(await (await fetch(DATA + f)).arrayBuffer())));
+    const all = new Uint8Array(parts.reduce((s_, q) => s_ + q.length, 0)); { let o = 0; for (const q of parts) { all.set(q, o); o += q.length; } }
+    const buf = all.buffer;
+    const [nb, nvm, ntm] = new Int32Array(buf, 0, 4);
+    const bl = new Int32Array(buf, 16, nb), vc = new Int32Array(buf, 16 + 4 * nb, nb), tc = new Int32Array(buf, 16 + 8 * nb, nb);
+    const V = new Float32Array(buf, 16 + 12 * nb, nvm * 3), T = new Uint16Array(buf, 16 + 12 * nb + 12 * nvm, ntm * 3);
+    let vo = 0, to = 0;
+    for (let i = 0; i < nb; i++) { meshOf.set(bl[i], { v: V.subarray(3 * vo, 3 * (vo + vc[i])), t: T.subarray(3 * to, 3 * (to + tc[i])) }); vo += vc[i]; to += tc[i]; }
+  }
+  const TW = 1024, TROWS = Math.ceil(M.n / TW), TEXELS = 5;
+  const bd = new Float32Array(TW * TEXELS * TROWS * 4);
+  const MOAT = M.classes.indexOf('moat'), DITCH = M.classes.indexOf('ditch'), FORT = M.classes.indexOf('fort');
+  {
+    const c1 = new THREE.Color(), c2 = new THREE.Color();
+    for (let b = 0; b < M.n; b++) {
+      const o = (Math.floor(b / TW) * TW * TEXELS + (b % TW) * TEXELS) * 4, g = M.gaps[b];
+      c1.setHex(periodCol(M.from[b])); c2.setHex(BASIS_COL(M.basis[M.basisIdx[b]]));
+      if (M.cls[b] === MOAT) { c1.setHex(0x3f86c4); c2.setHex(0x3f86c4); }
+      if (M.cls[b] === DITCH) { c1.setHex(0x8a7a58); c2.setHex(0x8a7a58); }
+      if (M.cls[b] === FORT) { const masonry = /^g1618-|zwinger|suburb_wall/.test(IDS[b]) || !meshOf.has(b); const ck = masonry ? 0x9a948a : 0x7d8f45; c1.setHex(ck); c2.setHex(ck); }  // masonry grey, earthworks olive  // earthworks olive, masonry grey
+      bd.set([M.from[b], M.to[b], M.tR[b], M.cls[b], M.h0[b], M.h1[b], ZS[b], 0, g[0], g[1], g[2], g[3], c1.r, c1.g, c1.b, 0, c2.r, c2.g, c2.b, 0], o);
+    }
+  }
+  const btex = new THREE.DataTexture(bd, TW * TEXELS, TROWS, THREE.RGBAFormat, THREE.FloatType);
+  btex.needsUpdate = true;
   let nv = 0, ni = 0;
   const tris: number[][] = [];
   for (let b = 0; b < M.n; b++) {
+    const m = meshOf.get(b);
+    if (m) { tris.push([]); nv += m.v.length / 3; ni += m.t.length; continue; }
     const r = M.rings[b]; const k = r.length / 2;
     const contour = Array.from({ length: k }, (_, i) => new THREE.Vector2(r[2 * i] / 10, r[2 * i + 1] / 10));
     const tr = THREE.ShapeUtils.triangulateShape(contour, []);
     tris.push(tr.flat()); nv += 4 * k + k; ni += 6 * k + tr.length * 3;
   }
-  const pos = new Float32Array(nv * 3), nor = new Float32Array(nv * 3), col = new Float32Array(nv * 3), col2 = new Float32Array(nv * 3);
-  const aT = new Float32Array(nv * 4), aH = new Float32Array(nv * 2), aG = new Float32Array(nv * 4), aZ = new Float32Array(nv);
-  const idx = new Uint32Array(ni), faceB = new Int32Array(ni / 3);
-  const MOAT = M.classes.indexOf('moat');
+  const pos = new Float32Array(nv * 3), aB = new Float32Array(nv), idx = new Uint32Array(ni);
   let v = 0, ii = 0;
-  const c1 = new THREE.Color(), c2 = new THREE.Color();
   for (let b = 0; b < M.n; b++) {
+    const put = (x: number, y: number, u: number) => { pos[3 * v] = x; pos[3 * v + 1] = u; pos[3 * v + 2] = -y; aB[v] = b; v++; };
+    const m = meshOf.get(b);
+    if (m) {
+      const v0 = v, h = Math.max(M.h0[b], M.h1[b], 0.5);
+      for (let i = 0; i < m.v.length; i += 3) put(m.v[i], m.v[i + 1], m.v[i + 2] / h);
+      for (let i = 0; i < m.t.length; i++) idx[ii++] = v0 + m.t[i];
+      continue;
+    }
     const r = M.rings[b]; const k = r.length / 2;
-    c1.setHex(periodCol(M.from[b])); c2.setHex(BASIS_COL(M.basis[M.basisIdx[b]]));
-    if (M.cls[b] === MOAT) { c1.setHex(0x6f9fc4); c2.setHex(0x6f9fc4); }
-    const v0 = v, i0 = ii;
-    const put = (x: number, y: number, u: number, nx: number, ny: number, nz: number) => {
-      pos[3 * v] = x; pos[3 * v + 1] = u; pos[3 * v + 2] = -y; nor[3 * v] = nx; nor[3 * v + 1] = ny; nor[3 * v + 2] = nz;
-      col[3 * v] = c1.r; col[3 * v + 1] = c1.g; col[3 * v + 2] = c1.b; col2[3 * v] = c2.r; col2[3 * v + 1] = c2.g; col2[3 * v + 2] = c2.b;
-      aT[4 * v] = M.from[b]; aT[4 * v + 1] = M.to[b]; aT[4 * v + 2] = M.tR[b]; aT[4 * v + 3] = M.cls[b];
-      aH[2 * v] = M.h0[b]; aH[2 * v + 1] = M.h1[b];
-      const g = M.gaps[b]; aG[4 * v] = g[0]; aG[4 * v + 1] = g[1]; aG[4 * v + 2] = g[2]; aG[4 * v + 3] = g[3];
-      aZ[v] = ZS[b];
-      v++;
-    };
-    // orientation: walls face outwards for counter-clockwise rings (in map coordinates)
-    let area = 0; for (let i = 0; i < k; i++) { const j = (i + 1) % k; area += r[2 * i] * r[2 * j + 1] - r[2 * j] * r[2 * i + 1]; }
-    const s = area >= 0 ? 1 : -1;
     for (let i = 0; i < k; i++) {
-      const j = (i + 1) % k;
-      const x1 = r[2 * i] / 10, y1 = r[2 * i + 1] / 10, x2 = r[2 * j] / 10, y2 = r[2 * j + 1] / 10;
-      const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1;
-      const nx = s * dy / L, nz = s * dx / L; // outward normal in scene coords (z = −y)
-      const w = v;
-      put(x1, y1, 0, nx, 0, nz); put(x2, y2, 0, nx, 0, nz); put(x2, y2, 1, nx, 0, nz); put(x1, y1, 1, nx, 0, nz);
-      if (s > 0) idx.set([w, w + 1, w + 2, w, w + 2, w + 3], ii); else idx.set([w, w + 2, w + 1, w, w + 3, w + 2], ii);
-      ii += 6;
+      const j = (i + 1) % k, w = v;
+      put(r[2 * i] / 10, r[2 * i + 1] / 10, 0); put(r[2 * j] / 10, r[2 * j + 1] / 10, 0); put(r[2 * j] / 10, r[2 * j + 1] / 10, 1); put(r[2 * i] / 10, r[2 * i + 1] / 10, 1);
+      idx.set([w, w + 1, w + 2, w, w + 2, w + 3], ii); ii += 6;
     }
     const rv = v;
-    for (let i = 0; i < k; i++) put(r[2 * i] / 10, r[2 * i + 1] / 10, 1, 0, 1, 0);
+    for (let i = 0; i < k; i++) put(r[2 * i] / 10, r[2 * i + 1] / 10, 1);
     const tr = tris[b];
-    for (let q = 0; q < tr.length; q += 3) {
-      if (s > 0) { idx[ii++] = rv + tr[q]; idx[ii++] = rv + tr[q + 1]; idx[ii++] = rv + tr[q + 2]; }
-      else { idx[ii++] = rv + tr[q]; idx[ii++] = rv + tr[q + 2]; idx[ii++] = rv + tr[q + 1]; }
-    }
-    void v0; faceB.fill(b, i0 / 3, ii / 3);
+    for (let q = 0; q < tr.length; q++) idx[ii++] = rv + tr[q];
   }
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
-  geo.setAttribute('color', new THREE.BufferAttribute(col, 3)); geo.setAttribute('color2', new THREE.BufferAttribute(col2, 3));
-  geo.setAttribute('aT', new THREE.BufferAttribute(aT, 4)); geo.setAttribute('aH', new THREE.BufferAttribute(aH, 2)); geo.setAttribute('aG', new THREE.BufferAttribute(aG, 4)); geo.setAttribute('aZ', new THREE.BufferAttribute(aZ, 1));
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('aB', new THREE.BufferAttribute(aB, 1));
   geo.setIndex(new THREE.BufferAttribute(idx, 1));
-  const uni = { uYear: { value: 1295 }, uMode: { value: 0 }, uRise: { value: 3 }, uSel: { value: -1 }, uSil: { value: 0 } };
-  const aB = new Float32Array(nv); for (let f = 0; f < faceB.length; f++) { aB[idx[3 * f]] = faceB[f]; aB[idx[3 * f + 1]] = faceB[f]; aB[idx[3 * f + 2]] = faceB[f]; }
-  geo.setAttribute('aB', new THREE.BufferAttribute(aB, 1));
-  const mat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  const uni = { uYear: { value: 1295 }, uMode: { value: 0 }, uRise: { value: 3 }, uSel: { value: -1 }, uSil: { value: 0 }, uBld: { value: btex } };
+  // shared GLSL: building record and animated height
+  const BLD_GLSL = `
+    uniform highp sampler2D uBld; uniform float uYear; uniform float uRise; attribute float aB;
+    vec4 bt(int k) { int b = int(aB + 0.5); return texelFetch(uBld, ivec2((b % ${TW}) * ${TEXELS} + k, b / ${TW}), 0); }
+    // returns the base height (y) of the vertex; vis = building standing in uYear; start = year of the last (re)building
+    float bldY(float u, out bool vis, out float start, out vec4 aT) {
+      aT = bt(0); vec4 hz = bt(1); vec4 aG = bt(2); float yr = uYear;
+      start = aT.x;
+      if (aG.y > 0.0 && yr >= aG.y) start = max(start, aG.y);   // rebuilt after the first destruction
+      if (aG.w > 0.0 && yr >= aG.w) start = max(start, aG.w);   // rebuilt after the second destruction
+      vis = yr >= aT.x && yr < aT.y && !(yr >= aG.x && yr < aG.y) && !(yr >= aG.z && yr < aG.w);
+      float h = (yr < aT.z ? hz.x : hz.y) * min(clamp((yr - start) / uRise, 0.0, 1.0), clamp((aT.y - yr) / 1.5, 0.0, 1.0));
+      if (yr >= aT.z) h *= clamp((yr - aT.z) / uRise, 0.35, 1.0);
+      return vis ? hz.z + u * max(h, 0.2) : hz.z - 3.0;
+    }`;
+  const mat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide, flatShading: true });
   mat.onBeforeCompile = sh => {
-    Object.assign(sh.uniforms, uni);
+    Object.assign(sh.uniforms, uni, vedUni);
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>
-        uniform float uYear; uniform float uMode; uniform float uRise;
-        attribute vec4 aT; attribute vec2 aH; attribute vec4 aG; attribute vec3 color2; attribute float aZ; attribute float aB;
-        uniform float uSel; uniform float uSil;
-        varying float vFresh; varying float vSel;`)
+        ${BLD_GLSL}
+        uniform float uMode; uniform float uSel; uniform float uSil;
+        varying float vFresh; varying float vSel; ${VED_V}`)
       .replace('#include <begin_vertex>', `
-        float yr = uYear;
-        float start = aT.x;
-        if (aG.y > 0.0 && yr >= aG.y) start = max(start, aG.y);   // rebuilt after the first destruction
-        if (aG.w > 0.0 && yr >= aG.w) start = max(start, aG.w);   // rebuilt after the second destruction
-        bool vis = yr >= aT.x && yr < aT.y && !(yr >= aG.x && yr < aG.y) && !(yr >= aG.z && yr < aG.w);
-        float rise = clamp((yr - start) / uRise, 0.0, 1.0);
-        float fall = clamp((aT.y - yr) / 1.5, 0.0, 1.0);
-        float h = (yr < aT.z ? aH.x : aH.y) * min(rise, fall);
-        if (yr >= aT.z) h *= clamp((yr - aT.z) / uRise, 0.35, 1.0);
+        bool vis; float start; vec4 aT;
         vec3 transformed = vec3(position);
-        transformed.y = vis ? aZ + position.y * max(h, 0.2) : aZ - 3.0;
+        transformed.y = bldY(position.y, vis, start, aT);
         vSel = abs(aB - uSel) < 0.5 ? 1.0 : 0.0;
-        vFresh = vis ? 1.0 - clamp((yr - max(start, aT.z < yr ? aT.z : start)) / 4.0, 0.0, 1.0) : 0.0;`)
-      .replace('#include <color_vertex>', `#include <color_vertex>
-        vColor.rgb = mix(color, color2, uMode);
+        vFresh = vis ? 1.0 - clamp((uYear - max(start, aT.z < uYear ? aT.z : start)) / 4.0, 0.0, 1.0) : 0.0;
+        vVed = uVedM * vec4(transformed, 1.0);`)
+      .replace('#include <color_vertex>', `vColor = vec3(1.0);
+        vColor.rgb = mix(bt(3).rgb, bt(4).rgb, uMode);
+        vColor.rgb = min(vColor.rgb * 1.12, vec3(1.0));   // a little brighter against the dimmed maps
         if (uSil > 0.5) vColor.rgb = vec3(0.25, 0.22, 0.2);`);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vFresh; varying float vSel;')
+      .replace('#include <common>', `#include <common>\nvarying float vFresh; varying float vSel; ${VED_F}`)
       .replace('#include <color_fragment>', `#include <color_fragment>
-        diffuseColor.rgb = mix(diffuseColor.rgb, vec3(1.0, 0.93, 0.55), 0.75 * vFresh);
+        diffuseColor.rgb = mix(diffuseColor.rgb, vec3(1.0, 0.93, 0.55), 0.75 * vFresh * (1.0 - uVedOn));
+        vec4 ved = vedColor(); diffuseColor.rgb = mix(diffuseColor.rgb, ved.rgb, ved.a);
         diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.9, 0.1, 0.5), vSel);`);
   };
   const mesh = new THREE.Mesh<THREE.BufferGeometry, THREE.Material>(geo, mat); mesh.frustumCulled = false; scene.add(mesh);
@@ -244,7 +323,7 @@ async function main() {
   const legend = document.getElementById('legend')!;
   const hex = (c: number) => '#' + c.toString(16).padStart(6, '0');
   const drawLegend = () => {
-    const items = mode.value === '0' ? PERIODS.map(([s, c, k]) => [c, `${t(k)} (${s}–)`] as [number, string]) : BASIS_KEYS.map(([c, k]) => [c, t(k)] as [number, string]);
+    const items = [...(mode.value === '0' ? PERIODS.map(([s, c, k]) => [c, `${t(k)} (${s}–)`] as [number, string]) : BASIS_KEYS.map(([c, k]) => [c, t(k)] as [number, string])), ...FORT_KEYS.map(([c, k]) => [c, t(k)] as [number, string])];
     legend.innerHTML = items.map(([c, l]) => `<span><i style="background:${hex(c)}"></i>${l}</span>`).join('') + `<span><i style="background:#fff08c"></i>${t('g3d.fresh')}</span>`;
   };
   mode.onchange = () => { uni.uMode.value = +mode.value; drawLegend(); }; drawLegend();
@@ -263,17 +342,49 @@ async function main() {
   drawChart();
 
   let year = 1295, playing = false;
+  // pace of the automatic play (years per second): slower in the fortification era and when the town grows fast
+  const PACE: [number, number, number][] = [[1295, 1600, 16], [1600, 1720, 8], [1720, 1780, 16], [1780, 1840, 8], [1840, 1960, 4.5], [1960, 2020, 5]];
+  const tOf = (y: number) => { let tt = 0; for (const [a, b, r] of PACE) { if (y <= a) break; tt += (Math.min(y, b) - a) / r; } return tt; };
+  const CAP_S = 4.0; // seconds a caption stays
+  let caps: { e: Model['events'][number]; a: number }[] = [];
+  const activeEvents = (y: number) => {
+    const ty = tOf(y);
+    return M.events.filter(e => e.year <= y + 1e-6 && ty - tOf(e.year) < CAP_S).reverse().slice(0, 3)
+      .map(e => { const d = ty - tOf(e.year); return { e, a: Math.min(1, d / 0.3, (CAP_S - d) / 0.6) }; });
+  };
   const setYear = (y: number) => {
     year = Math.max(Y0, Math.min(Y1, y)); uni.uYear.value = year; yr.value = String(year); yo.textContent = String(Math.floor(year));
-    const ev = [...M.events].reverse().find(e => e.year <= year);
-    if (ev && year - ev.year < 14) { caption.textContent = `${ev.year} — ${lang === 'cs' ? ev.cs : ev.en}`; caption.style.opacity = String(Math.min(1, (14 - (year - ev.year)) / 4)); }
-    else caption.style.opacity = '0';
-    const gr = mapg.checked ? [...M.grounds].reverse().find(g => g.year <= year + 0.01) ?? M.grounds[0] : M.grounds[0];
+    groundUni.uCutYear.value = year;
+    caps = activeEvents(year);
+    caption.innerHTML = caps.map(c => `<div style="opacity:${c.a.toFixed(2)}">${c.e.year} — ${lang === 'cs' ? c.e.cs : c.e.en}</div>`).join('');
+    caption.style.opacity = caps.some(c => c.a > 0.05) ? '1' : '0';
+    const byYear = [...M.grounds].reverse().find(g => g.year <= year + 0.01) ?? M.grounds[0];
+    const gs = PUBLIC ? (document.getElementById('gsel') as HTMLSelectElement | null)?.value ?? 'auto' : '';
+    const gr = PUBLIC ? (gs === 'auto' ? byYear : gs === 'off' ? M.grounds[0] : M.grounds[+gs] ?? byYear) : (mapg.checked ? byYear : M.grounds[0]);
+    if (PUBLIC) {
+      const gi = document.getElementById('ginfo'); if (gi) gi.textContent = `${t('g3d.mapNow')}: ${GROUND_NAME(gr, lang)}${gr.year > Y0 ? '' : ''}`;
+      document.querySelectorAll('#evlist li').forEach(li => li.classList.toggle('on', +(li as HTMLElement).dataset.y! <= year && year - +(li as HTMLElement).dataset.y! < 25));
+    }
     const tx = groundTex(gr.file); if (groundMat.map !== tx) { groundMat.map = tx; groundMat.needsUpdate = true; }
     if (M.water?.length) { const wf = ([...M.water].reverse().find(w => w.year <= year + 0.01) ?? M.water[0]).file; groundUni.uWater.value = waterTex(wf); }
     stat.textContent = t('g3d.stat', { n: Math.round(atStep(counts, year)), g: gr.year > Y0 ? gr.year : '–' });
   };
   yr.oninput = () => { if (!exporting) setYear(+yr.value); };
+  if (PUBLIC) {
+    const gsel = document.getElementById('gsel') as HTMLSelectElement;
+    gsel.add(new Option(t('g3d.mapAuto'), 'auto')); gsel.add(new Option(t('g3d.mapOff'), 'off'));
+    M.grounds.forEach((g, i) => { if (i > 0) gsel.add(new Option(`${g.year} – ${GROUND_NAME(g, lang)}`, String(i))); });
+    gsel.onchange = () => setYear(year);
+    const gf = document.getElementById('gfade') as HTMLInputElement; gf.oninput = () => { groundUni.uFade.value = +gf.value; };
+    const ol = document.getElementById('evlist')!;
+    for (const e of M.events) {
+      const li = document.createElement('li'); li.dataset.y = String(e.year);
+      li.innerHTML = `<b>${e.year}</b> ${lang === 'cs' ? e.cs : e.en}`;
+      li.onclick = () => { stopPlay(); auto.checked = true; setYear(e.year + 0.5); };
+      ol.appendChild(li);
+    }
+    mapg.checked = true; (mapg.parentElement as HTMLElement).style.display = 'none';
+  }
   mapg.onchange = () => setYear(year);
   const startPlay = () => { if (year >= Y1 - 0.01) setYear(Y0); playing = true; playBtn.textContent = '❚❚'; };
   const stopPlay = () => { playing = false; playBtn.textContent = '▶'; };
@@ -281,7 +392,7 @@ async function main() {
   ctl.addEventListener('start', () => { auto.checked = false; });
   const rate = (y: number) => {
     if (speed.value !== 'a') return +speed.value;
-    return y < 1780 ? 28 : y < 1840 ? 12 : y < 1960 ? 4.5 : 6; // years per second: slower when the town grows fast
+    return (PACE.find(([a, b]) => y >= a && y < b) ?? PACE[PACE.length - 1])[2];
   };
 
   // ---------- one animation step (shared by the live loop and the frame export) ----------
@@ -329,15 +440,16 @@ async function main() {
       g.fillText(`${t('g3d.nBuildings')}: ${Math.round(atStep(counts, year))}`, 140 * k, H - 74 * k);
       g.fillText(`${t('g3d.mapShort')}: ${gy > Y0 ? gy : '–'}`, 140 * k, H - 50 * k); }
     // event caption
-    const op = +caption.style.opacity || 0;
-    if (op > 0.02 && caption.textContent) {
-      g.font = `600 ${18 * k}px "Segoe UI", system-ui`; const tw = Math.min(g.measureText(caption.textContent).width, W * 0.8);
-      g.globalAlpha = op; box((W - tw) / 2 - 14 * k, 18 * k, tw + 28 * k, 38 * k, 0.8);
-      g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(caption.textContent, W / 2, 28 * k, W * 0.8); g.textAlign = 'left'; g.globalAlpha = 1;
-    }
+    caps.forEach((c, i) => {
+      const txt = `${c.e.year} — ${lang === 'cs' ? c.e.cs : c.e.en}`;
+      g.font = `600 ${(i ? 16 : 19) * k}px "Segoe UI", system-ui`; const tw = Math.min(g.measureText(txt).width, W * 0.8);
+      const y0 = (18 + i * 44) * k;
+      g.globalAlpha = Math.max(0, c.a) * (i ? 0.85 : 1); box((W - tw) / 2 - 14 * k, y0, tw + 28 * k, 38 * k, 0.8);
+      g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(txt, W / 2, y0 + (i ? 11 : 9) * k, W * 0.8); g.textAlign = 'left'; g.globalAlpha = 1;
+    });
     // title, legend, credits
     g.font = `700 ${15 * k}px system-ui`; g.fillStyle = '#1f2427'; g.fillText(t('g3d.title'), 16 * k, 14 * k);
-    const items = mode.value === '0' ? PERIODS.map(([s, c, kk]) => [c, `${t(kk)} (${s}–)`] as [number, string]) : BASIS_KEYS.map(([c, kk]) => [c, t(kk)] as [number, string]);
+    const items = [...(mode.value === '0' ? PERIODS.map(([s, c, kk]) => [c, `${t(kk)} (${s}–)`] as [number, string]) : BASIS_KEYS.map(([c, kk]) => [c, t(kk)] as [number, string])), ...FORT_KEYS.map(([c, kk]) => [c, t(kk)] as [number, string])];
     g.font = `${12 * k}px system-ui`;
     items.forEach(([c, l], i) => { g.fillStyle = hex(c); g.fillRect(16 * k, (40 + 17 * i) * k, 12 * k, 12 * k); g.fillStyle = '#1f2427'; g.fillText(l, 34 * k, (39 + 17 * i) * k); });
     g.font = `${11 * k}px system-ui`; g.fillStyle = 'rgba(31,36,39,.8)'; g.textAlign = 'right';
@@ -345,9 +457,15 @@ async function main() {
     return comp;
   };
   const EXP_W = 1600, EXP_H = 900;
+  // all ground and water textures loaded before frames are rendered (otherwise the first frame after a map switch is black)
+  const preload = () => Promise.all([
+    ...M.grounds.map(gr => new Promise<void>(res => { const x = groundTex(gr.file); if (x.image) res(); else { const iv = setInterval(() => { if (x.image) { clearInterval(iv); res(); } }, 50); } })),
+    ...(M.water ?? []).map(w => new Promise<void>(res => { const x = waterTex(w.file); if (x.image) res(); else { const iv = setInterval(() => { if (x.image) { clearInterval(iv); res(); } }, 50); } })),
+  ]).then(() => new Promise(r => setTimeout(r, 300)));
   const exportVideo = async (fps = 30) => {
     if (exporting) { exporting = false; return; }
     exporting = true; renderer.setAnimationLoop(null);
+    await preload();
     // fixed output size, independent of the window; no user input while exporting
     const prevRatio = renderer.getPixelRatio();
     renderer.setPixelRatio(1); renderer.setSize(EXP_W, EXP_H, false); cam.aspect = EXP_W / EXP_H; cam.updateProjectionMatrix();
@@ -372,18 +490,29 @@ async function main() {
     startLoop();
   };
   recBtn.onclick = () => { void exportVideo(); };
+  // one still at the export size (for documentation): saved as data/historic/growth/video/<run>/f_<n>.jpg
+  const snap = async (run: string, n: number) => {
+    await preload(); setYear(year);
+    renderer.setAnimationLoop(null); const prevRatio = renderer.getPixelRatio(); exporting = true;
+    renderer.setPixelRatio(1); renderer.setSize(EXP_W, EXP_H, false); cam.aspect = EXP_W / EXP_H; cam.updateProjectionMatrix();
+    ctl.update(); renderer.render(scene, cam);
+    const blob = await new Promise<Blob | null>(res => composite().toBlob(res, 'image/jpeg', 0.92));
+    const ok = !!blob && (await fetch(`/api/frame/${run}/${n}`, { method: 'PUT', body: blob }).catch(() => null))?.ok;
+    exporting = false; renderer.setPixelRatio(prevRatio); resize(); startLoop();
+    return ok;
+  };
 
   // ---------- views (vedute, bird's-eye plates): the model seen from the view's direction ----------
   // Select a view → camera at its viewpoint and year, the drawing in the left panel. Click a building in
   // the 3D view (GPU picking) and then the same object in the drawing → annotation linking the drawing
   // to the building id (ruian:…, h1840:…, g1618-…, fort:…), saved to the project.
-  const vsel = document.getElementById('vsel') as HTMLSelectElement, vimg = document.getElementById('vimg') as HTMLImageElement;
+  const vsel = (document.getElementById('vsel') ?? document.createElement('select')) as HTMLSelectElement, vimg = document.getElementById('vimg') as HTMLImageElement;
   const vcan = document.getElementById('vcan') as HTMLCanvasElement, vop = document.getElementById('vop') as HTMLInputElement;
   const vsil = document.getElementById('vsil') as HTMLInputElement, vsave = document.getElementById('vsave') as HTMLButtonElement;
   const vtitle = document.getElementById('vtitle')!, vhelp = document.getElementById('vhelp')!;
   type Proj = { sources: ProjSource[]; annotations: Ann[]; entities?: { id: string; name: string }[] } & Record<string, unknown>;
   let project: Proj | null = null;
-  try { project = await (await fetch('/api/project/plzen')).json(); } catch { project = null; }
+  if (!PUBLIC) { try { project = await (await fetch('/api/project/plzen')).json(); } catch { project = null; } }
   const entName = new Map((project?.entities ?? []).map(e => [e.id, e.name]));
   const views = (project?.sources ?? []).filter(s => VIEW_DEFAULTS[s.id] || s.kind === 'panorama' || s.kind === 'birdseye');
   for (const s of views) vsel.add(new Option(`${s.title.slice(0, 48)}`, s.id));
@@ -412,6 +541,13 @@ async function main() {
     if (!vs || !project || !vimg.naturalWidth) return;
     const k = w / vimg.naturalWidth;
     g.font = '600 11px system-ui';
+    g.lineWidth = 2;
+    for (const o of fitRes) {
+      const e = Math.hypot(o.prj[0] - o.obs[0], o.prj[1] - o.obs[1]);
+      g.strokeStyle = e < 15 ? '#2f9e44' : e < 40 ? '#f08c00' : '#e03131';
+      g.beginPath(); g.moveTo(o.obs[0] * k, o.obs[1] * k); g.lineTo(o.prj[0] * k, o.prj[1] * k); g.stroke();
+      g.beginPath(); g.arc(o.prj[0] * k, o.prj[1] * k, 3, 0, 7); g.stroke();
+    }
     for (const a of project.annotations.filter(a => a.sourceId === vs!.id)) {
       const b = a.entityId ? IDS.indexOf(a.entityId) : -1;
       g.beginPath(); g.arc(a.img[0] * k, a.img[1] * k, b === selB && b >= 0 ? 6 : 4, 0, 7);
@@ -427,6 +563,7 @@ async function main() {
     document.body.classList.toggle('vmode', !!vs); resize();
     if (!vs) { uni.uSel.value = -1; return; }
     vimg.src = vs.file; vtitle.textContent = vs.title;
+    fitRes = []; vcam.userData.ok = false; vproj.checked = false; vedUni.uVedOn.value = 0;
     const v = viewOf(vs); auto.checked = false; stopPlay();
     cam.position.fromArray(v.pos); ctl.target.fromArray(v.target); cam.fov = v.fov; cam.updateProjectionMatrix(); setYear(v.year);
     vhelp.textContent = t('g3d.vhelp');
@@ -435,21 +572,19 @@ async function main() {
   vsil.onchange = () => { uni.uSil.value = vsil.checked ? 1 : 0; ground.visible = !vsil.checked; scene.background = new THREE.Color(vsil.checked ? 0xffffff : 0xdfe6ea); };
   vsave.onclick = async () => {
     if (!vs) return;
-    vs.view = { pos: cam.position.toArray(), target: ctl.target.toArray(), fov: cam.fov, year: Math.round(year) };
+    vs.view = vcam.userData.ok
+      ? { ...(vs.view ?? {}), pos: vcam.position.toArray(), target: ctl.target.toArray(), fov: vcam.fov, year: Math.round(year), quat: vcam.quaternion.toArray(), aspect: vcam.aspect }
+      : { pos: cam.position.toArray(), target: ctl.target.toArray(), fov: cam.fov, year: Math.round(year) };
     vhelp.textContent = (await saveProject()) ? t('g3d.viewSaved') : t('g3d.saveFail');
   };
   // GPU picking: the buildings drawn with their index as colour into a 1 × 1 target at the mouse position
   const pickMat = new THREE.ShaderMaterial({
     uniforms: uni,
-    vertexShader: `uniform float uYear; uniform float uRise;
-      attribute vec4 aT; attribute vec2 aH; attribute vec4 aG; attribute float aZ; attribute float aB; varying float vB;
+    vertexShader: `${BLD_GLSL}
+      varying float vB;
       void main() {
-        float yr = uYear; float start = aT.x;
-        if (aG.y > 0.0 && yr >= aG.y) start = max(start, aG.y);
-        if (aG.w > 0.0 && yr >= aG.w) start = max(start, aG.w);
-        bool vis = yr >= aT.x && yr < aT.y && !(yr >= aG.x && yr < aG.y) && !(yr >= aG.z && yr < aG.w);
-        float h = (yr < aT.z ? aH.x : aH.y) * min(clamp((yr - start) / uRise, 0.0, 1.0), clamp((aT.y - yr) / 1.5, 0.0, 1.0));
-        vec3 p = position; p.y = vis ? aZ + position.y * max(h, 0.2) : aZ - 3.0; vB = vis ? aB : -1.0;
+        bool vis; float start; vec4 aT;
+        vec3 p = position; p.y = bldY(position.y, vis, start, aT); vB = vis ? aB : -1.0;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
       }`,
     fragmentShader: `varying float vB;
@@ -457,15 +592,32 @@ async function main() {
     side: THREE.DoubleSide,
   });
   const pickRT = new THREE.WebGLRenderTarget(1, 1), black = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  const posMat = new THREE.ShaderMaterial({
+    uniforms: uni,
+    vertexShader: `${BLD_GLSL}
+      varying vec3 vP; varying float vV;
+      void main() { bool vis; float start; vec4 aT; vec3 p = position; p.y = bldY(position.y, vis, start, aT); vP = p; vV = vis ? 1.0 : 0.0;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); }`,
+    fragmentShader: 'varying vec3 vP; varying float vV; void main() { if (vV < 0.5) discard; gl_FragColor = vec4(vP, 1.0); }',
+    side: THREE.DoubleSide,
+  });
+  const posRT = new THREE.WebGLRenderTarget(1, 1, { type: THREE.FloatType });
+  let lastXYZ: number[] | null = null;
   const pick = (ev: MouseEvent) => {
     const rect = renderer.domElement.getBoundingClientRect(), dpr = renderer.getPixelRatio();
     const W = rect.width * dpr, H = rect.height * dpr;
     cam.setViewOffset(W, H, (ev.clientX - rect.left) * dpr, (ev.clientY - rect.top) * dpr, 1, 1);
     const gm = ground.material, mm = mesh.material;
+    const bg = scene.background, cc = renderer.getClearColor(new THREE.Color()), ca = renderer.getClearAlpha();
+    scene.background = null; renderer.setClearColor(0x000000, 0);
     ground.material = black; mesh.material = pickMat;
-    renderer.setRenderTarget(pickRT); renderer.render(scene, cam); renderer.setRenderTarget(null);
+    renderer.setRenderTarget(pickRT); renderer.render(scene, cam);
+    ground.visible = false; mesh.material = posMat; renderer.setRenderTarget(posRT); renderer.render(scene, cam);
+    renderer.setRenderTarget(null); ground.visible = true; scene.background = bg; renderer.setClearColor(cc, ca);
     ground.material = gm; mesh.material = mm; cam.clearViewOffset();
     const px = new Uint8Array(4); renderer.readRenderTargetPixels(pickRT, 0, 0, 1, 1, px);
+    const pf = new Float32Array(4); renderer.readRenderTargetPixels(posRT, 0, 0, 1, 1, pf);
+    lastXYZ = pf[3] > 0.5 ? [+pf[0].toFixed(2), +pf[1].toFixed(2), +pf[2].toFixed(2)] : null;
     return px[0] + px[1] * 256 + px[2] * 65536 - 1;
   };
   let down: [number, number] | null = null;
@@ -484,12 +636,126 @@ async function main() {
     if (e.shiftKey && near) { project.annotations = project.annotations.filter(a => a !== near); await saveProject(); drawAnns(); return; }
     if (near && !e.altKey) { const b = near.entityId ? IDS.indexOf(near.entityId) : -1; selB = b; uni.uSel.value = b; vhelp.textContent = describe(b) || near.entityId || ''; drawAnns(); return; }
     if (selB < 0) { vhelp.textContent = t('g3d.pickFirst'); return; }
-    project.annotations.push({ id: 'g3d-' + Date.now().toString(36), sourceId: vs.id, img: [Math.round(x), Math.round(y)], entityId: IDS[selB] || null,
+    project.annotations.push({ id: 'g3d-' + Date.now().toString(36), sourceId: vs.id, img: [Math.round(x), Math.round(y)], ...(lastXYZ ? { xyz: lastXYZ } : {}), entityId: IDS[selB] || null,
       confidence: 2, useAsControl: false, kind: CLS_KIND[M.classes[M.cls[selB]]] ?? 'other', note: `growth model: ${describe(selB)}` });
     vhelp.textContent = (await saveProject()) ? `${t('g3d.linked')}: ${describe(selB)}` : t('g3d.saveFail');
     drawAnns();
   });
   addEventListener('resize', () => drawAnns());
+
+  // ---------- veduta → 3D: camera fit from the links and projective texturing ----------
+  // 3D point of a link: the surface point clicked in 3D (xyz), or for older links the top of the building
+  // (towers, churches, gates) or 70 % of its height (houses), with a lower weight.
+  const vcam = new THREE.PerspectiveCamera(40, 1, 5, 40000);
+  const vfit = document.getElementById('vfit') as HTMLButtonElement, vproj = document.getElementById('vproj') as HTMLInputElement;
+  let fitRes: { obs: number[]; prj: number[] }[] = [];
+  const linkPoint = (a: Ann): [THREE.Vector3, number] | null => {
+    if (a.xyz) return [new THREE.Vector3(...a.xyz), 1];
+    const b = a.entityId ? IDS.indexOf(a.entityId) : -1;
+    if (b < 0) return null;
+    const top = /^g1618-|^fort:/.test(IDS[b]) || M.classes[M.cls[b]] === 'landmark';
+    return [new THREE.Vector3(cx[b], ZS[b] + M.h1[b] * (top ? 1 : 0.7), -cy[b]), top ? 0.7 : 0.4];
+  };
+  const projectPt = (c: THREE.PerspectiveCamera, X: THREE.Vector3, W: number, H: number) => {
+    const p = X.clone().applyMatrix4(c.matrixWorldInverse);
+    if (p.z >= -1) return null;
+    const f = H / 2 / Math.tan(c.fov * Math.PI / 360);
+    return [W / 2 + f * p.x / -p.z, H / 2 - f * p.y / -p.z];
+  };
+  const setVcam = (pos: number[], quat: number[], fov: number) => {
+    vcam.position.fromArray(pos); vcam.quaternion.fromArray(quat); vcam.fov = fov;
+    vcam.aspect = vimg.naturalWidth / Math.max(1, vimg.naturalHeight); vcam.updateProjectionMatrix(); vcam.updateMatrixWorld(true);
+  };
+  const solve7 = (A: number[][], b: number[]) => { // Gaussian elimination with partial pivoting
+    const n = b.length, m = A.map((r, i) => [...r, b[i]]);
+    for (let i = 0; i < n; i++) {
+      let p = i; for (let k = i + 1; k < n; k++) if (Math.abs(m[k][i]) > Math.abs(m[p][i])) p = k;
+      [m[i], m[p]] = [m[p], m[i]]; if (Math.abs(m[i][i]) < 1e-12) return null;
+      for (let k = i + 1; k < n; k++) { const f = m[k][i] / m[i][i]; for (let j = i; j <= n; j++) m[k][j] -= f * m[i][j]; }
+    }
+    const x = new Array(n).fill(0);
+    for (let i = n - 1; i >= 0; i--) { let s = m[i][n]; for (let j = i + 1; j < n; j++) s -= m[i][j] * x[j]; x[i] = s / m[i][i]; }
+    return x;
+  };
+  const fitCamera = () => {
+    if (!vs || !project || !vimg.naturalWidth) return null;
+    const W = vimg.naturalWidth, H = vimg.naturalHeight;
+    const pts = project.annotations.filter(a => a.sourceId === vs!.id).map(a => ({ a, lp: linkPoint(a) })).filter(o => o.lp) as { a: Ann; lp: [THREE.Vector3, number] }[];
+    if (pts.length < 5) return null;
+    // start: the current 3D camera (the user turns the model roughly like the drawing first)
+    const c0 = cam.position.clone(), q0 = cam.quaternion.clone();
+    let p = [0, 0, 0, 0, 0, 0, Math.log(H / 2 / Math.tan(cam.fov * Math.PI / 360))];
+    const tc = new THREE.PerspectiveCamera();
+    const apply = (q: number[]) => {
+      const r = new THREE.Vector3(q[3], q[4], q[5]), ang = r.length();
+      const dq = ang > 1e-12 ? new THREE.Quaternion().setFromAxisAngle(r.clone().divideScalar(ang), ang) : new THREE.Quaternion();
+      tc.position.set(c0.x + q[0], c0.y + q[1], c0.z + q[2]); tc.quaternion.copy(q0).multiply(dq);
+      tc.fov = 2 * Math.atan(H / 2 / Math.exp(q[6])) * 180 / Math.PI; tc.updateMatrixWorld(true);
+    };
+    const resid = (q: number[]) => {
+      apply(q); const r: number[] = [];
+      for (const { a, lp } of pts) {
+        const pr = projectPt(tc, lp[0], W, H);
+        const e = pr ? [pr[0] - a.img[0], pr[1] - a.img[1]] : [W, H];
+        const n = Math.hypot(e[0], e[1]), hub = n > 40 ? Math.sqrt(40 / n) : 1;   // robust (Huber-like) weight
+        r.push(e[0] * lp[1] * hub, e[1] * lp[1] * hub);
+      }
+      return r;
+    };
+    const sq = (r: number[]) => r.reduce((s, v) => s + v * v, 0);
+    let lam = 1e-2, r = resid(p), cost = sq(r);
+    const eps = [0.5, 0.5, 0.5, 1e-4, 1e-4, 1e-4, 1e-4];
+    for (let it = 0; it < 200; it++) {
+      const J = eps.map((e, k) => { const q = [...p]; q[k] += e; return resid(q).map((v, i) => (v - r[i]) / e); });
+      const A = eps.map((_, i) => eps.map((__, j) => J[i].reduce((s, v, n) => s + v * J[j][n], 0)));
+      const g = eps.map((_, i) => -J[i].reduce((s, v, n) => s + v * r[n], 0));
+      let improved = false;
+      for (let tries = 0; tries < 8 && !improved; tries++) {
+        const Ad = A.map((row, i) => row.map((v, j) => v + (i === j ? lam * (A[i][i] + 1e-9) : 0)));
+        const d = solve7(Ad, g); if (!d) { lam *= 10; continue; }
+        const q = p.map((v, i) => v + d[i]), rq = resid(q), cq = sq(rq);
+        if (cq < cost) { p = q; r = rq; improved = cost - cq < 1e-6 * cost ? false : true; cost = cq; lam = Math.max(1e-7, lam / 3); if (!improved) break; }
+        else lam *= 10;
+      }
+      if (!improved) break;
+    }
+    apply(p);
+    fitRes = pts.map(({ a, lp }) => ({ obs: a.img, prj: projectPt(tc, lp[0], W, H) ?? a.img }));
+    const rms = Math.sqrt(fitRes.reduce((s, o) => s + (o.prj[0] - o.obs[0]) ** 2 + (o.prj[1] - o.obs[1]) ** 2, 0) / fitRes.length);
+    setVcam(tc.position.toArray(), tc.quaternion.toArray(), tc.fov);
+    return { rms, n: pts.length };
+  };
+  // depth of the scene as seen from the veduta camera (occlusion test of the projection)
+  const vedRT = new THREE.WebGLRenderTarget(2048, 2048);
+  vedRT.depthTexture = new THREE.DepthTexture(2048, 2048);
+  const updateVed = () => {
+    if (!vedUni.uVedOn.value) return;
+    vedUni.uVedOn.value = 0;
+    renderer.setRenderTarget(vedRT); renderer.render(scene, vcam); renderer.setRenderTarget(null);
+    vedUni.uVedOn.value = 1;
+    vedUni.uVedM.value.multiplyMatrices(vcam.projectionMatrix, vcam.matrixWorldInverse);
+    vedUni.uVedDepth.value = vedRT.depthTexture;
+  };
+  const vedTex = new Map<string, THREE.Texture>();
+  vproj.onchange = () => {
+    if (!vs) { vproj.checked = false; return; }
+    if (vproj.checked && !vcam.userData.ok) { const v = vs.view; if (v?.quat) { setVcam(v.pos, v.quat, v.fov); vcam.userData.ok = true; } }
+    if (vproj.checked && !vcam.userData.ok) { const f = fitCamera(); if (f) vcam.userData.ok = true; }
+    if (vproj.checked && !vcam.userData.ok) { vproj.checked = false; vhelp.textContent = t('g3d.fitNeed'); return; }
+    let tx = vedTex.get(vs.id); if (!tx) { tx = loader.load(vs.file); tx.colorSpace = THREE.SRGBColorSpace; vedTex.set(vs.id, tx); }
+    vedUni.uVedTex.value = tx; vedUni.uVedOn.value = vproj.checked ? 1 : 0; updateVed();
+    if (vproj.checked) vhelp.textContent = t('g3d.vhelp2');
+  };
+  vfit.onclick = () => {
+    const f = fitCamera();
+    if (!f) { vhelp.textContent = t('g3d.fitNeed'); return; }
+    vcam.userData.ok = true;
+    cam.position.copy(vcam.position); cam.quaternion.copy(vcam.quaternion); cam.fov = vcam.fov; cam.updateProjectionMatrix();
+    ctl.target.copy(new THREE.Vector3(0, 0, -300).applyQuaternion(vcam.quaternion).add(vcam.position));
+    vhelp.textContent = t('g3d.fitDone', { n: f.n, rms: f.rms.toFixed(1) });
+    if (vs) vs.view = { pos: vcam.position.toArray(), target: ctl.target.toArray(), fov: vcam.fov, year: Math.round(year), quat: vcam.quaternion.toArray(), aspect: vcam.aspect, fit: { rms: +f.rms.toFixed(1), n: f.n } };
+    drawAnns(); updateVed();
+  };
   // labels of landmarks (churches, gates, towers, monasteries) in the view mode
   const lmarks: { b: number; el: HTMLDivElement }[] = [];
   const seen = new Set<string>();
@@ -517,6 +783,7 @@ async function main() {
     renderer.setAnimationLoop(now => {
       const dt = Math.min(0.1, (now - last) / 1000); last = now;
       step(dt);
+      if (vedUni.uVedOn.value) updateVed();
       const hr = host.getBoundingClientRect();
       for (const p of labelPos()) {
         p.l.el.style.display = p.show ? 'block' : 'none';
@@ -526,7 +793,7 @@ async function main() {
     });
   };
   startLoop();
-  Object.assign(window as unknown as Record<string, unknown>, { __g3d: { setYear, uni, cam, ctl, M, exportVideo, pick } });
+  Object.assign(window as unknown as Record<string, unknown>, { __g3d: { setYear, uni, cam, ctl, M, exportVideo, pick, snap, auto, stopPlay, fitCamera, vcam, vedUni, IDS } });
 }
 
 main();

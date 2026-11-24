@@ -1,0 +1,474 @@
+{
+ "_comment": "Traces on the fortification plans of 1658 and 1703 (HAM ČR 21 – Plzeň, maps 5 and 6; ÖStA-KA GPA Inland C IV alpha Pilsen 1 and 2). Coordinates are half-scale pixels of the 300-dpi atlas page: page px = origin + 2 * (u, v). Traced by eye; registered by fort_plans.py.",
+ "plans": {
+  "1703": {
+   "title": "J. Ch. Zizner, Grund-Ris … 1703 (HAM map 6)",
+   "page": "data/reference/hiu-atlas/pages/p044_300.png",
+   "origin": [
+    600,
+    850
+   ],
+   "ring": [
+    [
+     250,
+     292
+    ],
+    [
+     320,
+     268
+    ],
+    [
+     420,
+     255
+    ],
+    [
+     600,
+     232
+    ],
+    [
+     760,
+     212
+    ],
+    [
+     860,
+     195
+    ],
+    [
+     905,
+     255
+    ],
+    [
+     950,
+     325
+    ],
+    [
+     972,
+     420
+    ],
+    [
+     978,
+     550
+    ],
+    [
+     975,
+     700
+    ],
+    [
+     978,
+     850
+    ],
+    [
+     975,
+     955
+    ],
+    [
+     870,
+     955
+    ],
+    [
+     760,
+     945
+    ],
+    [
+     700,
+     928
+    ],
+    [
+     600,
+     880
+    ],
+    [
+     500,
+     858
+    ],
+    [
+     420,
+     858
+    ],
+    [
+     330,
+     878
+    ],
+    [
+     262,
+     898
+    ],
+    [
+     228,
+     820
+    ],
+    [
+     212,
+     650
+    ],
+    [
+     205,
+     500
+    ],
+    [
+     210,
+     390
+    ]
+   ],
+   "check": {
+    "g1618-bartholomew": [
+     590,
+     600
+    ],
+    "g1618-gate_prague": [
+     700,
+     945
+    ],
+    "g1618-gate_north": [
+     975,
+     710
+    ]
+   },
+   "works": [
+    {
+     "id": "z1703_s_bastion",
+     "name": "South front: bastion (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       105,
+       450
+      ],
+      [
+       40,
+       565
+      ],
+      [
+       115,
+       650
+      ],
+      [
+       185,
+       650
+      ],
+      [
+       185,
+       560
+      ],
+      [
+       165,
+       470
+      ]
+     ]
+    },
+    {
+     "id": "z1703_s_redan",
+     "name": "South front: redan / ravelin (1703 plan)",
+     "kind": "ravelin",
+     "poly": [
+      [
+       115,
+       655
+      ],
+      [
+       185,
+       655
+      ],
+      [
+       200,
+       790
+      ],
+      [
+       130,
+       800
+      ]
+     ]
+    },
+    {
+     "id": "z1703_s_bastion2",
+     "name": "South front: bastion by the Mže road (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       128,
+       800
+      ],
+      [
+       212,
+       792
+      ],
+      [
+       248,
+       925
+      ],
+      [
+       135,
+       945
+      ]
+     ]
+    },
+    {
+     "id": "z1703_sw_lunette",
+     "name": "South-west outer lunette (1703 plan)",
+     "kind": "lunette",
+     "poly": [
+      [
+       55,
+       158
+      ],
+      [
+       178,
+       150
+      ],
+      [
+       240,
+       255
+      ],
+      [
+       238,
+       330
+      ],
+      [
+       105,
+       340
+      ]
+     ]
+    },
+    {
+     "id": "z1703_w_block",
+     "name": "West outer work by the Skvrňany road (1703 plan)",
+     "kind": "lunette",
+     "poly": [
+      [
+       200,
+       168
+      ],
+      [
+       300,
+       162
+      ],
+      [
+       332,
+       298
+      ],
+      [
+       255,
+       300
+      ]
+     ]
+    },
+    {
+     "id": "z1703_w_redoubt",
+     "name": "West bastion, Turkish redoubt (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       345,
+       120
+      ],
+      [
+       462,
+       45
+      ],
+      [
+       600,
+       105
+      ],
+      [
+       605,
+       178
+      ],
+      [
+       470,
+       205
+      ],
+      [
+       345,
+       240
+      ]
+     ]
+    },
+    {
+     "id": "z1703_nw_bastion",
+     "name": "North-west corner bastion (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       805,
+       178
+      ],
+      [
+       810,
+       100
+      ],
+      [
+       1000,
+       100
+      ],
+      [
+       1050,
+       150
+      ],
+      [
+       1040,
+       182
+      ]
+     ]
+    },
+    {
+     "id": "z1703_sw_bastion",
+     "name": "South-west corner bastion with casemates (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       150,
+       262
+      ],
+      [
+       238,
+       262
+      ],
+      [
+       258,
+       300
+      ],
+      [
+       208,
+       350
+      ],
+      [
+       186,
+       375
+      ],
+      [
+       150,
+       348
+      ]
+     ]
+    },
+    {
+     "id": "z1703_ne_work",
+     "name": "North-east corner work by the confluence (1703 plan)",
+     "kind": "bastion",
+     "poly": [
+      [
+       940,
+       940
+      ],
+      [
+       1000,
+       935
+      ],
+      [
+       1010,
+       1000
+      ],
+      [
+       945,
+       1005
+      ]
+     ]
+    }
+   ]
+  },
+  "1658": {
+   "title": "Delineation der Stadt Pilsen …, 23 Feb 1658 (HAM map 5)",
+   "page": "data/reference/hiu-atlas/pages/p043_300.png",
+   "origin": [
+    530,
+    1060
+   ],
+   "ring": [
+    [
+     125,
+     230
+    ],
+    [
+     150,
+     175
+    ],
+    [
+     200,
+     140
+    ],
+    [
+     280,
+     125
+    ],
+    [
+     340,
+     130
+    ],
+    [
+     600,
+     148
+    ],
+    [
+     880,
+     172
+    ],
+    [
+     905,
+     215
+    ],
+    [
+     950,
+     320
+    ],
+    [
+     945,
+     420
+    ],
+    [
+     915,
+     520
+    ],
+    [
+     880,
+     640
+    ],
+    [
+     860,
+     720
+    ],
+    [
+     840,
+     800
+    ],
+    [
+     720,
+     778
+    ],
+    [
+     600,
+     765
+    ],
+    [
+     515,
+     720
+    ],
+    [
+     430,
+     668
+    ],
+    [
+     285,
+     660
+    ],
+    [
+     230,
+     680
+    ],
+    [
+     150,
+     670
+    ],
+    [
+     128,
+     640
+    ],
+    [
+     125,
+     450
+    ]
+   ],
+   "check": {},
+   "works": []
+  }
+ }
+}

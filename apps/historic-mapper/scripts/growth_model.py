@@ -80,29 +80,46 @@ CENSUS = {
 }
 PART_GROUP = {code: g for g, (codes, _) in CENSUS.items() for code in codes}
 
-EVENTS = [
+EVENTS = [  # captions of the video; sources in docs/research/plzen-growth-model.md §1 and the guide page
     (1295, 'Založení Nové Plzně (Václav II.), pravidelná osnova s náměstím', 'Founding of New Plzeň (Wenceslas II), regular plan with the square'),
-    (1320, 'Hradby a stavba kostela sv. Bartoloměje (1. pol. 14. st.)', 'Town wall and St Bartholomew church under construction (early 14th c.)'),
-    (1420, 'Parkán (vnější hradba) a příkop před r. 1420', 'Zwinger (outer wall) and moat before 1420'),
-    (1433, 'Husitské obléhání 1433–34, předměstí zničena', 'Hussite siege 1433–34, suburbs destroyed'),
+    (1320, 'Stavba hradeb a kostela sv. Bartoloměje (1. pol. 14. st.)', 'Town wall and St Bartholomew church built (early 14th c.)'),
+    (1420, 'Parkán (vnější hradba) a příkop', 'Zwinger (outer wall) and moat'),
+    (1433, 'Husitské obléhání 1433–34 (Prokop Holý): město nedobyto, předměstí zničena', 'Hussite siege 1433–34 (Prokop Holý): the town holds, suburbs destroyed'),
     (1532, 'Vodárenská věž', 'Water tower'),
-    (1618, 'Obléhání Mansfeldem 19. 9. – 21. 11. 1618, předměstí vypálena (Theatrum Europaeum, leg. D)', 'Siege by Mansfeld 19 Sep – 21 Nov 1618, suburbs burned (Theatrum Europaeum, legend D)'),
-    (1645, 'Šance a raveliny před hradbou (de la Corona 1645–58; plán 1658), 1647 vyklizeno předpolí', 'Earthwork bastions and ravelins (de la Corona 1645–58; plan of 1658), glacis cleared 1647'),
-    (1703, 'Zizner obnovuje opevnění (březen–prosinec 1703), rozsah nových děl nejistý', 'Zizner repairs the fortification (March–December 1703); extent of new works uncertain'),
-    (1760, 'Díla chátrají (plán 1781: „eingegangene Vestungswerker“)', 'The works decay (1781 plan: "eingegangene Vestungswerker")'),
-    (1788, 'Schaller: 315 domů ve městě, 142 na předměstích', 'Schaller: 315 houses in the town, 142 in the suburbs'),
-    (1795, 'Začíná bourání hradeb, zasypávání příkopů (1795–1822)', 'Wall demolition begins, moats filled (1795–1822)'),
-    (1804, 'Zbořena Litická brána', 'Litice gate demolished'), (1822, 'Zbořena Pražská brána', 'Prague gate demolished'),
-    (1828, 'Západní hradby a bašta → okružní sady', 'Western walls and bastion → ring park'), (1833, 'Zbořena Říšská brána', 'Imperial gate demolished'),
-    (1842, 'Měšťanský pivovar', "Burghers' brewery"), (1849, 'Zbořena Saská brána, poslední brána', 'North (Saxon) gate demolished, the last gate'),
-    (1859, 'Valdštejnova strojírna, od 1869 Škoda', 'Waldstein engineering works, Škoda from 1869'),
-    (1861, 'Železnice Praha – Plzeň – Furth (1861–62)', 'Railway Prague – Plzeň – Furth (1861–62)'),
-    (1869, 'Sčítání: ve městě 988 domů (ČSÚ)', 'Census: 988 houses in the town (ČSÚ)'),
-    (1893, 'Poslední úsek hradeb odstraněn pro muzeum (1893–99)', 'Last wall section removed for the museum (1893–99)'),
-    (1924, 'Velká Plzeň: připojeny Doubravka, Doudlevce, Lobzy, Skvrňany', 'Greater Plzeň: Doubravka, Doudlevce, Lobzy and Skvrňany joined'),
-    (1945, 'Bombardování Škodových závodů a nádraží', 'Bombing of the Škoda works and the railway'),
-    (1955, 'Panelová sídliště (Slovany, Bory, Doubravka)', 'Prefab housing estates (Slovany, Bory, Doubravka)'),
-    (1975, 'Sídliště Severního Předměstí: Lochotín, Košutka, Vinice (dokončena do 1992)', 'Northern estates: Lochotín, Košutka, Vinice (completed by 1992)'),
+    (1618, 'Mansfeldovo obléhání 19. 9. – 21. 11. 1618: město dobyto útokem, předměstí vypálena', 'Mansfeld\'s siege 19 Sep – 21 Nov 1618: the town taken by storm, suburbs burned'),
+    (1619, 'Mansfeldova posádka staví zemní bastiony kolem města (1618–1620)', 'Mansfeld\'s garrison builds earthwork bastions around the town (1618–1620)'),
+    (1621, 'Mansfeldova posádka vydává město císařským (březen 1621)', 'Mansfeld\'s garrison hands the town over to the Imperial army (March 1621)'),
+    (1634, 'Valdštejn v Plzni, plzeňské reversy (leden 1634)', 'Wallenstein in Plzeň, the Plzeň reverses (January 1634)'),
+    (1639, 'Další etapa opevňování (1639–1649)', 'Next stage of fortification (1639–1649)'),
+    (1645, 'La Corona: bastiony a raveliny, nová Říšská brána; 1647 vyklizeno předpolí', 'La Corona: bastions and ravelins, the new Imperial gate; glacis cleared 1647'),
+    (1658, 'Vnější šance 1658–59 podle plánu z 23. 2. 1658 (díla a–h), Turecká šance', 'Outer works 1658–59 after the plan of 23 Feb 1658 (works a–h), the Turkish redoubt'),
+    (1703, 'Zizner opravuje opevnění (březen–prosinec 1703); nová díla na jihu, rozsah nejistý', 'Zizner repairs the fortification (March–December 1703); new works in the south, extent uncertain'),
+    (1760, 'Opevnění chátrá (plán 1781: „eingegangene Vestungswerker“)', 'The fortification decays (1781 plan: "eingegangene Vestungswerker")'),
+    (1784, 'Krajský úřad povoluje zbourání opevnění', 'The district office permits demolition of the fortification'),
+    (1795, 'Začíná bourání hradeb a zasypávání příkopů (1795–1822)', 'Demolition of the walls and filling of the moats begins (1795–1822)'),
+    (1804, 'Zbořena Litická brána', 'Litice gate demolished'),
+    (1822, 'Turecká šance srovnána, zbořena Pražská brána', 'Turkish redoubt levelled, Prague gate demolished'),
+    (1823, 'Kasárna 35. pěšího pluku na místě Turecké šance (rozhodnuto 1820)', 'Barracks of the 35th Infantry Regiment on the site of the Turkish redoubt (decided 1820)'),
+    (1828, 'Západní hradby → okružní sady', 'Western walls → ring park'),
+    (1833, 'Zbořena Říšská brána', 'Imperial gate demolished'),
+    (1842, 'Měšťanský pivovar', 'Burghers\' brewery'),
+    (1849, 'Zbořena Saská brána, poslední brána', 'Saxon gate demolished, the last gate'),
+    (1859, 'Valdštejnova strojírna, od 1869 Škodovy závody', 'Waldstein engineering works, the Škoda works from 1869'),
+    (1862, 'Železnice Praha – Plzeň – Furth (1861–62), první nádraží', 'Railway Prague – Plzeň – Furth (1861–62), the first station'),
+    (1893, 'Poslední úsek hradeb ustupuje muzeu (1893–99)', 'The last wall section gives way to the museum (1893–99)'),
+    (1899, 'Elektrická tramvaj', 'Electric tram'),
+    (1907, 'Nová budova hlavního nádraží (R. Štech, otevřena 17. 7. 1907)', 'New main station building (R. Štech, opened 17 July 1907)'),
+    (1924, 'Velká Plzeň: připojeny Doubravka, Doudlevce, Lobzy, Skvrňany', 'Greater Plzeň: Doubravka, Doudlevce, Lobzy and Skvrňany join'),
+    (1942, 'Nálety na Škodovy závody a nádraží (1942–45)', 'Air raids on the Škoda works and the station (1942–45)'),
+    (1945, 'Osvobození americkou armádou 6. 5. 1945', 'Liberation by the US Army, 6 May 1945'),
+    (1954, 'Sídliště Slovany (1954–63)', 'Slovany housing estate (1954–63)'),
+    (1960, 'Sídliště Doubravka (1960–67)', 'Doubravka housing estate (1960–67)'),
+    (1965, 'Sídliště Bory (1965–72)', 'Bory housing estate (1965–72)'),
+    (1968, 'Sídliště Skvrňany (1968–76)', 'Skvrňany housing estate (1968–76)'),
+    (1969, 'Kasárna 35. pluku odstřelena (24. 1. 1969) kvůli průtahu na Roudnou a Lochotín', 'Barracks of the 35th Regiment blown up (24 Jan 1969) for the through-road to Roudná and Lochotín'),
+    (1975, 'Sídliště Lochotín (1975–80)', 'Lochotín housing estate (1975–80)'),
+    (1978, 'Sídliště Bolevec (1978–81)', 'Bolevec housing estate (1978–81)'),
+    (1983, 'Sídliště Košutka a Vinice (dokončena do 1992)', 'Košutka and Vinice housing estates (completed by 1992)'),
 ]
 
 
@@ -281,6 +298,9 @@ print('dating', len(F), 'RÚIAN buildings')
 ruian_mask = np.zeros((N, N), np.uint8)
 pending, pre = [], []
 LANDMARK_PTS = {k: Point(*ENT[k]['geom']['coords'][0]) for k in ('g1618-bartholomew', 'g1618-franciscan', 'g1618-water_tower', 'g1618-st_nicholas', 'g1618-all_saints')}
+LANDMARK_KOD = {24142204: 1300.0,   # Franciscan monastery with the Gothic cloister (čp. 121; RÚIAN date 2010 = reconstruction)
+                24144177: 1897.0, 24143821: 1897.5,   # museum complex on Kopeckého sady (Západočeské muzeum, 1896–98)
+                }
 LANDMARK_FROM = {'g1618-bartholomew': (1320, 30), 'g1618-franciscan': (1300, 20), 'g1618-water_tower': (1532, 30), 'g1618-st_nicholas': (1400, 18), 'g1618-all_saints': (1250, 14)}
 for f in F:
     ring = f['geometry']['coordinates'][0]
@@ -296,6 +316,9 @@ for f in F:
     it = {'ring': ring, 'x': c.x, 'y': c.y, 'h1': height(p, area), 'ruian': dyear(p.get('dokonceni')), 'area': area, 'gaps': [],
           'part': p.get('castobce'), 'house': p.get('typstavebnihoobjektukod') in (1, 2), 'id': f'ruian:{p["kod"]}'}
     lm = next((k for k, q in LANDMARK_PTS.items() if poly.buffer(2).contains(q)), None)
+    if p['kod'] in LANDMARK_KOD:   # buildings dated by history, not by the maps
+        it['from'], it['cls'], it['basis'] = LANDMARK_KOD[p['kod']], 'landmark', 'history'; it['h0'] = it['h1']; it['lo'] = it['hi'] = it['from']
+        it['id'] = f'ruian:{p["kod"]}'; recs.append(it); continue
     if lm:
         it['from'], h = LANDMARK_FROM[lm]; it['h1'] = max(it['h1'], h) if lm != 'g1618-bartholomew' else it['h1']
         it['h0'] = it['h1']; it['cls'] = 'landmark'; it['basis'] = 'history'; it['lo'] = it['hi'] = it['from']; it['id'] = lm
@@ -521,25 +544,109 @@ for ln in FORT['lines']:  # Zwinger and outer walls (1781 plan)
         poly = LineString([p0, p1]).buffer(1.1, cap_style=2)
         recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': ln['from'] + rng.uniform(-8, 8), 'to': dem + rng.uniform(-3, 0),
                      'h0': ln['h'], 'h1': ln['h'], 'gaps': [], 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + ln['id']})
+import shapely.ops
+from shapely.ops import unary_union
+from shapely.strtree import STRtree
+import fabric
 DECAY = 1760  # the 1781 legend calls the works "eingegangene Vestungswerker" (defunct): lowered from about 1760
-for wk in FORT['works']:  # bastions, ravelins, redoubt: the "Schantzen" of the 1658 plan, built 1645-1658
-    ring = wk['poly'] + [wk['poly'][0]]; c = Polygon(ring).centroid
-    recs.append({'ring': ring, 'x': c.x, 'y': c.y, 'from': rng.uniform(1645, 1658), 'to': float(wk['to']), 'h0': wk['h'], 'h1': wk['h_decayed'],
-                 'tR': DECAY + rng.uniform(-10, 10), 'gaps': [], 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + wk['id']})
-for bd in FORT['bands']:  # ramparts along the rivers, cut into pieces
-    for p0, p1, mid in line_pieces(bd['line'], 25.0):
-        poly = LineString([p0, p1]).buffer(bd['half'], cap_style=2)
-        recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': rng.uniform(1645, 1658), 'to': bd['to'] + rng.uniform(-3, 0),
-                     'h0': bd['h'], 'h1': bd['h_decayed'], 'tR': DECAY + rng.uniform(-10, 10), 'gaps': [], 'cls': 'fort',
-                     'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + bd['id']})
-# moat and ditches as drawn (blue) on the 1781 plan; Zwinger moat before 1420, filled 1795-1822 by section
-for wt in FORT['water']:
-    for p0, p1, mid in line_pieces(wt['line'], 30.0):
-        poly = LineString([p0, p1]).buffer(wt['half'], cap_style=2)
-        fill = wt['to'] or min(max(wall_demolition(mid), 1795), 1822)
-        start = 1420.0 if wt['id'].startswith('moat') else rng.uniform(1645, 1658)
-        recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': start, 'to': fill + rng.uniform(-2, 0), 'h0': 0.35, 'h1': 0.35,
-                     'gaps': [], 'cls': 'moat', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + wt['id']})
+FPLANS = json.load(open(os.path.join(HERE, 'fort_plans_map.json'), encoding='utf-8'))
+H57 = json.load(open(os.path.join(ROOT, 'data', 'historic', 'growth', 'ham57_map.json'), encoding='utf-8'))
+W1703 = {w['id']: Polygon(w['poly']).buffer(0) for w in FPLANS['plans']['1703']['works']}
+# Baroque star after the plans of 1658 (HAM map 5, phases: cores existing in 1658 → 1645–49, proposals →
+# 1658–59) and 1703 (HAM map 6, geometry of all works; Vogt 1712 is a simplified copy). Bastions are joined
+# to a continuous main rampart around the Zwinger (Mansfeld 1618–20); one ditch follows the whole outline;
+# ravelins and lunettes stand detached in front with their own ditch. Removal years from the 1821 / 1840 plans.
+WORKS = [  # id, attached, (from lo, hi), to, height
+    ('z1703_sw_bastion', True, (1645, 1649), 1805, 7.0), ('z1703_s_bastion', True, (1645, 1649), 1800, 7.0),
+    ('z1703_s_bastion2', True, (1645, 1649), 1833, 7.0), ('z1703_ne_work', True, (1645, 1649), 9999, 7.0),
+    ('z1703_w_redoubt', True, (1658, 1659.9), 1822.3, 7.5), ('z1703_nw_bastion', True, (1658, 1659.9), 1810, 7.0),
+    ('z1703_s_redan', False, (1703.2, 1703.9), 1775, 5.0), ('z1703_sw_lunette', False, (1703.2, 1703.9), 1772, 5.0),
+    ('z1703_w_block', False, (1703.2, 1703.9), 1772, 5.0)]
+ZW = WALL.buffer(13, join_style=2)
+RING_OUT = WALL.buffer(36, join_style=2)
+ATT = {wid: fabric.connect(W1703[wid], RING_OUT).difference(ZW) for wid, att, *_ in WORKS if att}
+NSEC = 28
+TC = (WALL.centroid.x, WALL.centroid.y)
+
+
+def sector_of(x, y):
+    return int(((math.atan2(y - TC[1], x - TC[0]) + math.pi) / (2 * math.pi)) * NSEC) % NSEC
+
+
+def split_mesh(m):
+    """triangles of a mesh grouped by angular sector around the town (shared vertices → no seams)."""
+    out = {}
+    for t in m['t']:
+        cx = sum(m['v'][i][0] for i in t) / 3; cy = sum(m['v'][i][1] for i in t) / 3
+        out.setdefault(sector_of(cx, cy), []).append(t)
+    res = []
+    for k, ts in out.items():
+        used = sorted({i for t in ts for i in t}); remap = {o: n for n, o in enumerate(used)}
+        res.append((k, {'v': [m['v'][i] for i in used], 't': [[remap[i] for i in t] for t in ts]}))
+    return res
+
+
+def mesh_ring(m):
+    pts = [(v[0], v[1]) for v in m['v']]
+    hull = Polygon(pts).convex_hull if len(pts) > 2 else Point(pts[0]).buffer(1)
+    return list(hull.exterior.coords)
+
+
+def sector_demolition(k):
+    ang = (k + 0.5) / NSEC * 2 * math.pi - math.pi
+    pt = WALL.exterior.interpolate(WALL.exterior.project(Point(TC[0] + 400 * math.cos(ang), TC[1] + 400 * math.sin(ang))))
+    return min(max(wall_demolition((pt.x, pt.y)), 1796), 1830)
+
+
+def add_split(m, base, label):
+    for k, sub in split_mesh(m):
+        r = mesh_ring(sub); c = Polygon(r).centroid
+        recs.append(base | {'ring': r, 'x': c.x, 'y': c.y, 'id': label, 'imesh': sub,
+                            'to': base['to'] if base['to'] != 'sector' else sector_demolition(k) + rng.uniform(-2, 2)})
+
+
+EARTH = lambda h: [(0, 0.0), (1.8, h * 0.86), (3.8, h), (7.0, h * 0.82)]
+# main rampart (Mansfeld 1618–20), split by sector: removed with the nearest walls
+ring_body = RING_OUT.difference(ZW)
+add_split(fabric.band_mesh(ring_body, EARTH(6.0), mode_all=1),
+          {'from': rng.uniform(1619.0, 1620.0), 'to': 'sector', 'h0': 6.0, 'h1': 3.6, 'tR': DECAY + rng.uniform(-8, 8), 'gaps': [], 'cls': 'fort',
+           'basis': 'plans 1658 / 1703 (star), dated demolitions'}, 'fort:rampart')
+for wid, att, (lo, hi), to, h in WORKS:
+    body = ATT[wid] if att else W1703[wid]
+    body = max(fabric._parts(body), key=lambda g: g.area)
+    c = body.centroid
+    recs.append({'ring': list(body.exterior.coords), 'x': c.x, 'y': c.y, 'from': rng.uniform(lo, hi), 'to': float(to) + (rng.uniform(-2, 2) if to < 9999 else 0),
+                 'h0': h, 'h1': h * 0.6, 'tR': (DECAY if att else rng.uniform(1725, 1745)) + rng.uniform(-8, 8), 'gaps': [], 'cls': 'fort',
+                 'basis': 'plan 1703 (Zizner), phase 1658' if att else 'plan 1703 (Zizner), realisation uncertain', 'id': 'fort:' + wid,
+                 'imesh': fabric.band_mesh(body, EARTH(h), mode_all=1)})
+# ditches: one per phase, following the outline of the star at that time; the medieval moat (map 57) before
+E1 = RING_OUT
+E2 = unary_union([RING_OUT] + [ATT[w] for w, att, (lo, _), *_ in WORKS if att and lo < 1650])
+E3 = unary_union([E2] + [ATT[w] for w, att, (lo, _), *_ in WORKS if att and lo >= 1650])
+DW = 15.0
+ditch = lambda E: E.buffer(DW, join_style=2).difference(E).difference(ZW)
+outw = unary_union([W1703[w].buffer(10, join_style=2).difference(W1703[w]) for w, att, *_ in WORKS if not att]).difference(E3)
+FILL = 1810.0
+DITCHES = [(ditch(E1), 1619.6, 1647.0), (ditch(E2), 1647.0, 1659.9), (ditch(E3), 1659.9, 1703.6),
+           (unary_union([ditch(E3), outw]), 1703.6, 1772.0), (ditch(E3), 1772.0, FILL)]
+med = [Polygon(f['poly']).buffer(0) for f in H57['features'] if f['kind'] == 'moat']
+MED = unary_union([g for g in med if WALL.exterior.distance(g) < 60]).difference(ZW.buffer(-2))
+CUTS = []   # (geometry, from, to): terrain cut out while the ditch exists (bit i of cuts.png)
+for gi, (g, f0, t0) in enumerate([(MED, 1420.0, 1619.6)] + DITCHES):
+    if g.is_empty: continue
+    for part in fabric._parts(g):
+        if part.area < 50: continue
+        base = {'from': f0, 'to': t0, 'h0': 4.5, 'h1': 4.5, 'gaps': [], 'basis': 'plans 1658 / 1703 (star)' if gi else 'map 57 (moat c. 1410)'}
+        add_split(fabric.trough(part, 4.5), base | {'cls': 'ditch'}, 'fort:ditch')
+        add_split(fabric.trough(part, 4.5, water=-3.3), base | {'cls': 'moat'}, 'fort:ditch:water')
+    CUTS.append((g, f0, t0))
+# suburb walls of c. 1410 (map 57): low masonry, until the 1618 siege
+for f in H57['features']:
+    if f['kind'] != 'suburb_wall': continue
+    for p0, p1, mid in line_pieces(f['line'], 30.0):
+        poly = LineString([p0, p1]).buffer(0.9, cap_style=2)
+        recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': rng.uniform(1395, 1415), 'to': 1618.85, 'h0': 4.5, 'h1': 4.5,
+                     'gaps': [(1433.6, rng.uniform(1436, 1450))], 'cls': 'fort', 'basis': 'map 57 (suburb walls c. 1410)', 'id': 'fort:suburb_wall'})
 for k, e in ENT.items():
     if e['type'] not in ('gate', 'tower') or not e.get('geom') or e['geom']['type'] != 'Point': continue
     xy = tuple(e['geom']['coords'][0])
@@ -550,8 +657,394 @@ for k, e in ENT.items():
     w = 10 if e['type'] == 'gate' else 7
     recs.append({'ring': box(xy, w, w), 'x': xy[0], 'y': xy[1], 'from': 1325 + rng.uniform(-5, 5), 'to': float(dem), 'h0': e.get('height', 15), 'h1': e.get('height', 15),
                  'gaps': [], 'cls': 'fort', 'basis': 'model 1618 + dated demolitions', 'id': k})
-dxy = tuple(ENT['g1618-dominican']['geom']['coords'][0])
-recs.append({'ring': box(dxy, 34, 14), 'x': dxy[0], 'y': dxy[1], 'from': 1300, 'to': 1785, 'h0': 16, 'h1': 16, 'gaps': [], 'cls': 'landmark', 'basis': 'history', 'id': 'g1618-dominican'})
+VH = os.path.join(HERE, 'veduta_heights.json')
+if os.path.exists(VH):   # heights of towers and gates from the fitted vedute (veduta_fit.py)
+    VHH = json.load(open(VH, encoding='utf-8'))['heights']
+    for it in recs:
+        if it.get('id') in VHH and it.get('cls') == 'fort': it['h0'] = it['h1'] = VHH[it['id']]
+CUT = os.path.join(ROOT, 'data', 'historic', 'cutouts', 'ottheinrich-1536')
+if os.path.isdir(CUT):   # wall towers and gates shaped after the cut-outs of the 1536 veduta (corner tower, gate)
+    PROF = {k: fabric.silhouette_profile(os.path.join(CUT, f'{k}.png')) for k in ('corner-tower', 'gate-left', 'tall-tower', 'church-facade-left')}
+    for it in recs:
+        iid = str(it.get('id', ''))
+        if it.get('cls') != 'fort' or not (iid.startswith('g1618-gate_') or iid.startswith('g1618-te_tower')): continue
+        pt = Point(it['x'], it['y']); s_ = WALL.exterior.project(pt)
+        q1, q2 = WALL.exterior.interpolate(s_ - 3), WALL.exterior.interpolate(s_ + 3)
+        ang = math.atan2(q2.y - q1.y, q2.x - q1.x)
+        gate = iid.startswith('g1618-gate_')
+        it['imesh'] = fabric.loft(PROF['gate-left' if gate else 'corner-tower'], (it['x'], it['y']), ang, 10.0 if gate else 7.0, it['h1'])
+        it['basis'] = 'model 1618, shape after the 1536 veduta'
+
+# ---------- dated single buildings ----------
+TURK = W1703['z1703_w_redoubt'].buffer(30).union(Polygon(next(w for w in FORT['works'] if w['id'] == 'bastion_w')['poly']).buffer(45))
+nk = 0
+for it in recs:
+    if str(it.get('id', '')).startswith('h1840:') and TURK.contains(Point(it['x'], it['y'])) and it.get('to', 9999) > 1900:
+        it['from'] = 1823.0 + rng.uniform(0, 1.5); it['lo'] = it['hi'] = it['from']; it['to'] = 1969.07; it['basis'] = 'history'; nk += 1
+        pg = Polygon(it['ring']).buffer(0)
+        it['imesh'] = fabric.courtyard_block(pg, 14.0); it['h0'] = it['h1'] = 14.0; it['cls'] = 'town'; it.pop('tR', None); it['gaps'] = []
+print('barracks of the 35th regiment (1823–1969):', nk, 'footprints')
+
+# ---------- generated historic fabric (inner town before 1750, suburbs and villages before the 1840 houses) ----------
+# Inside the walls: narrow gabled burgher houses around the blocks of map 57 (gable to the street, rear
+# courtyard); the square is complete from the founding. Present buildings replace them only after
+# 1750–1800 (per block), or later if their own date (RÚIAN / rebuild) is later: the epoch evidence wins.
+# Outside the walls: small houses grow organically in the medieval suburbs of map 57 (from the gates,
+# burned 1433 and 1618, glacis cleared 1647); the houses of the historic database (1840 cadastre, present
+# buildings dated before 1840) appear only when the baroque walls fall (by sector, 1796–1835), villages
+# about 1825–1845; before that, small generated houses stand at their places.
+GEN = []
+gid = [0]
+
+
+def gen(q, eave, roof, cls, basis, ridge_depth=True, **kw):
+    gid[0] += 1
+    pg = Polygon(q); c = pg.centroid
+    r = {'ring': list(q) + [q[0]], 'x': c.x, 'y': c.y, 'h0': eave + roof, 'h1': eave + roof, 'gaps': [], 'cls': cls, 'basis': basis,
+         'id': f'gen:{gid[0]}', 'imesh': fabric.gable_house(q, eave, roof, ridge_depth)}
+    r.update(kw); GEN.append(r); return r
+
+
+# Dominican monastery (Black monastery, founded c. 1300; abolished 1785, military hospital from 1786 – HAM map 8;
+# replaced c. 1800): church outline of map 57 next to point B of the Theatrum Europaeum plate (1618)
+TE_B = Point(-822422.5, -1069465.0)
+dch = [Polygon(f['poly']).buffer(0) for f in H57['features'] if f['kind'] == 'church']
+DOM_CHURCH = min(dch, key=lambda g: g.distance(TE_B))
+_mrr = list(DOM_CHURCH.minimum_rotated_rectangle.exterior.coords)[:4]
+_e = sorted([(math.dist(_mrr[i], _mrr[(i + 1) % 4]), i) for i in range(4)])
+DOM_LEN = _e[-1][0]; _i = _e[-1][1]
+DOM_ANG = math.atan2(_mrr[(_i + 1) % 4][1] - _mrr[_i][1], _mrr[(_i + 1) % 4][0] - _mrr[_i][0])
+_blk = min((Polygon(f['poly']).buffer(0) for f in H57['features'] if f['kind'] == 'inner_block'), key=lambda g: g.distance(DOM_CHURCH.centroid))
+_n = (-math.sin(DOM_ANG), math.cos(DOM_ANG)); _c = DOM_CHURCH.centroid
+if (_blk.centroid.x - _c.x) * _n[0] + (_blk.centroid.y - _c.y) * _n[1] < 0: _n = (-_n[0], -_n[1])
+CLOISTER_C = (_c.x + _n[0] * 27, _c.y + _n[1] * 27)
+CLOISTER = Polygon(fabric.rect((CLOISTER_C[0] - _n[0] * 20, CLOISTER_C[1] - _n[1] * 20), (math.cos(DOM_ANG), math.sin(DOM_ANG)), 40, 40))
+DOM_AREA = unary_union([DOM_CHURCH.buffer(3), CLOISTER.buffer(2)])
+DOM_TO = 1802.0
+uq = (math.cos(DOM_ANG), math.sin(DOM_ANG))
+for k in range(4):  # cloister wings
+    ang = DOM_ANG + k * math.pi / 2; u = (math.cos(ang), math.sin(ang)); nn = (-u[1], u[0])
+    fc = (CLOISTER_C[0] - nn[0] * 20, CLOISTER_C[1] - nn[1] * 20)
+    gen(fabric.rect(fc, u, 40, 10), 9.0, 5.0, 'landmark', 'history', ridge_depth=False, **{'from': 1300 + rng.uniform(0, 20), 'to': DOM_TO})
+
+LMK = unary_union([Polygon(it['ring']).buffer(2) for it in recs if it.get('cls') == 'landmark'] + [DOM_AREA])
+blocks = [Polygon(f['poly']).buffer(0).intersection(WALL.buffer(-1)) for f in H57['features'] if f['kind'] == 'inner_block']
+blocks = [max(fabric._parts(bk), key=lambda g: g.area) for bk in blocks if not bk.is_empty and bk.area > 300]
+inner_gen = []
+BLOCK_T = []
+for bk in blocks:
+    T = rng.uniform(1750, 1800); BLOCK_T.append((bk, T))
+    for q, c, nrm in fabric.perimeter_houses(bk, rng, depth=13.5, width=(8.5, 12.5), skip=LMK):
+        d = math.hypot(c[0] - SQUARE[0], c[1] - SQUARE[1])
+        sq = d < 130 and ((SQUARE[0] - c[0]) * nrm[0] + (SQUARE[1] - c[1]) * nrm[1]) / max(d, 1) > 0.5
+        r = gen(q, rng.uniform(6.5, 8.5) if sq else rng.uniform(5.0, 7.0), rng.uniform(4.0, 5.2), 'inner', 'generated: blocks of map 57', ridge_depth=True,
+                **{'to': T + rng.uniform(-3, 3), 'sq': sq, 'd': d, 'blk': bk})
+        inner_gen.append(r)
+for r in inner_gen:   # houses on the square: three to four storeys
+    if r['sq']:
+        q = [tuple(v[:2]) for v in r['imesh']['v'][:4]]; ev, rf = rng.uniform(8.5, 11.0), rng.uniform(5.0, 6.2)
+        r['imesh'] = fabric.gable_house(q, ev, rf, True); r['h0'] = r['h1'] = ev + rf
+for r in inner_gen: r['from'] = 1295.0 + rng.uniform(0, 4.0)   # the whole plan at the founding (heights grow later, see below)
+
+
+def block_T(x, y):
+    p = Point(x, y)
+    return min(BLOCK_T, key=lambda bt: bt[0].distance(p))[1]
+
+
+REAL = lambda it: str(it.get('id', '')).split(':')[0] in ('ruian', 'h1840', 'ham65', 'h1902') and it.get('cls') != 'landmark'
+# the square: open area around the church between the blocks; its frontage is Renaissance (town hall 1554–59),
+# so the present models of the houses on the square (and the town hall) stand from then on
+_sq = Point(*SQUARE).buffer(170).difference(unary_union(blocks).buffer(1.0))
+SQ = min(fabric._parts(_sq), key=lambda g: g.distance(Point(*SQUARE)))
+SQ = max(fabric._parts(SQ.buffer(-14, join_style=2).buffer(14, join_style=2)), key=lambda g: g.area)   # without the streets
+TOWNHALL = {f['properties']['kod'] for f in F if str(f['properties'].get('cisladomovni')) == '1' and f['properties'].get('castobce') == 406392}
+inside = []
+for it in recs:
+    if not REAL(it) or not WALL.contains(Point(it['x'], it['y'])): continue
+    t_new = max(block_T(it['x'], it['y']) + rng.uniform(0, 4), it['from'])
+    if it.get('tR', 9999) < 9999: t_new = max(t_new, it['tR']); it.pop('tR', None); it['h0'] = it['h1']   # epoch evidence: the old house stays until the rebuild
+    if str(it.get('id', '')).startswith('ruian:') and Polygon(it['ring']).buffer(0).intersects(SQ.buffer(3)):
+        t_new = 1558.0 if int(it['id'].split(':')[1]) in TOWNHALL else rng.uniform(1555, 1575); it.pop('tR', None); it['h0'] = it['h1']; it['basis'] = 'history'
+    if DOM_AREA.intersects(Polygon(it['ring']).buffer(0)): t_new = max(t_new, DOM_TO + rng.uniform(0, 3))
+    if t_new < it.get('to', 9999):
+        it['from'] = t_new; it['gaps'] = []; inside.append(it)
+# generated houses stay until the present building on their plot appears
+if inside:
+    tr_in = STRtree([Polygon(it['ring']).buffer(0) for it in inside])
+    for r in inner_gen:
+        pg = Polygon(r['ring'])
+        hits = [inside[i] for i in tr_in.query(pg) if Polygon(inside[i]['ring']).buffer(0).intersection(pg).area > 0.2 * pg.area]
+        if hits: r['to'] = max(h['from'] for h in hits) + rng.uniform(-0.5, 0.5)   # until the present building on the plot appears
+# growth in height on the same plots, after the isometric views of 1618 / 1650: low timber houses 1295–1390 →
+# taller Gothic stone houses with rear tracts → Renaissance (1530–1620, on most plots and all of the square): taller,
+# double roofs on wide plots, wings and back houses glued together; the present model replaces the last stage
+staged = []
+for r in inner_gen:
+    q = [tuple(v[:2]) for v in r['imesh']['v'][:4]]
+    sq = r['sq']; end = r['to']; bk = r.get('blk')
+    t2 = rng.uniform(1375, 1405)
+    t3 = rng.uniform(1530, 1620) if (sq or rng.random() < 0.75) else 9999
+    stages = [(r['from'], t2, 1, rng.uniform(3.0, 4.0), rng.uniform(3.2, 3.8)),
+              (t2, t3, 2, rng.uniform(8.0, 9.5) if sq else rng.uniform(6.0, 7.5), rng.uniform(5.0, 6.0)),
+              (t3, 9999, 3, rng.uniform(9.5, 11.0) if sq else rng.uniform(7.5, 9.0), rng.uniform(5.5, 6.5))]
+    first = True
+    for f0, t0, st, ev, rf in stages:
+        if f0 >= end: break
+        mesh = fabric.burgher_complex(q, ev, rf, st, rng, bk)
+        if first:
+            r['imesh'] = mesh; r['h0'] = r['h1'] = ev + rf; r['to'] = min(t0, end); first = False
+        else:
+            g2 = gen(q, ev, rf, 'inner', 'generated: blocks of map 57, ' + ('Gothic' if st == 2 else 'Renaissance'), ridge_depth=True,
+                     **{'from': f0, 'to': min(t0, end), 'sq': sq, 'd': r['d']})
+            g2['imesh'] = mesh; staged.append(g2)
+inner_gen += staged
+
+# medieval suburbs of map 57: small houses from the gates outwards
+GATE_PTS = [g[0] for g in GATES]
+sub_gen = []
+for f in H57['features']:
+    if f['kind'] != 'suburb_block': continue
+    area = Polygon(f['poly']).buffer(0)
+    if area.distance(Point(*SQUARE)) > 1600: continue
+    # frontage along the roads that bound the block (with gaps), then the inside of the block
+    plots = [(q, c, True) for q, c, n in fabric.perimeter_houses(area, rng, depth=9.0, width=(8.0, 12.0)) if rng.random() < 0.8]
+    inner_area = area.buffer(-11)
+    plots += [(q, xy, False) for q, xy, de in fabric.scatter_houses(inner_area, rng, spacing=20.0, size=((6, 8), (7.5, 10)))] if not inner_area.is_empty else []
+    for q, (x, y), front in plots:
+        dg = min(math.hypot(x - g[0], y - g[1]) for g in GATE_PTS)
+        r = gen(q, rng.uniform(3.3, 4.5), rng.uniform(2.8, 3.6), 'suburb', 'generated: suburbs of map 57', ridge_depth=not front,
+                **{'dg': dg + (0 if front else 180) + rng.uniform(0, 70), 'dw': WALL.exterior.distance(Point(x, y))})
+        sub_gen.append(r)
+sub_gen.sort(key=lambda r: r['dg'])   # from the gates along the roads first, the insides of the blocks later
+for i, r in enumerate(sub_gen):
+    r['from'] = 1330 + 95 * i / max(len(sub_gen), 1) + rng.uniform(-4, 4)
+    if r['from'] < 1433.6: r['gaps'] = [(1433.6, rng.uniform(1436, 1480))]
+    if rng.random() < 0.55:          # rebuilt after the siege of 1618, cleared for the glacis in 1647 or replaced later
+        r['gaps'].append((1618.85, rng.uniform(1622, 1640)))
+        r['to'] = 1647.3 if r['dw'] < 260 else rng.uniform(1650, 1665)
+    else:
+        r['to'] = 1618.85
+
+# historic database outside the walls only after the baroque walls fall; small houses before
+nph = 0
+for it in recs:
+    if not REAL(it) or WALL.contains(Point(it['x'], it['y'])): continue
+    z = it.get('cls')
+    dw = WALL.exterior.distance(Point(it['x'], it['y']))
+    if z in ('suburb', 'glacis') or dw < 1200:
+        pt = WALL.exterior.interpolate(WALL.exterior.project(Point(it['x'], it['y'])))
+        T = min(max(wall_demolition((pt.x, pt.y)), 1796), 1835) + rng.uniform(-3, 6)
+        ph0 = None if dw < 260 else max(it['from'], 1650.0)
+    elif z in ('village', 'rural'):
+        T = rng.uniform(1825, 1845); ph0 = it['from']
+    else:
+        T = None; ph0 = None
+    t_old = it['from']
+    t_new = it['from']
+    if T is not None and t_old < T: t_new = T
+    if it.get('tR', 9999) < 9999 and it['tR'] > t_new + 5:   # epoch evidence: older house on the plot until the rebuild
+        t_new = it['tR']; ph0 = t_old if ph0 is None and dw >= 260 else ph0
+    it.pop('tR', None); it['h0'] = it['h1']
+    if t_new <= t_old + 0.01 or t_new >= it.get('to', 9999): continue
+    it['from'] = t_new; it['gaps'] = []
+    if ph0 is not None and ph0 < t_new - 2:
+        pg = Polygon(it['ring']).buffer(0)
+        mrr = list(pg.minimum_rotated_rectangle.exterior.coords)[:4]
+        e = sorted([(math.dist(mrr[i], mrr[(i + 1) % 4]), i) for i in range(4)]); L, i0 = e[-1]
+        u = ((mrr[(i0 + 1) % 4][0] - mrr[i0][0]) / L, (mrr[(i0 + 1) % 4][1] - mrr[i0][1]) / L)
+        w, d = min(L, rng.uniform(9, 13)), min(e[0][0], rng.uniform(6.5, 9))
+        c = pg.centroid; nn = (-u[1], u[0])
+        q = fabric.rect((c.x - nn[0] * d / 2, c.y - nn[1] * d / 2), u, w, d)
+        village = z in ('village', 'rural')
+        gen(q, rng.uniform(3.2, 4.2), rng.uniform(3.5, 4.5) if village else rng.uniform(2.8, 3.6), 'village' if village else 'suburb',
+            'generated: before the historic database', ridge_depth=False, **{'from': ph0, 'to': t_new + rng.uniform(-1, 0.5)})
+        nph += 1
+for r in GEN:
+    for k in ('sq', 'd', 'dg', 'dw', 'blk'): r.pop(k, None)
+    r.setdefault('from', 1300.0); r.setdefault('to', 9999.0)
+    r['to'] = max(r['to'], r['from'] + 1)
+recs += GEN
+print('generated fabric:', len(inner_gen), 'inner houses,', len(sub_gen), 'medieval suburb houses,', nph, 'houses before the historic database')
+
+# ---------- city 3D models: the real shape of present buildings, held back in time ----------
+# GIS_Budovy_Plzen_2024 multipatches (scripts/city3d_mesh.py) replace the extruded footprint of the RÚIAN
+# building that contains them. The shape is kept for the whole life of the building in the model (no
+# lower pre-rebuild height), so e.g. St Bartholomew has its present form from 1320 on: schematic, not historic.
+MESH_NPZ = os.path.join(ROOT, 'data', 'reference', 'plzen-3d', 'mesh.npz')
+if os.path.exists(MESH_NPZ):
+    from shapely.strtree import STRtree
+    MZ = np.load(MESH_NPZ)
+    m_vs, m_ts, m_V, m_T, m_O = MZ['vstart'], MZ['tstart'], MZ['verts'], MZ['tris'], MZ['origin']
+    cand = [it for it in recs if 'ruian' in it]
+    cpoly = []
+    for it in cand:
+        pg = Polygon(it['ring'])
+        cpoly.append(pg if pg.is_valid else pg.buffer(0))
+    tree = STRtree(cpoly)
+    hits = {}
+    for j in range(len(m_vs) - 1):
+        xy = m_V[m_vs[j]:m_vs[j + 1], :2]
+        c = Point(float(xy[:, 0].min() + xy[:, 0].max()) / 2 + m_O[0], float(xy[:, 1].min() + xy[:, 1].max()) / 2 + m_O[1])
+        q = tree.query(c, predicate='intersects')
+        if not len(q):
+            q = tree.query_nearest(c, max_distance=2.0)
+        if not len(q): continue
+        k = min(q, key=lambda i: cpoly[i].area)
+        hits.setdefault(k, []).append(j)
+    nm = 0
+    for k, objs in hits.items():
+        it = cand[k]
+        z0 = min(float(m_V[m_vs[j]:m_vs[j + 1], 2].min()) for j in objs)
+        z1 = max(float(m_V[m_vs[j]:m_vs[j + 1], 2].max()) for j in objs)
+        if z1 - z0 < 1.0: continue
+        it['mesh'] = objs; it['mesh_z0'] = z0
+        it['h0'] = it['h1'] = round(z1 - z0, 1); it.pop('tR', None); nm += 1
+    if any(it.get('id') == 'g1618-bartholomew' and 'mesh' in it for it in recs):
+        recs = [it for it in recs if it.get('id') != 'g1618-barth_tower']  # the tower is part of the church model
+    print('city 3D models:', len(m_vs) - 1, 'objects,', sum(len(v) for v in hits.values()), 'matched to', nm, 'model buildings')
+    # Dominican church (nave, choir, tower) shaped after the 1536 veduta: the steep gable of the church facades as the
+    # cross-section of nave and choir, the slender tower with its spire; plan after the church outline of map 57
+    # (next to point B of the 1618 plate)
+    if os.path.isdir(CUT):
+        from PIL import Image as _Im
+        _m = list(DOM_CHURCH.minimum_rotated_rectangle.exterior.coords)[:4]
+        _e = sorted([(math.dist(_m[i], _m[(i + 1) % 4]), i) for i in range(4)])
+        DW_ = min(_e[0][0], 16.0); c0 = DOM_CHURCH.centroid
+        ax = (math.cos(DOM_ANG), math.sin(DOM_ANG))
+        if ax[0] < 0: ax = (-ax[0], -ax[1])                                   # towards the east (choir)
+        w_end = (c0.x - ax[0] * DOM_LEN / 2, c0.y - ax[1] * DOM_LEN / 2); e_end = (c0.x + ax[0] * DOM_LEN / 2, c0.y + ax[1] * DOM_LEN / 2)
+        split = (w_end[0] + ax[0] * DOM_LEN * 0.62, w_end[1] + ax[1] * DOM_LEN * 0.62)
+        fa = _Im.open(os.path.join(CUT, 'church-facade-left.png')); fa_ratio = fa.size[1] / max(fa.size[0], 1)
+        nave_h = min(max(DW_ * fa_ratio * 0.9, 18.0), 32.0)
+        ta = np.array(_Im.open(os.path.join(CUT, 'tall-tower.png')).convert('RGBA'))[..., 3] > 128
+        rows = np.where(ta.any(1))[0]; cols = np.where(ta.any(0))[0]
+        tw_ = 7.5; tower_h = min(max(tw_ * (rows.max() - rows.min()) / max(np.median([np.ptp(np.where(ta[r])[0]) for r in rows[len(rows) // 3: 2 * len(rows) // 3] if ta[r].any()]), 1), 34.0), 45.0)
+        tower_c = (w_end[0] + ax[0] * tw_ / 2, w_end[1] + ax[1] * tw_ / 2)
+        mm = fabric.merge([fabric.extrude_profile(PROF['church-facade-left'], w_end, split, DW_, nave_h),
+                           fabric.extrude_profile(PROF['church-facade-left'], split, e_end, DW_ * 0.8, nave_h * 0.88),
+                           fabric.loft(PROF['tall-tower'], tower_c, DOM_ANG, tw_, tower_h)])
+        recs.append({'ring': list(DOM_CHURCH.exterior.coords), 'x': c0.x, 'y': c0.y, 'from': 1300.0, 'to': DOM_TO, 'h0': tower_h, 'h1': tower_h, 'gaps': [],
+                     'cls': 'landmark', 'basis': 'history', 'id': 'g1618-dominican', 'imesh': mm})
+        print(f'Dominican church after the 1536 veduta: nave {nave_h:.0f} m, tower {tower_h:.0f} m')
+
+# ---------- buildings of the 1902 plan around the barracks (city GIS export at 0.5 m, raw_hi/1902_barracks.png) ----------
+HI02 = os.path.join(ROOT, 'data', 'historic', 'growth', 'raw_hi', '1902_barracks.png')
+if os.path.exists(HI02):
+    from PIL import Image as _Im
+    arr = np.array(_Im.open(HI02).convert('RGBA')); hb = cv2.cvtColor(arr[..., :3], cv2.COLOR_RGB2BGR); ha = arr[..., 3]
+    hc = (-822396.8 - 371, -1069689.4 + 54); hres = 0.5; hn = arr.shape[0]; hx0, hy1 = hc[0] - 450, hc[1] + 450
+    hh = cv2.cvtColor(hb, cv2.COLOR_BGR2HSV); Hh_, Sh_, Vh_ = hh[..., 0].astype(int) * 2, hh[..., 1] / 255, hh[..., 2] / 255
+    blk = (Vh_ < 0.35) & (Sh_ < 0.5) & (ha > 0)
+    redm = ((Hh_ < 25) | (Hh_ > 340)) & (Sh_ > 0.42) & (Vh_ > 0.5) & (ha > 0)
+    redm = cv2.morphologyEx(redm.astype(np.uint8), cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)) > 0   # solid fills, not lines or text
+    blk = cv2.morphologyEx(blk.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
+    covd = np.zeros((hn, hn), np.uint8)
+    for it in recs:
+        if it.get('cls') in ('fort', 'ditch', 'moat') or not (it['from'] <= 1902.01 < it.get('to', 9999)): continue
+        pts = np.array([[(x - hx0) / hres, (hy1 - y) / hres] for x, y in it['ring']], np.int32)
+        if pts[:, 0].max() < 0 or pts[:, 1].max() < 0 or pts[:, 0].min() > hn or pts[:, 1].min() > hn: continue
+        cv2.fillPoly(covd, [pts], 1)
+    covd = cv2.dilate(covd, np.ones((7, 7), np.uint8)) > 0
+    n02 = 0
+    for mask, kind in ((blk & ~covd, 'black'), (redm & ~covd, 'red')):
+        nl, lab, st, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), 8)
+        for i in range(1, nl):
+            if st[i, cv2.CC_STAT_AREA] * hres * hres < 60: continue
+            x, y, w, h = st[i, :4]
+            cs, _ = cv2.findContours((lab[y:y + h, x:x + w] == i).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            ap = cv2.approxPolyDP(max(cs, key=cv2.contourArea), 1.5, True).reshape(-1, 2)
+            if len(ap) < 3: continue
+            ring = [(hx0 + (x + px) * hres, hy1 - (y + py) * hres) for px, py in ap]; ring.append(ring[0])
+            pg = Polygon(ring).buffer(0)
+            if pg.area < 60: continue
+            fp = footprint(ring)
+            if fp is None: continue
+            st_ = states(*fp)
+            k02 = YEARS.index(1902)
+            kg = max(split_gone(st_), k02 + 1); lo, hi = interval(kg)
+            to = 1969.07 if (kind == 'black' and TURK.buffer(120).intersects(pg)) else (lo + (hi - lo) * rng.uniform(0.2, 0.8) if hi > lo else hi)
+            c = pg.centroid
+            recs.append({'ring': list(pg.exterior.coords) if pg.geom_type == 'Polygon' else ring, 'x': c.x, 'y': c.y, 'from': rng.uniform(1899.0, 1901.8),
+                         'to': to, 'h0': 13.0 if kind == 'black' else 11.0, 'h1': 13.0 if kind == 'black' else 11.0, 'gaps': [], 'cls': 'town',
+                         'basis': 'plan 1902 (around the barracks)', 'id': f'h1902:{n02}', 'house': False})
+            n02 += 1
+    print('plan 1902 around the barracks:', n02, 'buildings added')
+
+# ---------- consistency with the maps and between buildings (check_epochs.py reports the result) ----------
+# 1. duplicates: a demolished house from the 1840 cadastre and the same house from map 65 → one record
+# 2. reliable maps (building detection with good recall) are binding at their year: a generated house the map does
+#    not show ends before it; a real building without an exact date that the map does not show starts after it
+# 3. no two buildings on the same place at the same time (> 25 % of the smaller footprint): priority history /
+#    landmarks > RÚIAN exact date > other real buildings > generated houses; the lower one gives way
+PRI = lambda it: 4 if it.get('cls') == 'landmark' or it.get('basis') == 'history' else 3 if it.get('basis') == 'RÚIAN date' else \
+    1 if str(it.get('id', '')).startswith('gen:') else 2
+SKIPC = {'fort', 'ditch', 'moat'}
+cons = [it for it in recs if it.get('cls') not in SKIPC]
+for it in cons:
+    pg = Polygon(it['ring']); it['_pg'] = pg if pg.is_valid else pg.buffer(0)
+tree_c = STRtree([it['_pg'] for it in cons])
+drop = set()
+nd = 0
+for i, it in enumerate(cons):   # 1. duplicates h1840 × ham65
+    if not str(it['id']).startswith('ham65:'): continue
+    for j in tree_c.query(it['_pg']):
+        o = cons[j]
+        if not str(o['id']).startswith('h1840:') or id(o) in drop: continue
+        a_ = it['_pg'].intersection(o['_pg']).area
+        if a_ > 0.25 * min(it['_pg'].area, o['_pg'].area):
+            if o.get('basis') == 'history': drop.add(id(it))                    # the barracks stay as modelled
+            else: it['from'] = min(it['from'], o['from']); it['gaps'] = []; drop.add(id(o))
+            nd += 1
+RELIABLE = [('1840_cadastre', 1840), ('1891', 1891), ('1912', 1912), ('1926', 1926), ('1931', 1931), ('1938', 1938)]
+NEXT = {y: (RELIABLE[k + 1][1] if k + 1 < len(RELIABLE) else 1953) for k, (_, y) in enumerate(RELIABLE)}
+ngen = nreal = 0
+for name, Y in RELIABLE:   # 2. binding maps
+    Bd = cv2.dilate(B[name].astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+    for it in cons:
+        if id(it) in drop or it.get('cls') == 'landmark' or it.get('basis') == 'history': continue
+        if not (it['from'] <= Y + 0.01 < it.get('to', 9999)) or any(a <= Y < b for a, b in it.get('gaps', [])): continue
+        fp = footprint(it['ring'], dil=0)
+        if fp is None: continue
+        sl, m = fp
+        if not m.any() or C[name][sl][m].mean() < 0.5: continue
+        if Bd[sl][m].mean() >= 0.1: continue
+        if str(it['id']).startswith('gen:'):
+            it['to'] = min(it.get('to', 9999), Y - rng.uniform(0.3, 3.0)); ngen += 1
+            if it['to'] <= it['from'] + 0.5: drop.add(id(it))
+        elif it.get('basis') != 'RÚIAN date':
+            it['from'] = Y + rng.uniform(0.3, min(10.0, NEXT[Y] - Y - 0.3)); it['gaps'] = []; nreal += 1
+            if it.get('to', 9999) <= it['from'] + 0.5: drop.add(id(it))
+nov = 0
+for i, it in enumerate(cons):   # 3. overlaps in space and time
+    if id(it) in drop: continue
+    for j in tree_c.query(it['_pg']):
+        if j <= i: continue
+        o = cons[j]
+        if id(o) in drop: continue
+        a_ = it['_pg'].intersection(o['_pg']).area
+        if a_ <= 0.25 * min(it['_pg'].area, o['_pg'].area) or a_ < 15: continue
+        if it['from'] >= o.get('to', 9999) or o['from'] >= it.get('to', 9999): continue
+        hi_, lo_ = (it, o) if (PRI(it), -it['from']) >= (PRI(o), -o['from']) else (o, it)
+        if PRI(hi_) == PRI(lo_) == 1:
+            drop.add(id(min((it, o), key=lambda q: q['_pg'].area))); nov += 1; continue
+        if PRI(hi_) == PRI(lo_):   # two real buildings
+            hist_ = [q for q in (it, o) if not str(q['id']).startswith('ruian:')]
+            pres_ = [q for q in (it, o) if str(q['id']).startswith('ruian:')]
+            if len(hist_) != 1: continue   # both present today (data overlap) or both historic: leave
+            h_, p_ = hist_[0], pres_[0]
+            p_['from'] = max(p_['from'], h_.get('to', 9999)) if h_.get('to', 9999) < 9999 else p_['from']
+            if h_.get('to', 9999) >= 9999 or p_['from'] >= p_.get('to', 9999): h_['to'] = min(h_.get('to', 9999), p_['from'])
+            if h_.get('to', 9999) <= h_['from'] + 0.5: drop.add(id(h_))
+            nov += 1; continue
+        if lo_['from'] < hi_['from']: lo_['to'] = min(lo_.get('to', 9999), hi_['from'])
+        elif hi_.get('to', 9999) < 9999: lo_['from'] = max(lo_['from'], hi_['to']); lo_['gaps'] = []
+        else: drop.add(id(lo_))
+        if lo_.get('to', 9999) <= lo_['from'] + 0.5: drop.add(id(lo_))
+        nov += 1
+for it in cons: it.pop('_pg', None)
+recs = [it for it in recs if id(it) not in drop]
+print(f'consistency: {nd} duplicates merged, {ngen} generated houses ended before a map, {nreal} buildings moved after a map, {nov} overlaps resolved, {len(drop)} records dropped')
 
 # ---------- checks ----------
 cnt = {c: sum(1 for it in recs if it.get('cls') == c and visible(it, 1788)) for c in ('inner', 'suburb', 'glacis')}
@@ -598,7 +1091,7 @@ cv2.imencode('.png', tex)[1].tofile(os.path.join(OUT, 'terrain.png'))
 
 # ---------- write ----------
 OX, OY = SQUARE
-CLS = ['inner', 'suburb', 'glacis', 'village', 'rural', 'town', 'fort', 'landmark', 'moat']
+CLS = ['inner', 'suburb', 'glacis', 'village', 'rural', 'town', 'fort', 'landmark', 'moat', 'ditch']
 BASIS = sorted({it['basis'] for it in recs})
 out = {'format': 'ca-geo/growth-model', 'crs': 'EPSG:5514', 'origin': [OX, OY], 'frame': BBOX, 'years': [1295, 2020],
        'terrain': {'file': 'terrain.png', 'size': TS, 'zmin': ZMIN, 'scale': 0.1, 'source': 'ČÚZK DMR 5G'},
@@ -629,31 +1122,87 @@ def clean(mask, mn=150):
 ztm, _ = imread(raw_path('2025_ztm'))
 H, Sat, V = hsv(ztm)
 water_now = clean((H >= 180) & (H < 235) & (Sat > 0.25) & (V > 0.5))
-WATER_RULES = {  # water colour per map; the detected old water is added to the present water (old meanders,
-                 # mill races, moats), because the detection along the town reaches is incomplete
-    '1840_cadastre': (1840, lambda H, S, V: (H >= 150) & (H < 220) & (S > 0.15) & (V > 0.35) & (V < 0.9)),
-    '1908': (1908, lambda H, S, V: (H >= 160) & (H < 205) & (S > 0.18) & (V > 0.6)),
-    '1938': (1938, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.45)),
-}
-water_ep = []
-for name, (year, wr) in WATER_RULES.items():
+# River courses per epoch. In every map that shows water well, the detected water is taken as it is; the present
+# water is accepted only right next to it (so a channel that moved, an old meander or a mill race keep their old
+# course); outside the map the previous epoch continues. Before 1840 only the connected river network is kept
+# (no Bolevec ponds, no sewage works).
+def largest_network(m):
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m.astype(np.uint8), 8)
+    if n <= 1: return m
+    return lab == 1 + int(np.argmax(st[1:, cv2.CC_STAT_AREA]))
+
+
+def nearby(m, px):
+    return cv2.dilate(m.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * px + 1, 2 * px + 1))) > 0
+
+
+def rivers_only(m):
+    """river-like water: components bridged over bridges, long and thin (compactness 4πA/P² < 0.12); ponds,
+    reservoirs and sewage tanks are compact and drop out"""
+    mc = cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9)))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(mc, 8)
+    keep = np.zeros(n, bool)
+    for i in range(1, n):
+        a_ = st[i, cv2.CC_STAT_AREA]
+        if a_ < 300: continue
+        x, y, w, h = st[i, :4]
+        cs, _ = cv2.findContours((lab[y:y + h, x:x + w] == i).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        per = sum(cv2.arcLength(c, True) for c in cs)
+        if 4 * math.pi * a_ / max(per * per, 1) < 0.12: keep[i] = True
+    return keep[lab] & (m > 0) | (keep[lab] & (mc > 0))
+
+
+rivers_now = rivers_only(water_now)
+RBAND = nearby(rivers_now, 120)   # old courses lie within 300 m of the present rivers
+
+
+def epoch_water(det, cov, base):
+    return base | clean(det & cov & RBAND, 300)
+FRAME_PX = lambda pts: np.array([[(x - BBOX[0]) / RES, (BBOX[3] - y) / RES] for x, y in pts], np.int32)
+r57 = np.zeros((N, N), np.uint8); f57 = np.zeros((N, N), np.uint8)
+for f in H57['features']:
+    if f['kind'] == 'river': cv2.fillPoly(r57, [FRAME_PX(f['poly'])], 1)
+cv2.fillPoly(f57, [FRAME_PX(H57['field'])], 1)
+w1410 = np.where(f57 > 0, r57 > 0, rivers_now)
+water_ep = [(1410, w1410)]
+# the fortification plan of 1658 (map 5): pale blue rivers, warped into the frame
+FMW = np.array([[1 / RES, 0, -BBOX[0] / RES], [0, -1 / RES, BBOX[3] / RES], [0, 0, 1]])
+_pj = json.load(open(os.path.join(HERE, 'fort_plans.json'), encoding='utf-8'))['plans']['1658']
+_A = np.r_[np.array(FPLANS['plans']['1658']['affine']), [[0, 0, 1]]] @ np.array([[0.5, 0, -_pj['origin'][0] / 2], [0, 0.5, -_pj['origin'][1] / 2], [0, 0, 1]])
+_pg = os.path.join(ROOT, 'data', 'reference', 'hiu-atlas', 'pages', 'p043_300.png')
+if os.path.exists(_pg):
+    pim = cv2.imdecode(np.fromfile(_pg, np.uint8), 1)
+    pf = np.zeros(pim.shape[:2], np.uint8); cv2.fillPoly(pf, [np.array([(160, 883), (1270, 883), (1270, 160), (2967, 160), (2967, 3815), (160, 3815)], np.int32)], 255)
+    Hf = FMW @ _A
+    wim = cv2.warpPerspective(pim, Hf, (N, N), flags=cv2.INTER_AREA); cov58 = cv2.warpPerspective(pf, Hf, (N, N), flags=cv2.INTER_NEAREST) > 0
+    H, Sat, V = hsv(wim)
+    w = epoch_water((H >= 160) & (H < 230) & (Sat > 0.10) & (V > 0.45), cov58, w1410)
+    water_ep.append((1658, w))
+WATER_RULES = [  # (raster, year, rule)
+    ('1840_cadastre', 1840, lambda H, S, V: (H >= 150) & (H < 220) & (S > 0.15) & (V > 0.35) & (V < 0.9)),
+    ('1908', 1908, lambda H, S, V: (H >= 160) & (H < 205) & (S > 0.18) & (V > 0.6)),
+    ('1926', 1926, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.4)),
+    ('1938', 1938, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.45)),
+    ('1947', 1947, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.4)),
+]
+for name, year, wr in WATER_RULES:
     im, alpha = imread(raw_path(name)); H, Sat, V = hsv(im); cov = coverage(name, im, alpha)
-    w = clean(wr(H, Sat, V) & cov, 300) | water_now
-    water_ep.append((year, w))
+    water_ep.append((year, epoch_water(wr(H, Sat, V), cov, rivers_now)))   # present rivers + the water of this map (meanders, races, ponds)
 water_ep.append((1953, water_now))
 for year, w in water_ep:
     f = f'water_{year}.png'
     cv2.imencode('.png', (cv2.resize(w.astype(np.uint8) * 255, (1024, 1024), interpolation=cv2.INTER_AREA)))[1].tofile(os.path.join(OUT, f))
-    out['water'].append({'year': 1295 if year == 1840 else year, 'file': f})
+    out['water'].append({'year': 1295 if year == 1410 else year, 'file': f})
+print('water epochs:', [y for y, _ in water_ep])
 
 
 def base_for(year):
-    w = next((m for y, m in reversed(water_ep) if y <= max(year, 1840)), water_ep[0][1])
+    w = next((m for y, m in reversed(water_ep) if (1295 if y == 1410 else y) <= year), water_ep[0][1])
     b = np.full((N, N, 3), (196, 214, 205), np.uint8); b[w] = (205, 160, 110); return b
 
 
 bases = {}
-b0 = base_for(1840)
+b0 = base_for(1295)   # the opening map: rivers only
 cv2.imencode('.jpg', cv2.resize(b0, (S, S), interpolation=cv2.INTER_AREA), [cv2.IMWRITE_JPEG_QUALITY, 85])[1].tofile(os.path.join(OUT, 'ground_base.jpg'))
 out['grounds'].append({'year': 1295, 'file': 'ground_base.jpg', 'label': 'base'})
 # ground maps: each is shown from its year until the next one
@@ -667,8 +1216,78 @@ for name, year in GROUNDS:
     comp = base_for(year).copy(); comp[cov] = im[cov]
     cv2.imencode('.jpg', cv2.resize(comp, (S, S), interpolation=cv2.INTER_AREA), [cv2.IMWRITE_JPEG_QUALITY, 82])[1].tofile(os.path.join(OUT, f'ground_{year}.jpg'))
     out['grounds'].append({'year': year, 'file': f'ground_{year}.jpg', 'label': name})
+# early ground maps registered to the model: map 57 (c. 1410), the Theatrum Europaeum plate (1618, homography of
+# its 12 control points), the fortification plans of 1658 and 1703 (affines of fort_plans.py)
+FM = np.array([[1 / RES, 0, -BBOX[0] / RES], [0, -1 / RES, BBOX[3] / RES], [0, 0, 1]])
+M3 = lambda a: np.r_[np.asarray(a, float), [[0, 0, 1]]] if np.asarray(a).shape == (2, 3) else np.asarray(a, float)
+
+
+def early_ground(img, H_page2map, field, year, name):
+    Hf = FM @ M3(H_page2map)
+    warped = cv2.warpPerspective(img, Hf, (N, N), flags=cv2.INTER_AREA)
+    fm = np.zeros(img.shape[:2], np.uint8); cv2.fillPoly(fm, [np.array(field, np.int32)], 255)
+    m = cv2.warpPerspective(fm, Hf, (N, N), flags=cv2.INTER_NEAREST) > 0
+    comp = base_for(year).copy(); comp[m] = warped[m]
+    cv2.imencode('.jpg', cv2.resize(comp, (S, S), interpolation=cv2.INTER_AREA), [cv2.IMWRITE_JPEG_QUALITY, 82])[1].tofile(os.path.join(OUT, f'ground_{year}.jpg'))
+    out['grounds'].append({'year': year, 'file': f'ground_{year}.jpg', 'label': name})
+
+
+PAGES = os.path.join(ROOT, 'data', 'reference', 'hiu-atlas', 'pages')
+rd = lambda f: cv2.imdecode(np.fromfile(f, np.uint8), 1)
+if os.path.exists(os.path.join(PAGES, 'p090_300.png')):
+    early_ground(rd(os.path.join(PAGES, 'p090_300.png')), H57['affine'], [(160, 1000), (3350, 1000), (3350, 4650), (160, 4650)], 1300, 'map 57 (c. 1410)')
+te_pts = json.load(open(os.path.join(HERE, 'te1618_points.json'), encoding='utf-8'))
+Hte, _ = cv2.findHomography(np.array([q['img'] for q in te_pts], np.float32), np.array([q['map'] for q in te_pts], np.float64))
+tc = np.mean([q['img'] for q in te_pts], 0)
+te_field = [(tc[0] + 1.7 * (x - tc[0]), tc[1] + 1.7 * (y - tc[1])) for x, y in cv2.convexHull(np.array([q['img'] for q in te_pts], np.float32)).reshape(-1, 2)]
+early_ground(rd(os.path.join(ROOT, 'data', 'historic', 'sources', 'te-1618.jpg')), Hte, te_field, 1618, 'Theatrum Europaeum 1618')
+for pid, year, field in (('1658', 1658, [(160, 883), (1270, 883), (1270, 160), (2967, 160), (2967, 3815), (160, 3815)]),
+                         ('1703', 1703, [(177, 406), (3196, 406), (3196, 4521), (1166, 4521), (1166, 3037), (212, 3037), (177, 3037)])):
+    pl = FPLANS['plans'][pid]; ox, oy = next(v['origin'] for k, v in json.load(open(os.path.join(HERE, 'fort_plans.json'), encoding='utf-8'))['plans'].items() if k == pid)
+    A = M3(pl['affine']) @ np.array([[0.5, 0, -ox / 2], [0, 0.5, -oy / 2], [0, 0, 1]])
+    early_ground(rd(os.path.join(PAGES, f'p04{3 if pid == "1658" else 4}_300.png')), A, field, year, f'plan {pid}')
+out['grounds'].sort(key=lambda g: g['year'])
 for f in os.listdir(OUT):  # remove ground files of an earlier run that are no longer listed
     if f.startswith('ground_') and f not in {g['file'] for g in out['grounds']}: os.remove(os.path.join(OUT, f))
+# mesh.bin: int32 [nb, nv, nt, 0], int32 bld[nb], vcount[nb], tcount[nb], float32 verts[nv, 3]
+# (x, y relative to the origin in metres, z above the model base), uint16 tris[nt, 3] (local per building)
+mb_b, mb_vc, mb_tc, mb_V, mb_T = [], [], [], [], []
+for b, it in enumerate(recs):
+    if 'imesh' in it:   # generated shapes (fortification): mode 0 = z above the base, mode 1 = z above the local terrain
+        v = np.array(it['imesh']['v'], float)
+        zz = v[:, 2] + np.where(v[:, 3] > 0.5, [z_at(x, y) - ZMIN - it['z'] for x, y in v[:, :2]], 0.0)
+        mb_b.append(b); mb_vc.append(len(v)); mb_tc.append(len(it['imesh']['t']))
+        mb_V.append(np.c_[v[:, 0] - OX, v[:, 1] - OY, zz]); mb_T.append(np.array(it['imesh']['t'], np.int64)); continue
+    if 'mesh' not in it: continue
+    vv, tt, off = [], [], 0
+    for j in it['mesh']:
+        v = m_V[m_vs[j]:m_vs[j + 1]].astype(np.float64)
+        vv.append(np.c_[v[:, 0] + m_O[0] - OX, v[:, 1] + m_O[1] - OY, v[:, 2] - it['mesh_z0']]); tt.append(m_T[m_ts[j]:m_ts[j + 1]] + off); off += len(v)
+    if off > 65535: continue
+    mb_b.append(b); mb_vc.append(off); mb_tc.append(sum(len(t) for t in tt)); mb_V.append(np.vstack(vv)); mb_T.append(np.vstack(tt))
+if mb_b:
+    with open(os.path.join(OUT, 'mesh.bin'), 'wb') as fh:
+        nv_, nt_ = sum(mb_vc), sum(mb_tc)
+        fh.write(np.array([len(mb_b), nv_, nt_, 0], np.int32).tobytes())
+        for a in (mb_b, mb_vc, mb_tc): fh.write(np.array(a, np.int32).tobytes())
+        fh.write(np.vstack(mb_V).astype(np.float32).tobytes()); fh.write(np.vstack(mb_T).astype(np.uint16).tobytes())
+    # terrain cut-outs over the moats: R = index into out['cuts']['periods'] (1-based), 1 m pixels
+    if CUTS:
+        u = shapely.ops.unary_union([c[0] for c in CUTS]).bounds
+        cx0, cy0, cx1, cy1 = u[0] - 5, u[1] - 5, u[2] + 5, u[3] + 5
+        CW, CH = int(cx1 - cx0) + 1, int(cy1 - cy0) + 1
+        cm = np.zeros((CH, CW), np.uint8)
+        for i, (pg, f0, t0) in enumerate(CUTS[:8]):   # bit i = region i
+            lay = np.zeros((CH, CW), np.uint8)
+            for part in fabric._parts(pg):
+                cv2.fillPoly(lay, [np.array([[(x - cx0), (cy1 - y)] for x, y in part.exterior.coords], np.int32)], 1)
+                for hole in part.interiors: cv2.fillPoly(lay, [np.array([[(x - cx0), (cy1 - y)] for x, y in hole.coords], np.int32)], 0)
+            cm |= (lay << i).astype(np.uint8)
+        cv2.imencode('.png', cm)[1].tofile(os.path.join(OUT, 'cuts.png'))
+        out['cuts'] = {'bits': True, 'file': 'cuts.png', 'box': [round(cx0 - OX, 1), round(cy0 - OY, 1), round(cx1 - OX, 1), round(cy1 - OY, 1)],
+                       'periods': [[round(f0, 2), round(t0, 2)] for _, f0, t0 in CUTS]}
+    out['mesh'] = {'file': 'mesh.bin', 'buildings': len(mb_b), 'source': 'Statutární město Plzeň, 3D model budov 2024 (GIS_Budovy_Plzen_2024)'}
+    print('mesh.bin', len(mb_b), 'buildings', round(os.path.getsize(os.path.join(OUT, 'mesh.bin')) / 1e6, 1), 'MB')
 json.dump(out, open(os.path.join(OUT, 'model.json'), 'w', encoding='utf-8'), separators=(',', ':'), ensure_ascii=False)
 json.dump({'calibration': calib, 'validation': valid}, open(os.path.join(OUT, 'validation.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
 print('wrote', len(recs), 'buildings', round(os.path.getsize(os.path.join(OUT, 'model.json')) / 1e6, 1), 'MB')

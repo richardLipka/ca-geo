@@ -1,0 +1,1713 @@
+{
+ "_comment": "Catalogue and chapters for sources_site.py (guide to the growth video). Every source used by the Plzeň growth model, with short bilingual texts. 'img' points to local files (data/, not versioned) or a PDF page. 'lic' is one of pd, cc0, ccbysa, ccby, ccbyncnd, cite, own. Vedute come from ../sources.json (texts in 'vedute').",
+ "groups": [
+  {
+   "id": "vedute",
+   "cs": "Veduty, panoramata a ptačí pohledy 1536–1864",
+   "en": "Vedute, panoramas and bird's-eye views 1536–1864",
+   "short_cs": "Veduty",
+   "short_en": "Vedute"
+  },
+  {
+   "id": "atlas",
+   "cs": "Historický atlas měst ČR 21 – Plzeň (HIÚ AV ČR 2009)",
+   "en": "Historical Atlas of Czech Towns 21 – Plzeň (HIÚ AV ČR 2009)",
+   "short_cs": "Historický atlas",
+   "short_en": "Historical atlas"
+  },
+  {
+   "id": "plans",
+   "cs": "Plány města 1781–1972 (GIS města Plzně, výřez 9 × 9 km)",
+   "en": "Town plans 1781–1972 (City of Plzeň GIS, 9 × 9 km frame)",
+   "short_cs": "Plány města",
+   "short_en": "Town plans"
+  },
+  {
+   "id": "state",
+   "cs": "Státní mapová díla a data (CENIA, ČÚZK)",
+   "en": "State maps and data (CENIA, ČÚZK)",
+   "short_cs": "Státní mapy, data",
+   "short_en": "State maps, data"
+  },
+  {
+   "id": "other",
+   "cs": "Statistika, malá měřítka a atributová data",
+   "en": "Statistics, small-scale maps and attribute data",
+   "short_cs": "Statistika aj.",
+   "short_en": "Statistics etc."
+  },
+  {
+   "id": "derived",
+   "cs": "Výstupy modelu (ca-geo)",
+   "en": "Model outputs (ca-geo)",
+   "short_cs": "Výstupy modelu",
+   "short_en": "Model outputs"
+  }
+ ],
+ "vedute": {
+  "ottheinrich-1536": {
+   "cs": "Nejstarší pohled na město: věže, brány a kostel sv. Bartoloměje. Domy z kresby jsou vyříznuty pro mapování na model.",
+   "en": "The oldest view of the town: towers, gates and St Bartholomew. Houses from the drawing are cut out for mapping onto the model."
+  },
+  "willenberg-1602": {
+   "cs": "Panorama před obléháním 1618; podle něj se kontrolují věže a hradby.",
+   "en": "Panorama before the 1618 siege; used to check the towers and walls."
+  },
+  "te-1618": {
+   "cs": "Obléhání 1618 s legendou. Podle bodů propojených s budovami byla dopočtena kamera kreslíře a rytina promítnuta na model.",
+   "en": "The 1618 siege with a key. The draughtsman's camera was solved from points linked to the buildings and the engraving projected onto the model."
+  },
+  "isselburg-1618": {
+   "cs": "Obléhání 1618, druhá nezávislá kresba: polohy bran a předměstí.",
+   "en": "The 1618 siege, a second independent drawing: positions of gates and suburbs."
+  },
+  "keller-1619": {
+   "cs": "Obléhání 1618 v dalším otisku; srovnání s Theatrem Europaeem.",
+   "en": "The 1618 siege in another print; compared with Theatrum Europaeum."
+  },
+  "hogenberg-1619": {
+   "cs": "Obléhání 1618 s legendou A–Y, která pomáhá určit jednotlivé stavby.",
+   "en": "The 1618 siege with a key A–Y that helps identify individual buildings."
+  },
+  "hollar-p812": {
+   "cs": "Panorama z 1. poloviny 17. století; siluety věží.",
+   "en": "Panorama from the first half of the 17th century; tower silhouettes."
+  },
+  "merian-1650": {
+   "cs": "Město roku 1650, po stavbě šancí.",
+   "en": "The town in 1650, after the earthworks were built."
+  },
+  "bodenehr-1700": {
+   "cs": "Plán a pohled kolem roku 1700: tvar bastionového opevnění.",
+   "en": "Plan and view around 1700: shape of the bastioned fortification."
+  },
+  "vogt-1712": {
+   "cs": "Zjednodušená kopie Ziznerova plánu z roku 1703.",
+   "en": "A simplified copy of Zizner's 1703 plan."
+  },
+  "zcm-1781": {
+   "cs": "Vojenský plán města 1781 (sever vpravo), stejný stav jako podrobný plán 1781.",
+   "en": "Military plan of the town 1781 (north to the right), the same state as the detailed 1781 plan."
+  },
+  "schabat-1864": {
+   "cs": "Město po zboření bran, s okružními sady.",
+   "en": "The town after the gates were demolished, with the ring park."
+  }
+ },
+ "items": [
+  {
+   "id": "ham-2-4",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1720,
+    1883
+   ],
+   "short": "HAM 2–4",
+   "title": "Mapy č. 2–4: Plzeň a okolí na Müllerově mapě Čech (1720), na mapě Plzeňského kraje F. J. J. Kreybicha (1830) a na speciální mapě 3. vojenského mapování (1882–1883)",
+   "holder": "Historický atlas měst ČR 21 – Plzeň, mapový list 1",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 42
+   },
+   "cs": "Vsi a cesty v malém měřítku (1720, 1830, 1880).",
+   "en": "Villages and roads at small scale (1720, 1830, 1880)."
+  },
+  {
+   "id": "ham-5",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1658,
+    1658
+   ],
+   "short": "HAM 5 (1658)",
+   "title": "Mapa č. 5: Plán opevnění královského krajského města Plzně a projekt jeho úprav, 23. 2. 1658 (Delineation der Stadt Pilsen …)",
+   "holder": "Österreichisches Staatsarchiv – Kriegsarchiv Wien; reprodukce v HAM ČR 21 – Plzeň, mapový list 2",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 43
+   },
+   "cs": "Díla označená a–h odpovídají dílům na plánu 1781, takže stála už roku 1658 (stavba 1645–58). Řez ukazuje výšky valů.",
+   "en": "Works a–h match the works of the 1781 plan, so they stood by 1658 (built 1645–58). The section shows rampart heights."
+  },
+  {
+   "id": "ham-6",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1703,
+    1703
+   ],
+   "short": "HAM 6 (1703)",
+   "title": "Mapa č. 6: Půdorys opevnění Plzně Johanna Christiana Ziznera, 1703 (Grund-Ris …, západ nahoře)",
+   "holder": "ÖStA – Kriegsarchiv Wien, GPA Inland C IV α Pilsen Nr. 2; reprodukce v HAM ČR 21 – Plzeň, mapový list 2",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 44
+   },
+   "cs": "Další bastiony a raveliny na jihu a západě. Zda byly postaveny, není jisté, a na plánu 1781 chybí, proto v animaci nejsou.",
+   "en": "Further bastions and ravelins on the south and west. Whether they were built is uncertain and they are absent in 1781, so they are not in the animation."
+  },
+  {
+   "id": "ham-9",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1780,
+    1783
+   ],
+   "short": "HAM 9 (1. VM)",
+   "title": "Mapa č. 9: Plzeň na Prvním vojenském mapování Čech, 1780–1783 (sectio 156)",
+   "holder": "ÖStA – Kriegsarchiv Wien; reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 47
+   },
+   "cs": "Obrys města kolem roku 1780 pro kontrolu plánu 1781.",
+   "en": "Town outline around 1780, a check of the 1781 plan."
+  },
+  {
+   "id": "ham-10",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "HAM 10 (1781)",
+   "title": "Mapa č. 10: Plán Plzně a nejbližšího okolí, 1781 (Kitelli / Strassoldo)",
+   "holder": "Západočeské muzeum v Plzni, MP 57; reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 48
+   },
+   "cs": "Legenda plánu označuje díla za zaniklá („Eingegangene Vestungswerker“), proto od roku 1760 chátrají.",
+   "en": "The plan's key marks the works as defunct (\"Eingegangene Vestungswerker\"), so they decay from 1760."
+  },
+  {
+   "id": "ham-11",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "HAM 11 (Raab)",
+   "title": "Mapy č. 11a–c: Intravilány Plzně, Skvrňan a Bolevce z raabizačních map plzeňského panství, 1781",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň, mapový list 4",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 49
+   },
+   "cs": "Zástavba Plzně, Skvrňan a Bolevce v roce 1781.",
+   "en": "Built-up Plzeň, Skvrňany and Bolevec in 1781."
+  },
+  {
+   "id": "ham-11b",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "HAM 11 (2)",
+   "title": "Mapy č. 11a–c (pokračování): raabizační mapy plzeňského panství, 1781",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň, mapový list 4",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 50
+   },
+   "cs": "Druhá strana mapového listu.",
+   "en": "Second page of the map sheet."
+  },
+  {
+   "id": "ham-12",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1821,
+    1821
+   ],
+   "short": "HAM 12 (1821)",
+   "title": "Mapa č. 12: Rukopisný plán Plzně s předměstími, 1821 (Josef z Točenovic, Situationsplan)",
+   "holder": "Archiv města Plzně, M 679; reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 51
+   },
+   "cs": "Stejný plán jako plán 1821 z GIS města; rozlišuje staré a nové domy.",
+   "en": "The same plan as the 1821 plan in the city GIS; separates old and new houses."
+  },
+  {
+   "id": "ham-46",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1938,
+    1938
+   ],
+   "short": "HAM 46 (1938)",
+   "title": "Mapa č. 46: Svislý letecký snímek Plzně, 1938",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň (VGHMÚř / archiv Škoda)",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 81
+   },
+   "cs": "Letecký snímek 1938.",
+   "en": "Aerial photograph 1938."
+  },
+  {
+   "id": "ham-47",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1945,
+    1945
+   ],
+   "short": "HAM 47 (1945)",
+   "title": "Mapa č. 47: Svislý letecký snímek Plzně, 1945 (USAAF, 9. 4. 1945)",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 82
+   },
+   "cs": "Letecký snímek po náletech, duben 1945.",
+   "en": "Aerial photograph after the air raids, April 1945."
+  },
+  {
+   "id": "ham-48",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1972,
+    1972
+   ],
+   "short": "HAM 48 (1972)",
+   "title": "Mapa č. 48: Svislý letecký snímek Plzně, 1972",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 83
+   },
+   "cs": "Severní předměstí před stavbou sídlišť.",
+   "en": "The northern suburb before the housing estates."
+  },
+  {
+   "id": "ham-49",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1988,
+    1988
+   ],
+   "short": "HAM 49 (1988)",
+   "title": "Mapa č. 49: Svislý letecký snímek Plzně, 1988",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 84
+   },
+   "cs": "Sídliště Lochotín, Košutka a Vinice z velké části hotová.",
+   "en": "The Lochotín, Košutka and Vinice estates largely built."
+  },
+  {
+   "id": "ham-50",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    2008,
+    2008
+   ],
+   "short": "HAM 50 (2008)",
+   "title": "Mapa č. 50: Svislý letecký snímek Plzně, 2008",
+   "holder": "reprodukce v HAM ČR 21 – Plzeň (GEOREAL)",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 85
+   },
+   "cs": "Současný stav pro srovnání.",
+   "en": "The present state for comparison."
+  },
+  {
+   "id": "ham-57",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1410,
+    1507
+   ],
+   "short": "HAM 57–58",
+   "title": "Mapy č. 57: Topografie středověké Nové Plzně (cca 1410), R. Široký, M. Wasková; č. 58: Rozsah požárů města Plzně roku 1507, M. Wasková",
+   "holder": "Historický atlas měst ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 90
+   },
+   "cs": "Rozsah středověkého města a předměstí kolem roku 1410 a požáry roku 1507.",
+   "en": "Extent of the medieval town and suburbs around 1410, and the fires of 1507."
+  },
+  {
+   "id": "ham-65",
+   "group": "atlas",
+   "lic": "cite",
+   "year": [
+    1942,
+    2008
+   ],
+   "short": "HAM 65",
+   "title": "Mapa č. 65: Rozsah demolic historické zástavby centrální oblasti Plzně od roku 1942, P. Domanický",
+   "holder": "Historický atlas měst ČR 21 – Plzeň",
+   "url": "https://obchod.hiu.cas.cz/user_uploads/Knihy%20ke%20sta%C5%BEen%C3%AD/historicky_atlas_mesta_plzne.pdf",
+   "img": {
+    "pdf": "data/reference/hiu-atlas/atlas.pdf",
+    "page": 96
+   },
+   "cs": "Zbořené historické domy v centru a místa zasažená nálety; 105 zaniklých domů doplněno do modelu.",
+   "en": "Demolished historic houses in the centre and air-raid sites; 105 vanished houses added to the model."
+  },
+  {
+   "id": "plan-1781",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "1781",
+   "layer": "GIS_HIS_Plzen_1781",
+   "title": "Plán Plzně 1781 (Kitelli / Strassoldo, ZČM MP 57)",
+   "img": {
+    "src": "data/historic/growth/raw/1781.png",
+    "crop": "auto"
+   },
+   "cs": "Nejpodrobnější zachycení barokního opevnění: díla, valy, parkán a příkop jsou v modelu obkreslena z tohoto plánu.",
+   "en": "The most detailed record of the baroque fortification: works, ramparts, Zwinger and moat in the model are traced from this plan."
+  },
+  {
+   "id": "plan-1821",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1821,
+    1821
+   ],
+   "short": "1821",
+   "layer": "GIS_HIS_Plzen_1821",
+   "title": "Situační plán Plzně 1821 (Josef z Točenovic, AMP M 679)",
+   "img": {
+    "src": "data/historic/growth/raw/1821.png",
+    "crop": "auto"
+   },
+   "cs": "Ukazuje, která předsunutá díla už zmizela; rozlišuje staré a nové domy.",
+   "en": "Shows which outer works had already gone; separates old and new houses."
+  },
+  {
+   "id": "plan-1840",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1839,
+    1840
+   ],
+   "short": "1840",
+   "layer": "GIS_HIS_Cisarske_otisky",
+   "title": "Stabilní katastr – císařské otisky, c. 1840",
+   "img": {
+    "src": "data/historic/growth/raw/1840_cadastre.png",
+    "crop": "auto"
+   },
+   "cs": "Nejdůležitější mapa modelu: zachycuje všechny budovy kolem roku 1840, včetně 760 dnes zaniklých.",
+   "en": "The key map of the model: every building around 1840, including 760 that have since vanished."
+  },
+  {
+   "id": "plan-1864",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1864,
+    1864
+   ],
+   "short": "1864",
+   "layer": "GIS_HIS_Plzen_1864",
+   "title": "Plán Plzně 1864",
+   "img": {
+    "src": "data/historic/growth/raw/1864.png",
+    "crop": "auto"
+   },
+   "cs": "Město po zboření bran.",
+   "en": "The town after the gates were demolished."
+  },
+  {
+   "id": "plan-1873",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1873,
+    1873
+   ],
+   "short": "1873",
+   "layer": "GIS_HIS_Plzen_1873",
+   "title": "Plán Plzně 1873",
+   "img": {
+    "src": "data/historic/growth/raw/1873.png",
+    "crop": "auto"
+   },
+   "cs": "Růst za hradbami.",
+   "en": "Growth outside the walls."
+  },
+  {
+   "id": "plan-1877",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1877,
+    1877
+   ],
+   "short": "1877",
+   "layer": "GIS_HIS_Plzen_1877_mesto",
+   "title": "Plán Plzně 1877 – město",
+   "img": {
+    "src": "data/historic/growth/raw/1877_mesto.png",
+    "crop": "auto"
+   },
+   "cs": "Zástavba města v roce 1877.",
+   "en": "Built-up town in 1877."
+  },
+  {
+   "id": "plan-1877l",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1877,
+    1877
+   ],
+   "short": "1877 L",
+   "layer": "GIS_HIS_Plzen_1877_Lochotin",
+   "title": "Plán 1877 – Lochotín",
+   "img": {
+    "src": "data/historic/growth/raw/1877_lochotin.png",
+    "crop": "auto"
+   },
+   "cs": "Lochotín v roce 1877.",
+   "en": "Lochotín in 1877."
+  },
+  {
+   "id": "plan-1881",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1881,
+    1881
+   ],
+   "short": "1881",
+   "layer": "GIS_HIS_Plzen_1881",
+   "title": "Plán Plzně 1881",
+   "img": {
+    "src": "data/historic/growth/raw/1881.png",
+    "crop": "auto"
+   },
+   "cs": "Zástavba v roce 1881.",
+   "en": "Built-up area in 1881."
+  },
+  {
+   "id": "plan-1891",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1891,
+    1891
+   ],
+   "short": "1891",
+   "layer": "GIS_HIS_Plzen_1891",
+   "title": "Plán Plzně 1891",
+   "img": {
+    "src": "data/historic/growth/raw/1891.png",
+    "crop": "auto"
+   },
+   "cs": "Předměstí po příchodu železnice.",
+   "en": "The suburbs after the railway arrived."
+  },
+  {
+   "id": "plan-1893",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1893,
+    1893
+   ],
+   "short": "1893",
+   "layer": "GIS_HIS_Plzen_1893",
+   "title": "Plán Plzně 1893",
+   "img": {
+    "src": "data/historic/growth/raw/1893.png",
+    "crop": "auto"
+   },
+   "cs": "Podkladová mapa animace pro 90. léta 19. století.",
+   "en": "Ground map of the animation for the 1890s."
+  },
+  {
+   "id": "plan-1895",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1895,
+    1895
+   ],
+   "short": "1895",
+   "layer": "GIS_HIS_Plzen_1895",
+   "title": "Plán Plzně 1895",
+   "img": {
+    "src": "data/historic/growth/raw/1895.png",
+    "crop": "auto"
+   },
+   "cs": "Zástavba v roce 1895.",
+   "en": "Built-up area in 1895."
+  },
+  {
+   "id": "plan-1902",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1902,
+    1902
+   ],
+   "short": "1902",
+   "layer": "GIS_HIS_Plzen_1902",
+   "title": "Plán Plzně 1902",
+   "img": {
+    "src": "data/historic/growth/raw/1902.png",
+    "crop": "auto"
+   },
+   "cs": "Zástavba na přelomu století.",
+   "en": "Built-up area at the turn of the century."
+  },
+  {
+   "id": "plan-1908",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1908,
+    1908
+   ],
+   "short": "1908",
+   "layer": "GIS_HIS_Plzen_1908",
+   "title": "Plán Plzně 1908",
+   "img": {
+    "src": "data/historic/growth/raw/1908.png",
+    "crop": "auto"
+   },
+   "cs": "Zástavba a vodní toky v roce 1908.",
+   "en": "Built-up area and rivers in 1908."
+  },
+  {
+   "id": "plan-1912",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1912,
+    1912
+   ],
+   "short": "1912",
+   "layer": "GIS_HIS_Plzen_1912_50cm",
+   "title": "Plán Plzně 1912",
+   "img": {
+    "src": "data/historic/growth/raw/1912.png",
+    "crop": "auto"
+   },
+   "cs": "Město před 1. světovou válkou.",
+   "en": "The town before the First World War."
+  },
+  {
+   "id": "plan-1926",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1926,
+    1926
+   ],
+   "short": "1926",
+   "layer": "GIS_HIS_Plzeň_1926",
+   "title": "Plán Plzně 1926",
+   "img": {
+    "src": "data/historic/growth/raw/1926.png",
+    "crop": "auto"
+   },
+   "cs": "Velká Plzeň po připojení obcí v roce 1924.",
+   "en": "Greater Plzeň after the 1924 merger."
+  },
+  {
+   "id": "plan-1931",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1931,
+    1931
+   ],
+   "short": "1931",
+   "layer": "GIS_HIS_Plzen_1931",
+   "title": "Plán Plzně 1931",
+   "img": {
+    "src": "data/historic/growth/raw/1931.png",
+    "crop": "auto"
+   },
+   "cs": "Meziválečný růst.",
+   "en": "Interwar growth."
+  },
+  {
+   "id": "plan-1938",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1938,
+    1938
+   ],
+   "short": "1938",
+   "layer": "GIS_HIS_Plzen_1938",
+   "title": "Plán Plzně 1938",
+   "img": {
+    "src": "data/historic/growth/raw/1938.png",
+    "crop": "auto"
+   },
+   "cs": "Město před válkou; vodní toky 1938.",
+   "en": "The town before the war; rivers in 1938."
+  },
+  {
+   "id": "plan-1947",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1947,
+    1947
+   ],
+   "short": "1947",
+   "layer": "GIS_HIS_Plzen_1947",
+   "title": "Plán Plzně 1947",
+   "img": {
+    "src": "data/historic/growth/raw/1947.png",
+    "crop": "auto"
+   },
+   "cs": "Stav po válce.",
+   "en": "State after the war."
+  },
+  {
+   "id": "plan-1950",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1950,
+    1950
+   ],
+   "short": "1950",
+   "layer": "GIS_HIS_Plzen_1950",
+   "title": "Plán Plzně 1950",
+   "img": {
+    "src": "data/historic/growth/raw/1950.png",
+    "crop": "auto"
+   },
+   "cs": "Poválečný plán.",
+   "en": "Post-war plan."
+  },
+  {
+   "id": "plan-1951",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1951,
+    1951
+   ],
+   "short": "1951",
+   "layer": "GIS_HIS_Plzen_1951",
+   "title": "Plán Plzně 1951",
+   "img": {
+    "src": "data/historic/growth/raw/1951.png",
+    "crop": "auto"
+   },
+   "cs": "Poválečný plán.",
+   "en": "Post-war plan."
+  },
+  {
+   "id": "plan-1971",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1971,
+    1971
+   ],
+   "short": "1971",
+   "layer": "GIS_HIS_Plzen_1971",
+   "title": "Mapový list 1971",
+   "img": {
+    "src": "data/historic/growth/raw/1971.png",
+    "crop": "auto"
+   },
+   "cs": "Mapový list ze začátku 70. let.",
+   "en": "Map sheet from the early 1970s."
+  },
+  {
+   "id": "plan-1972",
+   "group": "plans",
+   "lic": "cite",
+   "year": [
+    1972,
+    1972
+   ],
+   "short": "1972",
+   "layer": "GIS_HIS_Plzen_1972",
+   "title": "Mapový list 1972 (plánovací výkres Petrohrad, ne zaměření)",
+   "img": {
+    "src": "data/historic/growth/raw/1972.png",
+    "crop": "auto"
+   },
+   "cs": "Plánovací výkres Petrohradu: návrh, ne skutečný stav.",
+   "en": "Planning drawing for Petrohrad: a proposal, not the actual state."
+  },
+  {
+   "id": "vm2",
+   "group": "state",
+   "lic": "cite",
+   "year": [
+    1836,
+    1852
+   ],
+   "short": "2. VM",
+   "title": "II. vojenské mapování (Františkovo), 1836–1852",
+   "holder": "© ÖStA – Kriegsarchiv, © Laboratoř geoinformatiky UJEP, © CENIA",
+   "url": "https://gis.cenia.cz/mapcache/II_vojenske_mapovani/wms",
+   "img": {
+    "src": "data/historic/growth/raw/1840_vm2.jpg"
+   },
+   "cs": "Krajina a vsi kolem roku 1840.",
+   "en": "Landscape and villages around 1840."
+  },
+  {
+   "id": "vm3",
+   "group": "state",
+   "lic": "cite",
+   "year": [
+    1876,
+    1880
+   ],
+   "short": "3. VM",
+   "title": "III. vojenské mapování (Františko-josefské), 1876–1880",
+   "holder": "© ÖStA – Kriegsarchiv, © Laboratoř geoinformatiky UJEP, © CENIA",
+   "url": "https://gis.cenia.cz/mapcache/III_vojenske_mapovani/wms",
+   "img": {
+    "src": "data/historic/growth/raw/1880_vm3.jpg"
+   },
+   "cs": "Krajina a vsi kolem roku 1880.",
+   "en": "Landscape and villages around 1880."
+  },
+  {
+   "id": "orto-1953",
+   "group": "state",
+   "lic": "cite",
+   "year": [
+    1950,
+    1956
+   ],
+   "short": "Orto 50. léta",
+   "title": "Historická ortofotomapa 50. let",
+   "holder": "© CENIA, © VGHMÚř Dobruška",
+   "url": "https://gis.cenia.cz/mapcache/ortofotomapa_historicka/wms",
+   "img": {
+    "src": "data/historic/growth/raw/1953_orto.jpg"
+   },
+   "cs": "Nejstarší souvislé letecké snímky; podkladová mapa animace pro 50. léta.",
+   "en": "The oldest continuous aerial images; ground map of the animation for the 1950s."
+  },
+  {
+   "id": "orto-2001",
+   "group": "state",
+   "lic": "ccby",
+   "year": [
+    2001,
+    2001
+   ],
+   "short": "Orto 2001",
+   "title": "Archivní ortofoto, nálet 2001",
+   "holder": "© ČÚZK",
+   "url": "https://geoportal.cuzk.gov.cz/WMS_ORTOFOTO_ARCHIV/WMService.aspx",
+   "img": {
+    "src": "data/historic/growth/raw/2001_orto.jpg"
+   },
+   "cs": "Kontrola dokončení sídlišť.",
+   "en": "Check of the finished housing estates."
+  },
+  {
+   "id": "ztm",
+   "group": "state",
+   "lic": "ccby",
+   "year": [
+    2015,
+    2025
+   ],
+   "short": "ZTM10",
+   "title": "Základní topografická mapa 1 : 10 000",
+   "holder": "© ČÚZK",
+   "url": "https://ags.cuzk.gov.cz/arcgis1/services/ZTM/ZTM10/MapServer/WMSServer",
+   "img": {
+    "src": "data/historic/growth/raw/2025_ztm.png"
+   },
+   "cs": "Dnešní mapa jako podklad; dnešní řeky.",
+   "en": "Present map as the ground; present rivers."
+  },
+  {
+   "id": "ruian",
+   "group": "state",
+   "lic": "ccby",
+   "year": [
+    2025,
+    2025
+   ],
+   "short": "RÚIAN",
+   "title": "RÚIAN – budovy",
+   "holder": "© ČÚZK",
+   "url": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/MapServer",
+   "img": {
+    "src": "data/historic/growth/raw/2025_ruian.png"
+   },
+   "cs": "Půdorysy a stáří všech dnešních budov.",
+   "en": "Footprints and age of all present buildings."
+  },
+  {
+   "id": "dmr5g",
+   "group": "state",
+   "lic": "ccby",
+   "year": [
+    2025,
+    2025
+   ],
+   "short": "DMR 5G",
+   "title": "Digitální model reliéfu 5. generace (DMR 5G)",
+   "holder": "© ČÚZK",
+   "url": "https://ags.cuzk.gov.cz/arcgis2/rest/services/dmr5g/ImageServer",
+   "img": {
+    "src": "data/historic/growth/web/terrain.png",
+    "terrain": true
+   },
+   "cs": "Terén, na kterém model stojí.",
+   "en": "The terrain the model stands on."
+  },
+  {
+   "id": "csu-hlo",
+   "group": "other",
+   "lic": "cite",
+   "year": [
+    1869,
+    2001
+   ],
+   "short": "ČSÚ",
+   "title": "Historický lexikon obcí České republiky 1869–2005, I. díl (ČSÚ 2006), okres Plzeň-město, s. 302–303 (ukázka: počty domů, s. 303)",
+   "holder": "© Český statistický úřad",
+   "url": "https://csu.gov.cz/",
+   "img": {
+    "pdf": "data/reference/csu-hlo/13n106cd1.pdf",
+    "page": 303
+   },
+   "cs": "Počty domů při sčítáních 1869–2001 a první zmínky vsí; podle nich je model zkalibrován.",
+   "en": "House counts of the 1869–2001 censuses and first mentions of the villages; the model is calibrated to them."
+  },
+  {
+   "id": "mueller",
+   "group": "other",
+   "lic": "pd",
+   "year": [
+    1720,
+    1720
+   ],
+   "short": "Müller",
+   "title": "J. Ch. Müller: mapa Čech (c. 1720), výřez Bolevec",
+   "holder": "Wikimedia Commons, Müllerovo mapování – Bolevec.png",
+   "url": "https://commons.wikimedia.org/wiki/File:M%C3%BCllerovo_mapov%C3%A1n%C3%AD_-_Bolevec.png",
+   "img": {
+    "src": "data/reference/mueller/mueller_bolevec.png"
+   },
+   "cs": "Opevněné město se schematickou hvězdou; existence vsí, ne tvar.",
+   "en": "Walled town with a schematic star; confirms villages, not shapes."
+  },
+  {
+   "id": "city3d",
+   "group": "other",
+   "lic": "cite",
+   "year": [
+    2024,
+    2024
+   ],
+   "short": "3D 2024",
+   "title": "3D model budov města Plzně 2024",
+   "holder": "Statutární město Plzeň, 3D model budov 2024",
+   "url": "https://ags.plzen.eu/arcgis/rest/services/GIS_3D_budovy/GIS_Budovy_Plzen_2024/FeatureServer",
+   "img": {
+    "src": "data/historic/growth/shots/city3d_church_2020.jpg"
+   },
+   "cs": "Skutečné tvary 31 tisíc dnešních budov včetně kostela sv. Bartoloměje. V animaci stojí budovy v dnešní podobě po celou dobu své existence, takže starší podoba je jen schematická.",
+   "en": "The real shapes of 31 thousand present buildings, including St Bartholomew. In the animation each building keeps its present form for its whole life, so earlier states are only schematic."
+  },
+  {
+   "id": "out-fort",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1781",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "Opevnění 1781",
+   "title": "Obkreslení opevnění z plánu 1781",
+   "img": {
+    "src": "data/historic/growth/fort/1781_05.png"
+   },
+   "cs": "Výřez plánu 1781, podle kterého byla díla obkreslena.",
+   "en": "Crop of the 1781 plan used to trace the works."
+  },
+  {
+   "id": "out-legend",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1781",
+   "year": [
+    1781,
+    1781
+   ],
+   "short": "Legenda 1781",
+   "title": "Legenda plánu 1781 (otočeno)",
+   "img": {
+    "src": "data/historic/growth/fort/legend_rot.jpg"
+   },
+   "cs": "Položka 13 legendy: „zaniklá opevnění“ už v roce 1781.",
+   "en": "Key item 13: \"defunct fortification works\" already in 1781."
+  },
+  {
+   "id": "out-fortcmp",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1821",
+   "year": [
+    1781,
+    1840
+   ],
+   "short": "1781–1840",
+   "title": "Opevnění na plánech 1781, 1821 a 1840",
+   "img": {
+    "strip": [
+     "data/historic/growth/fort/1781.png",
+     "data/historic/growth/fort/1821.png",
+     "data/historic/growth/fort/1840.png"
+    ]
+   },
+   "cs": "Co je na plánu 1781 a chybí v letech 1821 a 1840, bylo mezitím zbořeno.",
+   "en": "What is on the 1781 plan and missing in 1821 and 1840 was demolished in between."
+  },
+  {
+   "id": "out-ham65",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-65",
+   "year": [
+    1942,
+    2008
+   ],
+   "short": "Registrace HAM 65",
+   "title": "Mapa demolic na dnešních půdorysech",
+   "img": {
+    "src": "data/historic/growth/_ham65_check.jpg"
+   },
+   "cs": "Mapa demolic přiložená na dnešní půdorysy (modře).",
+   "en": "The demolition map laid over present footprints (blue)."
+  },
+  {
+   "id": "out-epochs",
+   "group": "derived",
+   "lic": "own",
+   "year": [
+    1840,
+    2025
+   ],
+   "short": "Epochy",
+   "title": "Zastavěné plochy podle map",
+   "img": {
+    "src": "data/historic/growth/_epochs.jpg"
+   },
+   "cs": "Zastavěné plochy rozpoznané na mapách jednotlivých let.",
+   "en": "Built-up areas recognised on the maps of each year."
+  },
+  {
+   "id": "out-growth",
+   "group": "derived",
+   "lic": "own",
+   "year": [
+    1840,
+    2025
+   ],
+   "short": "Růst",
+   "title": "Růst zastavěné plochy 1840–2025",
+   "img": {
+    "src": "data/historic/growth/_growth.jpg"
+   },
+   "cs": "Růst zastavěné plochy 1840–2025.",
+   "en": "Growth of the built-up area 1840–2025."
+  },
+  {
+   "id": "out-cutouts",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ottheinrich-1536",
+   "year": [
+    1536,
+    1537
+   ],
+   "short": "Výřezy 1536",
+   "title": "Výřezy domů z veduty 1536 (kontaktní arch)",
+   "img": {
+    "src": "data/historic/cutouts/ottheinrich-1536/_contact_sheet.jpg"
+   },
+   "cs": "Domy vyříznuté z veduty pro mapování na budovy.",
+   "en": "Houses cut out of the veduta for mapping onto buildings."
+  },
+  {
+   "id": "out-synth",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ottheinrich-1536",
+   "year": [
+    1536,
+    1537
+   ],
+   "short": "Syntetický pohled",
+   "title": "Syntetický pohled modelu ze stanoviště veduty 1536",
+   "img": {
+    "src": "data/historic/cutouts/_synthetic_view_ottheinrich.jpg"
+   },
+   "cs": "Model viděný ze stanoviště kreslíře z roku 1536.",
+   "en": "The model seen from the 1536 draughtsman's viewpoint."
+  },
+  {
+   "id": "out-facets",
+   "group": "derived",
+   "lic": "own",
+   "basis": "te-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Fasety 1618",
+   "title": "Fasetové textury z rytiny 1618 (ukázka náměstí)",
+   "img": {
+    "src": "data/historic/facets/te-1618/_sample_square.jpg"
+   },
+   "cs": "Textury stěn a střech z rytiny 1618.",
+   "en": "Wall and roof textures from the 1618 engraving."
+  },
+  {
+   "id": "out-3d1450",
+   "group": "derived",
+   "lic": "own",
+   "basis": "city3d",
+   "year": [
+    1450,
+    1450
+   ],
+   "short": "3D 1450",
+   "title": "Centrum v roce 1450 s tvary z 3D modelu",
+   "img": {
+    "src": "data/historic/growth/shots/city3d_church_1450.jpg"
+   },
+   "cs": "Kostel sv. Bartoloměje má už ve středověku dnešní tvar; domy stojí na místech domů z roku 1840 (3D model města [city3d], citace).",
+   "en": "St Bartholomew has its present form already in the Middle Ages; houses stand where the 1840 houses stood (city 3D model [city3d], quotation)."
+  },
+  {
+   "id": "out-3d1990",
+   "group": "derived",
+   "lic": "own",
+   "basis": "city3d",
+   "year": [
+    1990,
+    1990
+   ],
+   "short": "3D 1990",
+   "title": "Sídliště Severního Předměstí v roce 1990",
+   "img": {
+    "src": "data/historic/growth/shots/city3d_estates_1990.jpg"
+   },
+   "cs": "Bloky Lochotína, Košutky a Vinice ve skutečných tvarech (3D model města [city3d], citace).",
+   "en": "The blocks of Lochotín, Košutka and Vinice in their real shapes (city 3D model [city3d], quotation)."
+  },
+  {
+   "id": "out-ved1",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Veduta → 3D",
+   "title": "Rytina 1618 promítnutá z napasované kamery",
+   "img": {
+    "src": "data/historic/growth/shots/veduta_te1618_camera.jpg"
+   },
+   "cs": "Kamera kreslíře dopočtená ze 14 vazeb mezi rytinou a modelem (odchylka 63.6 px, 3,4 % výšky listu); společně s ní byly odhadnuty výšky věží hradeb (14–17,5 m) a bran (21–28 m), které model používá (rytina [siege-1618]).",
+   "en": "The draughtsman's camera solved from 14 links between the plate and the model (error 63.6 px, 3.4 % of the sheet height); together with it the heights of the wall towers (14–17.5 m) and gates (21–28 m) used by the model were estimated (plate [siege-1618])."
+  },
+  {
+   "id": "out-ved2",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1618,
+    1618
+   ],
+   "short": "Veduta na fasádách",
+   "title": "Rytina 1618 na fasádách a střechách",
+   "img": {
+    "src": "data/historic/growth/shots/veduta_te1618_oblique.jpg"
+   },
+   "cs": "Pohled z jiného směru: rytina na fasádách a střechách generovaných domů; plochy, které kreslíř neviděl, zůstávají bílé (rytina [siege-1618]).",
+   "en": "Seen from another direction: the plate on the façades and roofs of the generated houses; surfaces the draughtsman could not see stay white (plate [siege-1618])."
+  },
+  {
+   "id": "out-reg1658",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-5",
+   "year": [
+    1658,
+    1658
+   ],
+   "short": "Plán 1658 × 1781",
+   "title": "Plán 1658 přiložený na model",
+   "img": {
+    "src": "data/historic/growth/fort/_reg_1658.jpg"
+   },
+   "cs": "Modře hradby modelu, zeleně díla z plánu 1781. Malá olivová jádra existovala už roku 1658, větší obrysy jsou tehdejší návrhy postavené 1658–59 (plán [ham-5], citace).",
+   "en": "Blue: the model's walls, green: the works of the 1781 plan. The small olive cores existed by 1658; the larger outlines are proposals built in 1658–59 (plan [ham-5], quotation)."
+  },
+  {
+   "id": "out-reg1703",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-6",
+   "year": [
+    1703,
+    1703
+   ],
+   "short": "Plán 1703 × 1781",
+   "title": "Plán 1703 přiložený na model",
+   "img": {
+    "src": "data/historic/growth/fort/_reg_1703.jpg"
+   },
+   "cs": "Červeně díla obkreslená z plánu 1703. Dvě z nich odpovídají dílům z roku 1781; redan na jižní frontě a dvě předsunuté lunety plán 1781 nezná, proto v animaci stojí jen 1703–1780 (plán [ham-6], citace).",
+   "en": "Red: works traced from the 1703 plan. Two match works of 1781; the redan of the south front and two outer lunettes are not on the 1781 plan, so in the animation they stand only 1703–1780 (plan [ham-6], quotation)."
+  },
+  {
+   "id": "out-fort1665",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1781",
+   "year": [
+    1665,
+    1665
+   ],
+   "short": "Opevnění 1665",
+   "title": "Barokní opevnění kolem roku 1665",
+   "img": {
+    "src": "data/historic/growth/shots/fort_1665.jpg"
+   },
+   "cs": "Zemní bastiony a valy (olivově), hradby a parkán (šedě) a příkop s vodou (modře) podle plánů 1658 a 1781.",
+   "en": "Earthwork bastions and ramparts (olive), walls and Zwinger (grey) and the water-filled moat (blue) after the plans of 1658 and 1781."
+  },
+  {
+   "id": "out-fort1720",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-6",
+   "year": [
+    1720,
+    1720
+   ],
+   "short": "Opevnění 1720",
+   "title": "Opevnění po Ziznerových úpravách (1720)",
+   "img": {
+    "src": "data/historic/growth/shots/fort_1720.jpg"
+   },
+   "cs": "Přibyla díla z plánu 1703 na jihu a jihozápadě; zda byla opravdu postavena, není jisté.",
+   "en": "The works of the 1703 plan in the south and south-west are added; whether they were really built is uncertain."
+  },
+  {
+   "id": "out-fort1790",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1781",
+   "year": [
+    1790,
+    1790
+   ],
+   "short": "Opevnění 1790",
+   "title": "Sesedlá opevnění kolem roku 1790",
+   "img": {
+    "src": "data/historic/growth/shots/fort_1790.jpg"
+   },
+   "cs": "Od roku 1760 díla chátrají; roku 1784 je povoleno je zbourat.",
+   "en": "From 1760 the works decay; in 1784 their demolition is permitted."
+  },
+  {
+   "id": "out-barracks",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1840",
+   "year": [
+    1823,
+    1969
+   ],
+   "short": "Kasárna 1823–1969",
+   "title": "Kasárna 35. pěšího pluku (1950)",
+   "img": {
+    "src": "data/historic/growth/shots/barracks_1950.jpg"
+   },
+   "cs": "Velká budova na místě Turecké šance (oranžově uprostřed vlevo), odstřelená 24. 1. 1969 kvůli průtahu.",
+   "en": "The large building on the site of the Turkish redoubt (orange, centre left), blown up on 24 Jan 1969 for the through-road."
+  },
+  {
+   "id": "out-reg57",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-57",
+   "year": [
+    1410,
+    1410
+   ],
+   "short": "Mapa 57 × model",
+   "title": "Mapa 57 zarovnaná na model",
+   "img": {
+    "src": "data/historic/growth/fort/_reg_57.jpg"
+   },
+   "cs": "Modře hradby modelu; vektorizované bloky vnitřního města (fialově), předměstí (zeleně), předměstské hradby (červeně), kostely a koryta řek. Bloky jsou podkladem generovaných domů, předměstí a koryta platí pro období kolem roku 1410 (mapa [ham-57], citace).",
+   "en": "Blue: the model's walls; vectorised inner-town blocks (purple), suburbs (green), suburb walls (red), churches and river courses. The blocks carry the generated houses; suburbs and rivers apply to the period around 1410 (map [ham-57], quotation)."
+  },
+  {
+   "id": "out-med1400",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-57",
+   "year": [
+    1400,
+    1400
+   ],
+   "short": "Město 1400",
+   "title": "Město a předměstí kolem roku 1400",
+   "img": {
+    "src": "data/historic/growth/shots/med_1400.jpg"
+   },
+   "cs": "Generované měšťanské domy kolem dvorců, kompletní náměstí a organicky rostoucí předměstí malých domků (podklad: mapa [ham-57], citace).",
+   "en": "Generated burgher houses around courtyards, a complete square and organically growing suburbs of small houses (ground: map [ham-57], quotation)."
+  },
+  {
+   "id": "out-blocks1500",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-57",
+   "year": [
+    1500,
+    1500
+   ],
+   "short": "Domy 1500",
+   "title": "Štítové domy uvnitř hradeb (1500)",
+   "img": {
+    "src": "data/historic/growth/shots/blocks_1500.jpg"
+   },
+   "cs": "Nižší domy se sedlovými střechami, štítem do ulice, v řadách kolem obdélníkových dvorců; kostel sv. Bartoloměje z 3D modelu města.",
+   "en": "Lower houses with gabled roofs, gable to the street, in rows around rectangular courtyards; St Bartholomew from the city 3D model."
+  },
+  {
+   "id": "out-fort1640",
+   "group": "derived",
+   "lic": "own",
+   "basis": "siege-1618",
+   "year": [
+    1640,
+    1640
+   ],
+   "short": "Val 1640",
+   "title": "Mansfeldův val s příkopem (1640)",
+   "img": {
+    "src": "data/historic/growth/shots/fort_1640.jpg"
+   },
+   "cs": "Souvislý zemní val kolem parkánu a příkop, který nahradil středověký příkop; podklad rytina Theatra Europaea 1618.",
+   "en": "A continuous earth rampart around the Zwinger and the ditch that replaced the medieval moat; ground: the Theatrum Europaeum plate of 1618."
+  },
+  {
+   "id": "out-star1720",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-6",
+   "year": [
+    1720,
+    1720
+   ],
+   "short": "Hvězdice 1720",
+   "title": "Barokní hvězdice podle plánů 1658 a 1703 (1720)",
+   "img": {
+    "src": "data/historic/growth/shots/star_1720.jpg"
+   },
+   "cs": "Bastiony napojené na hlavní val, samostatné raveliny a lunety a příkop kopírující celý obrys; podklad plán [ham-6] (citace).",
+   "en": "Bastions joined to the main rampart, detached ravelins and lunettes and a ditch following the whole outline; ground: plan [ham-6] (quotation)."
+  },
+  {
+   "id": "out-star1720b",
+   "group": "derived",
+   "lic": "own",
+   "basis": "ham-6",
+   "year": [
+    1720,
+    1720
+   ],
+   "short": "Val zblízka",
+   "title": "Hlavní val, parkán a hradba zblízka (1720)",
+   "img": {
+    "src": "data/historic/growth/shots/star_close_1720.jpg"
+   },
+   "cs": "Zemní tělesa se svahem, valovou korunou a předprsní; uvnitř kamenný parkán a hradba.",
+   "en": "Earth bodies with scarp, crest and parapet; inside the masonry Zwinger and wall."
+  },
+  {
+   "id": "out-town1830",
+   "group": "derived",
+   "lic": "own",
+   "basis": "plan-1821",
+   "year": [
+    1830,
+    1830
+   ],
+   "short": "Město 1830",
+   "title": "Po zboření hradeb (1830)",
+   "img": {
+    "src": "data/historic/growth/shots/town_1830.jpg"
+   },
+   "cs": "Za hradbami už stojí domy z historické databáze; uvnitř zůstávají starší domy tam, kde dnešní budova vznikla později (podklad plán [plan-1821], citace).",
+   "en": "Outside the walls the houses of the historic database now stand; inside, older houses remain where the present building came later (ground: plan [plan-1821], quotation)."
+  },
+  {
+   "id": "out-sq1500",
+   "group": "derived",
+   "lic": "own",
+   "year": [
+    1500,
+    1500
+   ],
+   "short": "Náměstí 1500",
+   "title": "Náměstí kolem roku 1500",
+   "img": {
+    "src": "data/historic/growth/shots/square_1500.jpg"
+   },
+   "cs": "Domy na náměstí jsou vyšší (tři až čtyři podlaží), v ulicích nižší.",
+   "en": "Houses on the square are taller (three to four storeys), lower in the streets."
+  },
+  {
+   "id": "out-sq1600",
+   "group": "derived",
+   "lic": "own",
+   "year": [
+    1600,
+    1600
+   ],
+   "short": "Náměstí 1600",
+   "title": "Renesanční náměstí (1600)",
+   "img": {
+    "src": "data/historic/growth/shots/square_1600.jpg"
+   },
+   "cs": "Od stavby radnice (1554–59) stojí kolem náměstí dnešní modely domů a radnice z 3D modelu města.",
+   "en": "From the building of the town hall (1554–59) the present models of the houses and the town hall from the city 3D model stand around the square."
+  },
+  {
+   "id": "out-franc1400",
+   "group": "derived",
+   "lic": "own",
+   "year": [
+    1400,
+    1400
+   ],
+   "short": "Františkáni 1400",
+   "title": "Františkánský klášter s gotickým traktem (1400)",
+   "img": {
+    "src": "data/historic/growth/shots/franciscan_1400.jpg"
+   },
+   "cs": "Klášter s ambitem stojí od středověku; RÚIAN uvádí jen datum rekonstrukce (2010).",
+   "en": "The monastery with its cloister stands from the Middle Ages; RÚIAN gives only the date of the reconstruction (2010)."
+  }
+ ],
+ "stills": [
+  1300,
+  1420,
+  1500,
+  1618,
+  1660,
+  1781,
+  1830,
+  1870,
+  1900,
+  1925,
+  1945,
+  1960,
+  1980,
+  1995,
+  2020
+ ],
+ "chapters": [
+  {
+   "id": "c1",
+   "years": [
+    1295,
+    1432
+   ],
+   "cs": "Založení a gotické město",
+   "en": "Founding and the Gothic town",
+   "stills": [
+    1300,
+    1420
+   ],
+   "text_cs": "Václav II. zakládá roku 1295 Novou Plzeň s pravidelnou sítí ulic a velkým náměstím. Město stojí hned celé v půdorysu bloků mapy 57: nejdřív nízké dřevěné domy, které na stejných parcelách nahrazují vyšší zděné domy (1340–1480) a na části parcel renesanční patra; skutečné dnešní budovy přicházejí až po roce 1750, na náměstí od stavby radnice. Předměstí malých domků rostou od bran podél cest a postupně vyplňují své bloky; dominikánský klášter stojí severně od náměstí. Řeky tečou ve středověkých korytech.",
+   "text_en": "In 1295 Wenceslas II founds New Plzeň with a regular street grid and a large square. The town stands complete from the start on the blocks of map 57: first low timber houses, replaced on the same plots by taller stone houses (1340–1480) and on part of the plots by Renaissance storeys; the real present buildings come only after 1750, on the square from the building of the town hall. Suburbs of small houses grow from the gates along the roads and gradually fill their blocks; the Dominican monastery stands north of the square. The rivers run in their medieval courses.",
+   "items": [
+    "ham-57",
+    "out-reg57",
+    "out-med1400",
+    "out-3d1450",
+    "out-franc1400"
+   ]
+  },
+  {
+   "id": "c2",
+   "years": [
+    1433,
+    1617
+   ],
+   "cs": "Husitské obléhání a renesanční město",
+   "en": "Hussite siege and the Renaissance town",
+   "stills": [
+    1500
+   ],
+   "text_cs": "Husité pod Prokopem Holým obléhají město v letech 1433–34 devět měsíců, ale nedobudou ho; předměstí shoří a během dalších desetiletí se obnovují. V letech 1554–59 vzniká renesanční radnice a s ní dnešní podoba domů na náměstí. Ze 16. století pochází první pohled na město (1536) a Willenbergovo panorama (1602).",
+   "text_en": "The Hussites under Prokop Holý besiege the town for nine months in 1433–34 but do not take it; the suburbs burn and are rebuilt over the following decades. In 1554–59 the Renaissance town hall is built, and with it the present form of the houses on the square. The 16th century gives the first view of the town (1536) and Willenberg's panorama (1602).",
+   "items": [
+    "ottheinrich-1536",
+    "willenberg-1602",
+    "hollar-p812",
+    "out-cutouts",
+    "out-synth",
+    "out-blocks1500",
+    "out-sq1500",
+    "out-sq1600"
+   ]
+  },
+  {
+   "id": "c3",
+   "years": [
+    1618,
+    1702
+   ],
+   "cs": "Dobytí 1618 a barokní pevnost",
+   "en": "The capture of 1618 and the baroque fortress",
+   "stills": [
+    1618,
+    1665
+   ],
+   "text_cs": "Mansfeld dobývá město 21. listopadu 1618 útokem; předměstí hoří a jeho posádka staví kolem parkánu souvislý zemní val s příkopem, který nahrazuje středověký příkop. Roku 1647 je předpolí vyklizeno. Za velitele La Corony (1645–49) a v letech 1658–59 vyrůstají bastiony napojené na val; jejich tvar je z plánu 1703, časování z plánu 1658 a Vogtův plán 1712 je potvrzuje.",
+   "text_en": "Mansfeld takes the town by storm on 21 November 1618; the suburbs burn and his garrison builds a continuous earth rampart with a ditch around the Zwinger, replacing the medieval moat. In 1647 the glacis is cleared. Under commander La Corona (1645–49) and in 1658–59 bastions joined to the rampart rise; their shape comes from the 1703 plan, their timing from the 1658 plan, and Vogt's plan of 1712 confirms them.",
+   "items": [
+    "siege-1618",
+    "merian-1650",
+    "ham-5",
+    "out-ved1",
+    "out-ved2",
+    "out-facets",
+    "out-reg1658",
+    "out-fort1665",
+    "out-fort1640"
+   ]
+  },
+  {
+   "id": "c4",
+   "years": [
+    1703,
+    1794
+   ],
+   "cs": "Opevnění chátrá",
+   "en": "The fortification decays",
+   "stills": [
+    1720,
+    1790
+   ],
+   "fort": true,
+   "text_cs": "Zizner roku 1703 opevnění opravuje a doplňuje raveliny a lunety na jihu a jihozápadě; příkop teď obtéká celou hvězdici. Zda byla nová díla opravdu postavena, není jisté, a v 70. letech 18. století mizí. Od 1760 díla chátrají a roku 1784 je povoleno je zbourat.",
+   "text_en": "In 1703 Zizner repairs the fortification and adds ravelins and lunettes in the south and south-west; the ditch now runs around the whole star. Whether the new works were really built is uncertain, and they disappear in the 1770s. From 1760 the works decay, and in 1784 their demolition is permitted.",
+   "items": [
+    "ham-6",
+    "bodenehr-1700",
+    "vogt-1712",
+    "ham-2-4",
+    "mueller",
+    "ham-9",
+    "ham-10",
+    "ham-11",
+    "ham-11b",
+    "zcm-1781",
+    "plan-1781",
+    "out-fort",
+    "out-legend",
+    "out-reg1703",
+    "out-fort1790",
+    "out-star1720",
+    "out-star1720b"
+   ]
+  },
+  {
+   "id": "c5",
+   "years": [
+    1795,
+    1860
+   ],
+   "cs": "Bourání hradeb a okružní sady",
+   "en": "Walls come down, the ring park appears",
+   "stills": [
+    1830
+   ],
+   "text_cs": "Od roku 1795 se boří hradby a zasypávají příkopy, brány padají mezi lety 1804 a 1849. Teprve teď se za hradbami objevují domy z historické databáze (katastr 1840, dnešní budovy). Turecká šance je kolem roku 1822 srovnána a stojí na ní kasárna 35. pěšího pluku se dvorem; dominikánský klášter, od roku 1786 vojenská nemocnice, ustupuje kolem roku 1800 nové zástavbě.",
+   "text_en": "From 1795 the walls are pulled down and the moats filled; the gates fall between 1804 and 1849. Only now do the houses of the historic database (1840 cadastre, present buildings) appear outside the walls. The Turkish redoubt is levelled around 1822 and the barracks of the 35th Infantry Regiment with their courtyard stand on it; the Dominican monastery, a military hospital from 1786, gives way to new building around 1800.",
+   "items": [
+    "plan-1821",
+    "ham-12",
+    "plan-1840",
+    "vm2",
+    "out-fortcmp",
+    "schabat-1864",
+    "plan-1864",
+    "out-town1830"
+   ]
+  },
+  {
+   "id": "c6",
+   "years": [
+    1861,
+    1918
+   ],
+   "cs": "Železnice, pivovar a Škodovka",
+   "en": "Railway, brewery and Škoda",
+   "stills": [
+    1870,
+    1900
+   ],
+   "text_cs": "Železnice (1861–62) s prvním nádražím, Měšťanský pivovar a Škodovy závody mění Plzeň v průmyslové město. Roku 1899 jezdí elektrická tramvaj a roku 1907 se otevírá nová budova hlavního nádraží. Předměstí rostou do všech stran; plány z let 1873–1912 ukazují postup zástavby téměř rok po roku a počty domů ze sčítání slouží ke kalibraci.",
+   "text_en": "The railway (1861–62) with the first station, the Burghers' Brewery and the Škoda works make Plzeň an industrial town. The electric tram runs from 1899 and the new main station building opens in 1907. The suburbs grow in all directions; the plans of 1873–1912 show the progress almost year by year, and census house counts calibrate the model.",
+   "items": [
+    "plan-1873",
+    "plan-1877",
+    "plan-1877l",
+    "vm3",
+    "plan-1881",
+    "plan-1891",
+    "plan-1893",
+    "plan-1895",
+    "plan-1902",
+    "plan-1908",
+    "plan-1912",
+    "csu-hlo"
+   ]
+  },
+  {
+   "id": "c7",
+   "years": [
+    1919,
+    1945
+   ],
+   "cs": "Velká Plzeň a válka",
+   "en": "Greater Plzeň and the war",
+   "stills": [
+    1925,
+    1945
+   ],
+   "text_cs": "Roku 1924 se k Plzni připojují Doubravka, Doudlevce, Lobzy a Skvrňany. Nálety v letech 1942–45 zasahují Škodovy závody, nádraží i centrum; 6. května 1945 město osvobozuje americká armáda. Zničené domy mizí a po válce se obnovují.",
+   "text_en": "In 1924 Doubravka, Doudlevce, Lobzy and Skvrňany join Plzeň. The air raids of 1942–45 hit the Škoda works, the station and the centre; on 6 May 1945 the US Army liberates the town. Destroyed houses disappear and are rebuilt after the war.",
+   "items": [
+    "plan-1926",
+    "plan-1931",
+    "plan-1938",
+    "ham-46",
+    "ham-47",
+    "ham-65",
+    "out-ham65"
+   ]
+  },
+  {
+   "id": "c8",
+   "years": [
+    1946,
+    1989
+   ],
+   "cs": "Poválečná obnova a sídliště",
+   "en": "Post-war rebuilding and housing estates",
+   "stills": [
+    1960,
+    1980
+   ],
+   "text_cs": "Po válce se boří části historického centra. Rostou panelová sídliště: Slovany (1954–63), Doubravka (1960–67), Bory (1965–72) a Skvrňany (1968–76). Roku 1969 jsou odstřelena kasárna 35. pluku, aby mohl vzniknout průtah přes Mži na Roudnou a Lochotín, kde se staví od roku 1975; Bolevec následuje 1978–81, Košutka a Vinice jsou hotové na začátku 90. let.",
+   "text_en": "After the war parts of the historic centre are demolished. Prefabricated estates grow: Slovany (1954–63), Doubravka (1960–67), Bory (1965–72) and Skvrňany (1968–76). In 1969 the barracks of the 35th Regiment are blown up to make way for the through-road across the Mže to Roudná and Lochotín, built from 1975; Bolevec follows in 1978–81, and Košutka and Vinice are finished in the early 1990s.",
+   "items": [
+    "plan-1947",
+    "plan-1950",
+    "plan-1951",
+    "orto-1953",
+    "plan-1971",
+    "plan-1972",
+    "ham-48",
+    "ham-49",
+    "out-epochs",
+    "out-3d1990",
+    "out-barracks"
+   ]
+  },
+  {
+   "id": "c9",
+   "years": [
+    1990,
+    2020
+   ],
+   "cs": "Dnešní město",
+   "en": "The present town",
+   "stills": [
+    1995,
+    2020
+   ],
+   "text_cs": "Na konci animace stojí dnešní město: půdorysy a stáří budov z RÚIAN, jejich tvary z 3D modelu města a terén z výškopisu ČÚZK.",
+   "text_en": "The animation ends with the present town: footprints and ages of the buildings from RÚIAN, their shapes from the city 3D model and the terrain from the ČÚZK elevation model.",
+   "items": [
+    "orto-2001",
+    "ham-50",
+    "ztm",
+    "ruian",
+    "dmr5g",
+    "city3d",
+    "out-growth"
+   ]
+  }
+ ],
+ "siege": {
+  "cs": "Čtyři vyobrazení obléhání 19. 9. – 21. 11. 1618 se shodují v hlavním: Mansfeldovo vojsko táboří před městem, průlom vede u Pražské brány, předměstí hoří (legenda D Theatra Europaea) a město je 21. 11. dobyto. Legendy pojmenovávají kostely, kláštery a brány, mezi nimi černý (dominikánský) klášter (B) severně od náměstí. Rytina Theatra Europaea je zarovnaná na model (12 bodů) a slouží jako podkladová mapa let 1618–1658 a pro promítnutí na budovy.",
+  "en": "The four depictions of the siege of 19 Sep – 21 Nov 1618 agree on the essentials: Mansfeld's army camps before the town, the breach is at the Prague gate, the suburbs burn (key D of Theatrum Europaeum) and the town is taken on 21 Nov. The keys name churches, monasteries and gates, among them the Black (Dominican) monastery (B) north of the square. The Theatrum Europaeum plate is aligned to the model (12 points) and serves as the ground map of 1618–1658 and for projection onto the buildings."
+ }
+}
