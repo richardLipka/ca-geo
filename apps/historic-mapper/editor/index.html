@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruční doplnění map</title>
+<style>
+  :root { --bg: #f6f5f1; --panel: #ffffff; --ink: #1f2427; --mute: #67706f; --line: #d3d8d6; --acc: #8c3b2e; --water: #2f7fd0; --sel: #e0a020 }
+  * { box-sizing: border-box }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, sans-serif }
+  #app { display: grid; grid-template-columns: 300px 1fr; height: 100% }
+  aside { background: var(--panel); border-right: 1px solid var(--line); padding: 10px 12px; overflow: auto }
+  h1 { font-size: 15px; margin: 0 0 6px } h2 { font-size: 12.5px; margin: 14px 0 4px; color: var(--acc); text-transform: uppercase; letter-spacing: .04em }
+  select, input, button { font: inherit } select, input[type=number], input[type=text] { width: 100%; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px }
+  .row { display: flex; gap: 6px; align-items: center; margin: 4px 0 } .row > * { flex: 1 }
+  .tools button, .tabs button { padding: 4px 8px; border: 1px solid var(--line); background: #fbfbfa; border-radius: 4px; cursor: pointer }
+  .tools button.on, .tabs button.on { background: var(--acc); color: #fff; border-color: var(--acc) }
+  .tabs { display: flex; gap: 4px; margin: 6px 0 } .tools { display: flex; flex-wrap: wrap; gap: 4px }
+  #save { background: #2d6a3e; color: #fff; border: 0; padding: 6px 10px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 8px }
+  #status { color: var(--mute); margin-top: 6px; min-height: 2.6em } .hint { color: var(--mute); font-size: 12px }
+  ul { list-style: none; padding: 0; margin: 4px 0; max-height: 220px; overflow: auto; border: 1px solid var(--line); border-radius: 4px }
+  li { padding: 3px 6px; cursor: pointer; display: flex; justify-content: space-between } li:hover { background: #f1efe8 } li.on { background: #f4dfc9 }
+  main { position: relative; overflow: hidden } canvas { display: block; width: 100%; height: 100%; cursor: crosshair }
+  #coord { position: absolute; left: 8px; bottom: 6px; background: rgba(255,255,255,.85); padding: 2px 6px; border-radius: 4px; font-size: 12px }
+  kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; background: #fbfbfa; font-size: 11px }
+  .lg { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px }
+</style>
+</head>
+<body>
+<div id="app">
+<aside>
+  <h1 data-t="title">Ruční doplnění map a vedut</h1>
+  <div class="hint" data-t="intro">Pracovní nástroj projektu (není součástí veřejné stránky). Úpravy se ukládají do apps/historic-mapper/manual/ a growth_model.py je použije při dalším sestavení.</div>
+  <div class="tabs"><button id="tabMap" class="on" data-t="tabMap">Mapy</button><button id="tabVed" data-t="tabVed">Veduty</button><button id="lang">EN</button></div>
+
+  <div id="paneMap">
+    <h2 data-t="map">Mapa</h2>
+    <select id="mapSel"></select>
+    <div class="row"><label><input type="checkbox" id="showModel" checked> <span data-t="showModel">budovy modelu v roce mapy</span></label></div>
+    <div class="row"><label><input type="checkbox" id="showWater" checked> <span data-t="showWater">ručně zamodřená voda</span></label></div>
+    <h2 data-t="tool">Nástroj</h2>
+    <div class="tools">
+      <button data-tool="pan" class="on" data-t="pan">Posun</button>
+      <button data-tool="water" data-t="water">Voda – štětec</button>
+      <button data-tool="erase" data-t="erase">Guma</button>
+      <button data-tool="poly" data-t="poly">Půdorys</button>
+    </div>
+    <div class="row"><span data-t="brush">Štětec (m)</span><input type="range" id="brush" min="3" max="60" value="12"><b id="brushV">12</b></div>
+    <div class="hint" data-t="keys">Kolečko = zoom, tažení prostředním tlačítkem nebo s mezerníkem = posun. Půdorys: klikat rohy, <kbd>Enter</kbd> / dvojklik = hotovo, <kbd>Esc</kbd> = zrušit, klik na budovu = výběr, <kbd>Delete</kbd> = smazat.</div>
+    <h2 data-t="blds">Doplněné budovy</h2>
+    <ul id="bldList"></ul>
+    <div id="bldEdit" hidden>
+      <div class="row"><span data-t="from">od roku</span><input type="number" id="bFrom" placeholder="auto"><span data-t="to">do roku</span><input type="number" id="bTo" placeholder="auto"></div>
+      <div class="row"><span data-t="height">výška (m)</span><input type="number" id="bH" placeholder="auto"></div>
+      <div class="row"><input type="text" id="bNote" placeholder="poznámka / note"></div>
+    </div>
+    <div class="hint"><span class="lg" style="background:#3b6fb0"></span><span data-t="lgModel">model</span> &nbsp; <span class="lg" style="background:#d0402a"></span><span data-t="lgMan">doplněno ručně</span> &nbsp; <span class="lg" style="background:var(--water)"></span><span data-t="lgWater">voda</span></div>
+  </div>
+
+  <div id="paneVed" hidden>
+    <h2 data-t="veduta">Veduta</h2>
+    <select id="vedSel"></select>
+    <div id="camInfo" class="hint"></div>
+    <h2 data-t="vblds">Budovy na vedutě</h2>
+    <div class="row"><button id="vNew" data-t="vNew">+ nová budova</button></div>
+    <ul id="vList"></ul>
+    <div id="vEdit" hidden>
+      <div class="row"><input type="text" id="vName" placeholder="název / name"></div>
+      <div class="row"><span data-t="from">od roku</span><input type="number" id="vFrom" placeholder="auto"><span data-t="to">do roku</span><input type="number" id="vTo" placeholder="auto"></div>
+      <div class="tools">
+        <button data-pt="foot" class="on"><span class="lg" style="background:#2d9a4e"></span><span data-t="foot">rohy půdorysu</span></button>
+        <button data-pt="eave"><span class="lg" style="background:#d0402a"></span><span data-t="eave">okap / koruna zdi</span></button>
+        <button data-pt="ridge"><span class="lg" style="background:#2f5fd0"></span><span data-t="ridge">hřeben / vrchol</span></button>
+      </div>
+      <div class="hint" data-t="vHint">Rohy půdorysu: body, kde stěny stojí na zemi (alespoň 3, ideálně 4, po obvodu). Okap: horní hrana stěny nad rohem. Hřeben: konce hřebene střechy (nebo vrchol věže). Pravý klik smaže nejbližší bod.</div>
+    </div>
+  </div>
+  <button id="save" data-t="save">Uložit</button>
+  <div id="status"></div>
+</aside>
+<main><canvas id="cv"></canvas><div id="coord"></div></main>
+</div>
+<script>
+const T = {
+  cs: {},
+  en: { title: 'Manual completion of maps and vedute', intro: 'Working tool of the project (not part of the public page). Edits are saved to apps/historic-mapper/manual/ and growth_model.py uses them in the next build.',
+    tabMap: 'Maps', tabVed: 'Vedute', map: 'Map', showModel: 'model buildings in the map year', showWater: 'manually painted water', tool: 'Tool', pan: 'Pan', water: 'Water brush',
+    erase: 'Eraser', poly: 'Footprint', brush: 'Brush (m)', keys: 'Wheel = zoom, drag with the middle button or with space = pan. Footprint: click corners, Enter / double click = done, Esc = cancel, click a building = select, Delete = remove.',
+    blds: 'Added buildings', from: 'from', to: 'to', height: 'height (m)', lgModel: 'model', lgMan: 'added manually', lgWater: 'water', veduta: 'Veduta', vblds: 'Buildings on the veduta',
+    vNew: '+ new building', foot: 'footprint corners', eave: 'eave / wall top', ridge: 'ridge / apex',
+    vHint: 'Footprint corners: points where the walls meet the ground (at least 3, ideally 4, around the building). Eave: top edge of the wall above a corner. Ridge: ends of the roof ridge (or the apex of a tower). Right click removes the nearest point.',
+    save: 'Save' },
+};
+let lang = 'cs';
+const csText = {}; document.querySelectorAll('[data-t]').forEach(e => csText[e.dataset.t] = e.textContent);
+const tr = k => (lang === 'en' ? T.en[k] : csText[k]) ?? k;
+function applyLang() { document.querySelectorAll('[data-t]').forEach(e => e.textContent = tr(e.dataset.t)); document.getElementById('lang').textContent = lang === 'cs' ? 'EN' : 'CS'; document.documentElement.lang = lang; }
+document.getElementById('lang').onclick = () => { lang = lang === 'cs' ? 'en' : 'cs'; applyLang(); refreshLists(); };
+
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+let IDX, MODEL = null, mode = 'map';
+let view = { cx: -822400, cy: -1069700, s: 2.0 };   // world centre, metres per screen px (map) / image px per screen px (veduta)
+let vview = { cx: 0, cy: 0, s: 2 };
+let cur = null, imgs = [], edits = null, waterCv = null, waterCtx = null, modelPath = null;
+let tool = 'pan', draft = [], selB = -1, dirty = false;
+let ved = null, vimg = null, vedits = null, selV = -1, ptType = 'foot';
+const status = t => $('status').textContent = t;
+
+function resize() { const r = cv.parentElement.getBoundingClientRect(); cv.width = r.width * devicePixelRatio; cv.height = r.height * devicePixelRatio; draw(); }
+window.addEventListener('resize', resize);
+// ---------- transforms ----------
+const W2S = (x, y) => [(x - view.cx) / view.s * devicePixelRatio + cv.width / 2, -(y - view.cy) / view.s * devicePixelRatio + cv.height / 2];
+const S2W = (u, v) => [(u - cv.width / 2) / devicePixelRatio * view.s + view.cx, -(v - cv.height / 2) / devicePixelRatio * view.s + view.cy];
+const I2S = (x, y) => [(x - vview.cx) / vview.s * devicePixelRatio + cv.width / 2, (y - vview.cy) / vview.s * devicePixelRatio + cv.height / 2];
+const S2I = (u, v) => [(u - cv.width / 2) / devicePixelRatio * vview.s + vview.cx, (v - cv.height / 2) / devicePixelRatio * vview.s + vview.cy];
+const evPos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * devicePixelRatio, (e.clientY - r.top) * devicePixelRatio]; };
+
+async function getJSON(u, d) { try { const r = await fetch(u, { cache: 'no-store' }); if (!r.ok) return d; return await r.json(); } catch { return d; } }
+function loadImg(u) { return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = u; }); }
+
+// ---------- maps ----------
+async function openMap(id) {
+  if (dirty && !confirm(lang === 'cs' ? 'Neuložené změny se zahodí. Pokračovat?' : 'Unsaved changes will be lost. Continue?')) { $('mapSel').value = cur.id; return; }
+  cur = IDX.maps.find(m => m.id === id); dirty = false; draft = []; selB = -1;
+  status('…');
+  imgs = (await Promise.all(cur.layers.map(async L => ({ L, im: await loadImg(L.url) })))).filter(o => o.im);
+  edits = await getJSON(`/manual/map_${id}.json`, null) ?? { map: id, year: cur.year, buildings: [] };
+  const F = IDX.frame, n = Math.round((F[2] - F[0]) / IDX.res);
+  waterCv = document.createElement('canvas'); waterCv.width = waterCv.height = n; waterCtx = waterCv.getContext('2d');
+  const wi = await loadImg(`/manual/water_${id}.png?${Date.now()}`);
+  if (wi) { // stored as white = water on black; shown in blue
+    const t = document.createElement('canvas'); t.width = t.height = n; const tc = t.getContext('2d'); tc.drawImage(wi, 0, 0, n, n);
+    const d = tc.getImageData(0, 0, n, n), o = waterCtx.createImageData(n, n);
+    for (let k = 0; k < d.data.length; k += 4) if (d.data[k] > 127) { o.data[k] = 47; o.data[k + 1] = 127; o.data[k + 2] = 208; o.data[k + 3] = 255; }
+    waterCtx.putImageData(o, 0, 0);
+  }
+  buildModelPath();
+  if (cur.layers.length > 1 || cur.id.endsWith('_hi')) { const b = cur.layers.reduce((a, L) => [Math.min(a[0], L.bbox[0]), Math.min(a[1], L.bbox[1]), Math.max(a[2], L.bbox[2]), Math.max(a[3], L.bbox[3])], [1e9, 1e9, -1e9, -1e9]); view.cx = (b[0] + b[2]) / 2; view.cy = (b[1] + b[3]) / 2; view.s = Math.max(view.s, 0.5); view.s = Math.min(view.s, 2); }
+  refreshLists(); draw();
+  status(`${cur.label}: ${edits.buildings.length} ${lang === 'cs' ? 'doplněných budov' : 'added buildings'}`);
+}
+function visible(b, y) {
+  if (MODEL.from[b] > y || MODEL.to[b] <= y) return false;
+  const g = MODEL.gaps[b] || []; for (let k = 0; k + 1 < g.length; k += 2) if (g[k] <= y && y < g[k + 1]) return false; return true;
+}
+function buildModelPath() {
+  modelPath = null; if (!MODEL || !cur) return;
+  const y = cur.year + 0.01, [OX, OY] = MODEL.origin, skip = new Set(['moat', 'ditch'].map(c => MODEL.classes.indexOf(c)));
+  const p = new Path2D();
+  for (let b = 0; b < MODEL.n; b++) {
+    if (skip.has(MODEL.cls[b]) || !visible(b, y)) continue;
+    const r = MODEL.rings[b];
+    p.moveTo(r[0] / 10 + OX, r[1] / 10 + OY); for (let k = 2; k < r.length; k += 2) p.lineTo(r[k] / 10 + OX, r[k + 1] / 10 + OY); p.closePath();
+  }
+  modelPath = p;
+}
+function worldTransform() { const k = devicePixelRatio / view.s; ctx.setTransform(k, 0, 0, -k, cv.width / 2 - view.cx * k, cv.height / 2 + view.cy * k); return k; }
+
+function drawMap() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#e9e7e0'; ctx.fillRect(0, 0, cv.width, cv.height);
+  if (!cur) return;
+  const k = worldTransform();
+  ctx.imageSmoothingEnabled = view.s > 1.2;
+  for (const { L, im } of imgs) {
+    const sx = (L.bbox[2] - L.bbox[0]) / im.width, sy = (L.bbox[3] - L.bbox[1]) / im.height;
+    if (L.cells) {   // registered plan: 4 × 4 cells moved by their shift (map_buildings.py), so footprints drawn here fit the model
+      const cw = im.width / 4, ch = im.height / 4;
+      for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) { const [dx, dy] = L.cells[r][c]; ctx.save(); ctx.translate(L.bbox[0] + dx, L.bbox[3] + dy); ctx.scale(sx, -sy);
+        ctx.drawImage(im, c * cw, r * ch, cw, ch, c * cw, r * ch, cw, ch); ctx.restore(); }
+    } else { ctx.save(); ctx.translate(L.bbox[0], L.bbox[3]); ctx.scale(sx, -sy); ctx.drawImage(im, 0, 0); ctx.restore(); }
+  }
+  if ($('showWater').checked && waterCv) { const F = IDX.frame; ctx.save(); ctx.globalAlpha = 0.55; ctx.translate(F[0], F[3]); ctx.scale(IDX.res, -IDX.res); ctx.drawImage(waterCv, 0, 0); ctx.restore(); }
+  if ($('showModel').checked && modelPath) { ctx.lineWidth = 1.2 / k; ctx.strokeStyle = 'rgba(59,111,176,.9)'; ctx.stroke(modelPath); }
+  edits.buildings.forEach((b, i) => {
+    ctx.beginPath(); b.ring.forEach(([x, y], j) => j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath();
+    ctx.fillStyle = i === selB ? 'rgba(224,160,32,.45)' : 'rgba(208,64,42,.30)'; ctx.fill(); ctx.lineWidth = 2 / k; ctx.strokeStyle = i === selB ? '#e0a020' : '#d0402a'; ctx.stroke();
+  });
+  if (draft.length) {
+    ctx.beginPath(); draft.forEach(([x, y], j) => j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); if (hover) ctx.lineTo(...hover);
+    ctx.lineWidth = 2 / k; ctx.strokeStyle = '#d0402a'; ctx.setLineDash([6 / k, 4 / k]); ctx.stroke(); ctx.setLineDash([]);
+    for (const [x, y] of draft) { ctx.beginPath(); ctx.arc(x, y, 3 / k, 0, 7); ctx.fillStyle = '#d0402a'; ctx.fill(); }
+  }
+  if ((tool === 'water' || tool === 'erase') && hover) { ctx.beginPath(); ctx.arc(hover[0], hover[1], +$('brush').value / 2, 0, 7); ctx.lineWidth = 1.5 / k; ctx.strokeStyle = tool === 'water' ? '#2f7fd0' : '#555'; ctx.stroke(); }
+}
+let hover = null;
+let lastPaint = null;
+function paint(x, y) {
+  const F = IDX.frame, r = Math.max(+$('brush').value / 2 / IDX.res, 0.7);
+  const u = (x - F[0]) / IDX.res, v = (F[3] - y) / IDX.res;
+  waterCtx.globalCompositeOperation = tool === 'erase' ? 'destination-out' : 'source-over';
+  waterCtx.fillStyle = waterCtx.strokeStyle = '#2f7fd0'; waterCtx.lineCap = 'round'; waterCtx.lineWidth = 2 * r;
+  if (lastPaint) { waterCtx.beginPath(); waterCtx.moveTo(...lastPaint); waterCtx.lineTo(u, v); waterCtx.stroke(); }
+  waterCtx.beginPath(); waterCtx.arc(u, v, r, 0, 7); waterCtx.fill(); lastPaint = [u, v];
+  waterCtx.globalCompositeOperation = 'source-over'; dirty = true; edits.waterEdited = true;
+}
+function finishPoly() {
+  if (draft.length >= 3) { edits.buildings.push({ ring: draft.map(([x, y]) => [Math.round(x * 10) / 10, Math.round(y * 10) / 10]) }); selB = edits.buildings.length - 1; dirty = true; }
+  draft = []; refreshLists(); draw();
+}
+function pointInRing(x, y, r) { let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+
+// ---------- vedute ----------
+async function openVed(id) {
+  if (dirty && !confirm(lang === 'cs' ? 'Neuložené změny se zahodí. Pokračovat?' : 'Unsaved changes will be lost. Continue?')) { $('vedSel').value = ved.id; return; }
+  ved = IDX.vedute.find(v => v.id === id); dirty = false; selV = -1; status('…');
+  vimg = await loadImg(ved.url);
+  vedits = await getJSON(`/manual/veduta_${id}.json`, null) ?? { source: id, size: vimg ? [vimg.width, vimg.height] : null, buildings: [] };
+  if (vimg) { vview.cx = vimg.width / 2; vview.cy = vimg.height / 2; vview.s = Math.max(vimg.width / (cv.width / devicePixelRatio), vimg.height / (cv.height / devicePixelRatio)); }
+  $('camInfo').textContent = ved.view ? (lang === 'cs' ? `kamera napasována (veduta_fit.py, RMS ${ved.view.fit?.rms ?? '?'} px): budovy lze rekonstruovat` : `camera fitted (veduta_fit.py, RMS ${ved.view.fit?.rms ?? '?'} px): buildings can be reconstructed`)
+    : (lang === 'cs' ? 'kamera zatím chybí: propojte v hlavní aplikaci aspoň 5 bodů vedutu s objekty modelu (věže, brány) a spusťte veduta_fit.py; body budov lze sbírat už teď' : 'no camera yet: link at least 5 points of the veduta to model objects (towers, gates) in the main app and run veduta_fit.py; building points can be collected already');
+  refreshLists(); draw(); status(`${ved.label}: ${vedits.buildings.length}`);
+}
+const PTC = { foot: '#2d9a4e', eave: '#d0402a', ridge: '#2f5fd0' };
+function drawVed() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#e9e7e0'; ctx.fillRect(0, 0, cv.width, cv.height);
+  if (!vimg) return;
+  const k = devicePixelRatio / vview.s; ctx.setTransform(k, 0, 0, k, cv.width / 2 - vview.cx * k, cv.height / 2 - vview.cy * k);
+  ctx.imageSmoothingEnabled = vview.s > 1; ctx.drawImage(vimg, 0, 0);
+  vedits.buildings.forEach((b, i) => {
+    const on = i === selV, P = b.pts;
+    if (P.foot.length) { ctx.beginPath(); P.foot.forEach(([x, y], j) => j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); if (P.foot.length > 2) ctx.closePath(); ctx.lineWidth = (on ? 2.5 : 1.5) / k; ctx.strokeStyle = PTC.foot; ctx.stroke(); }
+    if (P.ridge.length > 1) { ctx.beginPath(); ctx.moveTo(...P.ridge[0]); P.ridge.slice(1).forEach(p => ctx.lineTo(...p)); ctx.lineWidth = (on ? 2.5 : 1.5) / k; ctx.strokeStyle = PTC.ridge; ctx.stroke(); }
+    for (const t of ['foot', 'eave', 'ridge']) for (const [x, y] of P[t]) { ctx.beginPath(); ctx.arc(x, y, (on ? 4 : 2.5) / k, 0, 7); ctx.fillStyle = PTC[t]; ctx.fill(); }
+    const c = P.foot[0] || P.eave[0] || P.ridge[0];
+    if (c) { ctx.font = `${12 / k}px system-ui`; ctx.fillStyle = on ? '#8c3b2e' : '#333'; ctx.fillText(b.name || `#${i + 1}`, c[0] + 5 / k, c[1] - 5 / k); }
+  });
+}
+function draw() { mode === 'map' ? drawMap() : drawVed(); }
+
+// ---------- lists ----------
+function refreshLists() {
+  if (mode === 'map' && edits) {
+    const ul = $('bldList'); ul.innerHTML = '';
+    edits.buildings.forEach((b, i) => { const li = document.createElement('li'); li.className = i === selB ? 'on' : '';
+      li.innerHTML = `<span>#${i + 1} ${b.note ?? ''}</span><span>${b.from ?? ''}–${b.to ?? ''}</span>`; li.onclick = () => { selB = i; const c = b.ring[0]; view.cx = c[0]; view.cy = c[1]; refreshLists(); draw(); }; ul.appendChild(li); });
+    $('bldEdit').hidden = selB < 0;
+    if (selB >= 0) { const b = edits.buildings[selB]; $('bFrom').value = b.from ?? ''; $('bTo').value = b.to ?? ''; $('bH').value = b.h ?? ''; $('bNote').value = b.note ?? ''; }
+  }
+  if (mode === 'ved' && vedits) {
+    const ul = $('vList'); ul.innerHTML = '';
+    vedits.buildings.forEach((b, i) => { const li = document.createElement('li'); li.className = i === selV ? 'on' : '';
+      li.innerHTML = `<span>${b.name || '#' + (i + 1)}</span><span>${b.pts.foot.length}/${b.pts.eave.length}/${b.pts.ridge.length}</span>`; li.onclick = () => { selV = i; refreshLists(); draw(); }; ul.appendChild(li); });
+    $('vEdit').hidden = selV < 0;
+    if (selV >= 0) { const b = vedits.buildings[selV]; $('vName').value = b.name ?? ''; $('vFrom').value = b.from ?? ''; $('vTo').value = b.to ?? ''; }
+  }
+}
+const num = v => v === '' ? undefined : +v;
+for (const [id, key, f] of [['bFrom', 'from', num], ['bTo', 'to', num], ['bH', 'h', num], ['bNote', 'note', v => v || undefined]])
+  $(id).oninput = () => { if (selB < 0) return; edits.buildings[selB][key] = f($(id).value); dirty = true; refreshLists(); };
+for (const [id, key, f] of [['vName', 'name', v => v || undefined], ['vFrom', 'from', num], ['vTo', 'to', num]])
+  $(id).oninput = () => { if (selV < 0) return; vedits.buildings[selV][key] = f($(id).value); dirty = true; refreshLists(); draw(); };
+$('vNew').onclick = () => { if (!vedits) return; vedits.buildings.push({ pts: { foot: [], eave: [], ridge: [] } }); selV = vedits.buildings.length - 1; dirty = true; refreshLists(); draw(); };
+document.querySelectorAll('[data-pt]').forEach(b => b.onclick = () => { ptType = b.dataset.pt; document.querySelectorAll('[data-pt]').forEach(x => x.classList.toggle('on', x === b)); });
+document.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => { tool = b.dataset.tool; draft = []; document.querySelectorAll('[data-tool]').forEach(x => x.classList.toggle('on', x === b)); draw(); });
+$('brush').oninput = () => { $('brushV').textContent = $('brush').value; };
+$('showModel').onchange = $('showWater').onchange = draw;
+$('mapSel').onchange = () => openMap($('mapSel').value);
+$('vedSel').onchange = () => openVed($('vedSel').value);
+function setMode(m) { if (m === mode) return; mode = m; $('tabMap').classList.toggle('on', m === 'map'); $('tabVed').classList.toggle('on', m === 'ved'); $('paneMap').hidden = m !== 'map'; $('paneVed').hidden = m !== 'ved';
+  if (m === 'ved' && !ved && IDX.vedute.length) openVed($('vedSel').value); refreshLists(); draw(); }
+$('tabMap').onclick = () => setMode('map'); $('tabVed').onclick = () => setMode('ved');
+
+// ---------- saving ----------
+async function post(name, body) { const r = await fetch('/api/manual/' + name, { method: 'POST', body }); if (!r.ok) throw new Error(r.status); }
+$('save').onclick = async () => {
+  try {
+    if (mode === 'map' && cur) {
+      edits.saved = new Date().toISOString();
+      await post(`map_${cur.id}.json`, JSON.stringify(edits, null, 1));
+      if (edits.waterEdited) { // white = water on black, frame resolution
+        const n = waterCv.width, t = document.createElement('canvas'); t.width = t.height = n; const tc = t.getContext('2d');
+        tc.fillStyle = '#000'; tc.fillRect(0, 0, n, n); const d = waterCtx.getImageData(0, 0, n, n), o = tc.getImageData(0, 0, n, n);
+        for (let k = 0; k < d.data.length; k += 4) if (d.data[k + 3] > 100) { o.data[k] = o.data[k + 1] = o.data[k + 2] = 255; }
+        tc.putImageData(o, 0, 0); await post(`water_${cur.id}.png`, t.toDataURL('image/png'));
+      }
+    } else if (mode === 'ved' && ved) {
+      vedits.saved = new Date().toISOString(); await post(`veduta_${ved.id}.json`, JSON.stringify(vedits, null, 1));
+    }
+    dirty = false; status((lang === 'cs' ? 'uloženo ' : 'saved ') + new Date().toLocaleTimeString());
+  } catch (e) { status('ERROR ' + e.message + (lang === 'cs' ? ' – běží scripts/serve_site.py?' : ' – is scripts/serve_site.py running?')); }
+};
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+// ---------- mouse / keys ----------
+let drag = null, space = false, painting = false;
+cv.addEventListener('wheel', e => { e.preventDefault(); const [u, v] = evPos(e), f = Math.exp(e.deltaY * 0.0015);
+  if (mode === 'map') { const [x, y] = S2W(u, v); view.s = Math.min(Math.max(view.s * f, 0.05), 12); const [x2, y2] = S2W(u, v); view.cx += x - x2; view.cy += y - y2; }
+  else { const [x, y] = S2I(u, v); vview.s = Math.min(Math.max(vview.s * f, 0.05), 40); const [x2, y2] = S2I(u, v); vview.cx += x - x2; vview.cy += y - y2; }
+  draw(); }, { passive: false });
+cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('mousedown', e => {
+  const [u, v] = evPos(e);
+  if (e.button === 1 || space || (mode === 'map' && tool === 'pan' && e.button === 0)) { drag = [u, v, mode === 'map' ? view.cx : vview.cx, mode === 'map' ? view.cy : vview.cy]; return; }
+  if (mode === 'map') {
+    const [x, y] = S2W(u, v);
+    if (tool === 'water' || tool === 'erase') { painting = true; paint(x, y); draw(); return; }
+    if (tool === 'poly' && e.button === 0) {
+      if (!draft.length) { const hit = edits.buildings.findIndex(b => pointInRing(x, y, b.ring)); if (hit >= 0) { selB = hit; refreshLists(); draw(); return; } }
+      draft.push([x, y]); draw();
+    }
+  } else if (vimg && selV >= 0) {
+    const [x, y] = S2I(u, v), P = vedits.buildings[selV].pts;
+    if (e.button === 2) { let best = null, bd = 1e9; for (const t of ['foot', 'eave', 'ridge']) P[t].forEach((p, j) => { const d = Math.hypot(p[0] - x, p[1] - y); if (d < bd) { bd = d; best = [t, j]; } });
+      if (best && bd < 15 * vview.s) P[best[0]].splice(best[1], 1); }
+    else P[ptType].push([Math.round(x * 10) / 10, Math.round(y * 10) / 10]);
+    dirty = true; refreshLists(); draw();
+  }
+});
+window.addEventListener('mousemove', e => {
+  const [u, v] = evPos(e);
+  if (drag) { const k = (mode === 'map' ? view.s : vview.s) / devicePixelRatio;
+    if (mode === 'map') { view.cx = drag[2] - (u - drag[0]) * k; view.cy = drag[3] + (v - drag[1]) * k; } else { vview.cx = drag[2] - (u - drag[0]) * k; vview.cy = drag[3] - (v - drag[1]) * k; } draw(); return; }
+  if (mode === 'map' && cur) { const [x, y] = S2W(u, v); hover = [x, y]; $('coord').textContent = `S-JTSK ${x.toFixed(1)}, ${y.toFixed(1)}  ·  ${view.s.toFixed(2)} m/px`; if (painting) paint(x, y); if (draft.length || painting || tool === 'water' || tool === 'erase') draw(); }
+  else if (mode === 'ved' && vimg) { const [x, y] = S2I(u, v); $('coord').textContent = `px ${x.toFixed(0)}, ${y.toFixed(0)}`; }
+});
+window.addEventListener('mouseup', () => { drag = null; painting = false; lastPaint = null; });
+cv.addEventListener('dblclick', () => { if (mode === 'map' && tool === 'poly') { draft.pop(); finishPoly(); } });
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
+  if (e.code === 'Space') { space = true; e.preventDefault(); }
+  if (e.key === 'Enter' && mode === 'map') finishPoly();
+  if (e.key === 'Escape') { draft = []; draw(); }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && mode === 'map' && selB >= 0) { edits.buildings.splice(selB, 1); selB = -1; dirty = true; refreshLists(); draw(); }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && mode === 'ved' && selV >= 0) { vedits.buildings.splice(selV, 1); selV = -1; dirty = true; refreshLists(); draw(); }
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $('save').click(); }
+});
+window.addEventListener('keyup', e => { if (e.code === 'Space') space = false; });
+
+(async () => {
+  IDX = await getJSON('/manual/maps.json', null);
+  if (!IDX) { status('manual/maps.json missing: python scripts/manual_maps.py'); return; }
+  for (const m of IDX.maps) $('mapSel').add(new Option(`${m.year} · ${m.label}`, m.id));
+  for (const v of IDX.vedute) $('vedSel').add(new Option(`${v.year ?? ''} · ${v.label}${v.view ? ' ●' : ''}`, v.id));
+  resize();
+  MODEL = await getJSON('/web/model.json', null);
+  const first = IDX.maps.find(m => m.id === '1902_hi') ?? IDX.maps[0];
+  $('mapSel').value = first.id; await openMap(first.id);
+  view.cx = -822600; view.cy = -1069650; view.s = 0.6; draw();
+})();
+</script>
+</body>
+</html>

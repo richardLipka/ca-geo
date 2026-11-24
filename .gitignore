@@ -33,3 +33,6 @@ external/**
 
 # Local Python environment for image processing (OpenCV, PyTorch)
 .venv/
+
+# logos of KIV / FAV / ZČU (university marks, not under the repository licence): copied locally
+apps/historic-mapper/public/logos/

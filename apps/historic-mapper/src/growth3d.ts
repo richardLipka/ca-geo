@@ -72,7 +72,7 @@ async function main() {
     <label>${t('g3d.colour')} <select id="mode"><option value="0">${t('g3d.byPeriod')}</option><option value="1">${t('g3d.byBasis')}</option></select></label>
     <label><input type="checkbox" id="mapg"> ${t('g3d.mapGround')}</label>
     <label><input type="checkbox" id="auto" checked> ${t('g3d.autoCam')}</label>
-    ${PUBLIC ? `<label>${t('g3d.mapSel')} <select id="gsel"></select></label><label>${t('g3d.fade')} <input type="range" id="gfade" min="0" max="1" step="0.05" value="0.9"></label>`
+    ${PUBLIC ? `<label>${t('g3d.mapSel')} <select id="gsel"></select></label><label>${t('g3d.fade')} <input type="range" id="gfade" min="0" max="1" step="0.05" value="0.9"></label><a href="../">${t('g3d.guide')}</a><a href="https://www.kiv.zcu.cz/" target="_blank" rel="noopener">KIV</a><a href="https://www.fav.zcu.cz/" target="_blank" rel="noopener">FAV</a><a href="https://www.zcu.cz/" target="_blank" rel="noopener">${t('g3d.uni')}</a><a href="https://home.zcu.cz/~lipka/" target="_blank" rel="noopener">R. Lipka</a>`
     : `<label>${t('g3d.view')} <select id="vsel"><option value="">–</option></select></label><a href="./">${t('v3d.back')}</a>`}
     <button type="button" id="lang">${t('btn.lang')}</button></div>
   ${PUBLIC ? `<div id="tlpanel"><b>${t('g3d.timeline')}</b><ol id="evlist"></ol></div><div id="ginfo"></div>` : ''}
@@ -422,6 +422,10 @@ async function main() {
   // ---------- video export: deterministic frames (fixed 30 fps time step) with overlays drawn in ----------
   // frames are saved by the dev server to data/historic/growth/video/<run>/ and encoded by scripts/encode_video.py
   const comp = document.createElement('canvas');
+  // logos of the department, the faculty and the university (public/logos/, not part of the repository licence),
+  // top right of every exported frame; missing files are skipped
+  const LOGOS = ['kiv.svg', 'fav.svg', 'zcu.png'].map(f => { const im = new Image(); im.src = `${PUBLIC ? '' : '/'}logos/${f}`; return im; });
+  const LOGOS_EN = new Image(); LOGOS_EN.src = `${PUBLIC ? '' : '/'}logos/zcu-en.png`;
   const composite = () => {
     const src = renderer.domElement, W = src.width, H = src.height, k = W / (exporting ? EXP_W : host.clientWidth);
     comp.width = W; comp.height = H; const g = comp.getContext('2d')!;
@@ -442,11 +446,19 @@ async function main() {
     // event caption
     caps.forEach((c, i) => {
       const txt = `${c.e.year} — ${lang === 'cs' ? c.e.cs : c.e.en}`;
-      g.font = `600 ${(i ? 16 : 19) * k}px "Segoe UI", system-ui`; const tw = Math.min(g.measureText(txt).width, W * 0.8);
+      g.font = `600 ${(i ? 16 : 19) * k}px "Segoe UI", system-ui`; const tw = Math.min(g.measureText(txt).width, W * 0.6);
       const y0 = (18 + i * 44) * k;
       g.globalAlpha = Math.max(0, c.a) * (i ? 0.85 : 1); box((W - tw) / 2 - 14 * k, y0, tw + 28 * k, 38 * k, 0.8);
-      g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(txt, W / 2, y0 + (i ? 11 : 9) * k, W * 0.8); g.textAlign = 'left'; g.globalAlpha = 1;
+      g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(txt, W / 2, y0 + (i ? 11 : 9) * k, W * 0.6); g.textAlign = 'left'; g.globalAlpha = 1;
     });
+    // logos (KIV, FAV, ZČU) top right on a dark plate
+    { const ims = LOGOS.map((im, i) => i === 2 && lang === 'en' && LOGOS_EN.complete && LOGOS_EN.naturalWidth ? LOGOS_EN : im).filter(im => im.complete && im.naturalWidth > 0);
+      if (ims.length) {
+        const lh = 36 * k, gap = 14 * k, pad = 9 * k;
+        const ws = ims.map(im => lh * im.naturalWidth / im.naturalHeight), tw = ws.reduce((a_, b_) => a_ + b_, 0) + gap * (ims.length - 1);
+        box(W - tw - 2 * pad - 14 * k, 14 * k, tw + 2 * pad, lh + 2 * pad, 0.78);
+        let x = W - tw - pad - 14 * k; ims.forEach((im, i) => { g.drawImage(im, x, 14 * k + pad, ws[i], lh); x += ws[i] + gap; });
+      } }
     // title, legend, credits
     g.font = `700 ${15 * k}px system-ui`; g.fillStyle = '#1f2427'; g.fillText(t('g3d.title'), 16 * k, 14 * k);
     const items = [...(mode.value === '0' ? PERIODS.map(([s, c, kk]) => [c, `${t(kk)} (${s}–)`] as [number, string]) : BASIS_KEYS.map(([c, kk]) => [c, t(kk)] as [number, string])), ...FORT_KEYS.map(([c, kk]) => [c, t(kk)] as [number, string])];

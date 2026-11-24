@@ -301,6 +301,38 @@ LANDMARK_PTS = {k: Point(*ENT[k]['geom']['coords'][0]) for k in ('g1618-bartholo
 LANDMARK_KOD = {24142204: 1300.0,   # Franciscan monastery with the Gothic cloister (čp. 121; RÚIAN date 2010 = reconstruction)
                 24144177: 1897.0, 24143821: 1897.5,   # museum complex on Kopeckého sady (Západočeské muzeum, 1896–98)
                 }
+# significant buildings dated by history (Czech Wikipedia, scripts/notable_buildings.json): the RÚIAN building at the
+# article coordinates (containing it, or the nearest within 15 m) stands from its completion year; a 'complex' (the
+# star-shaped Bory prison, 1874–78) takes all buildings joined to it, finished at once
+NOTABLE_KOD = {}
+try:
+    from pyproj import Transformer as _Tr
+    from shapely.strtree import STRtree
+    _tr = _Tr.from_crs('EPSG:4326', 'EPSG:5514', always_xy=True)
+    _NB = json.load(open(os.path.join(HERE, 'notable_buildings.json'), encoding='utf-8'))['buildings']
+    _polys = []
+    for f in F:
+        if len(f['geometry']['coordinates'][0]) < 4: continue
+        pg_ = Polygon(f['geometry']['coordinates'][0]); _polys.append((pg_ if pg_.is_valid else pg_.buffer(0), f['properties']['kod']))
+    _ntree = STRtree([q for q, _ in _polys])
+    for b in _NB:
+        x_, y_ = _tr.transform(b['lon'], b['lat']); pt_ = Point(x_, y_)
+        hit = [i for i in _ntree.query(pt_, predicate='intersects')]
+        if not hit: hit = list(_ntree.query_nearest(pt_, max_distance=40.0 if b.get('complex') else 15.0))
+        if not hit: print('  notable building not found:', b['name']); continue
+        seed = min(hit, key=lambda i: _polys[i][0].distance(pt_))
+        group = {seed}
+        if b.get('complex'):   # flood over buildings that touch (≤ 1.5 m) within 250 m of the seed
+            todo = [seed]
+            while todo:
+                i = todo.pop()
+                for j in _ntree.query(_polys[i][0].buffer(1.5)):
+                    if j not in group and _polys[j][0].distance(pt_) < 250 and _polys[j][0].distance(_polys[i][0]) <= 1.5:
+                        group.add(j); todo.append(j)
+        for i in group: NOTABLE_KOD.setdefault(_polys[i][1], (float(b['done']) + 0.3, b['name']))
+    print('notable buildings (Wikipedia):', len(_NB), 'entries →', len(NOTABLE_KOD), 'RÚIAN buildings dated')
+except Exception as e:
+    print('notable buildings skipped:', e)
 LANDMARK_FROM = {'g1618-bartholomew': (1320, 30), 'g1618-franciscan': (1300, 20), 'g1618-water_tower': (1532, 30), 'g1618-st_nicholas': (1400, 18), 'g1618-all_saints': (1250, 14)}
 for f in F:
     ring = f['geometry']['coordinates'][0]
@@ -319,6 +351,9 @@ for f in F:
     if p['kod'] in LANDMARK_KOD:   # buildings dated by history, not by the maps
         it['from'], it['cls'], it['basis'] = LANDMARK_KOD[p['kod']], 'landmark', 'history'; it['h0'] = it['h1']; it['lo'] = it['hi'] = it['from']
         it['id'] = f'ruian:{p["kod"]}'; recs.append(it); continue
+    if p['kod'] in NOTABLE_KOD and not lm:
+        it['from'] = NOTABLE_KOD[p['kod']][0]; it['cls'] = 'town'; it['basis'] = 'history'; it['h0'] = it['h1']; it['lo'] = it['hi'] = it['from']
+        it['notable'] = NOTABLE_KOD[p['kod']][1]; recs.append(it); continue
     if lm:
         it['from'], h = LANDMARK_FROM[lm]; it['h1'] = max(it['h1'], h) if lm != 'g1618-bartholomew' else it['h1']
         it['h0'] = it['h1']; it['cls'] = 'landmark'; it['basis'] = 'history'; it['lo'] = it['hi'] = it['from']; it['id'] = lm
@@ -544,6 +579,7 @@ for ln in FORT['lines']:  # Zwinger and outer walls (1781 plan)
         poly = LineString([p0, p1]).buffer(1.1, cap_style=2)
         recs.append({'ring': list(poly.exterior.coords), 'x': mid[0], 'y': mid[1], 'from': ln['from'] + rng.uniform(-8, 8), 'to': dem + rng.uniform(-3, 0),
                      'h0': ln['h'], 'h1': ln['h'], 'gaps': [], 'cls': 'fort', 'basis': 'plan 1781 + dated demolitions', 'id': 'fort:' + ln['id']})
+import shapely
 import shapely.ops
 from shapely.ops import unary_union
 from shapely.strtree import STRtree
@@ -752,7 +788,7 @@ def block_T(x, y):
     return min(BLOCK_T, key=lambda bt: bt[0].distance(p))[1]
 
 
-REAL = lambda it: str(it.get('id', '')).split(':')[0] in ('ruian', 'h1840', 'ham65', 'h1902') and it.get('cls') != 'landmark'
+REAL = lambda it: str(it.get('id', '')).split(':')[0] in ('ruian', 'h1840', 'ham65', 'hmap') and it.get('cls') != 'landmark'
 # the square: open area around the church between the blocks; its frontage is Renaissance (town hall 1554–59),
 # so the present models of the houses on the square (and the town hall) stand from then on
 _sq = Point(*SQUARE).buffer(170).difference(unary_union(blocks).buffer(1.0))
@@ -886,11 +922,16 @@ if os.path.exists(MESH_NPZ):
     for j in range(len(m_vs) - 1):
         xy = m_V[m_vs[j]:m_vs[j + 1], :2]
         c = Point(float(xy[:, 0].min() + xy[:, 0].max()) / 2 + m_O[0], float(xy[:, 1].min() + xy[:, 1].max()) / 2 + m_O[1])
-        q = tree.query(c, predicate='intersects')
+        # the footprint that holds most of the object's vertices (not just its bbox centre: the museum next to the
+        # Franciscan monastery has its centre inside the monastery outline and stood there from 1300 otherwise)
+        q = tree.query(shapely.box(float(xy[:, 0].min()) + m_O[0], float(xy[:, 1].min()) + m_O[1], float(xy[:, 0].max()) + m_O[0], float(xy[:, 1].max()) + m_O[1]))
         if not len(q):
             q = tree.query_nearest(c, max_distance=2.0)
         if not len(q): continue
-        k = min(q, key=lambda i: cpoly[i].area)
+        vx, vy = xy[:, 0] + m_O[0], xy[:, 1] + m_O[1]
+        share = {i: float(shapely.contains_xy(cpoly[i].buffer(1.0), vx, vy).mean()) for i in q}
+        k = max(q, key=lambda i: (share[i], -cpoly[i].area))
+        if share[k] < 0.5 and not cpoly[k].buffer(2.0).contains(c): continue
         hits.setdefault(k, []).append(j)
     nm = 0
     for k, objs in hits.items():
@@ -928,48 +969,120 @@ if os.path.exists(MESH_NPZ):
                      'cls': 'landmark', 'basis': 'history', 'id': 'g1618-dominican', 'imesh': mm})
         print(f'Dominican church after the 1536 veduta: nave {nave_h:.0f} m, tower {tower_h:.0f} m')
 
-# ---------- buildings of the 1902 plan around the barracks (city GIS export at 0.5 m, raw_hi/1902_barracks.png) ----------
-HI02 = os.path.join(ROOT, 'data', 'historic', 'growth', 'raw_hi', '1902_barracks.png')
-if os.path.exists(HI02):
-    from PIL import Image as _Im
-    arr = np.array(_Im.open(HI02).convert('RGBA')); hb = cv2.cvtColor(arr[..., :3], cv2.COLOR_RGB2BGR); ha = arr[..., 3]
-    hc = (-822396.8 - 371, -1069689.4 + 54); hres = 0.5; hn = arr.shape[0]; hx0, hy1 = hc[0] - 450, hc[1] + 450
-    hh = cv2.cvtColor(hb, cv2.COLOR_BGR2HSV); Hh_, Sh_, Vh_ = hh[..., 0].astype(int) * 2, hh[..., 1] / 255, hh[..., 2] / 255
-    blk = (Vh_ < 0.35) & (Sh_ < 0.5) & (ha > 0)
-    redm = ((Hh_ < 25) | (Hh_ > 340)) & (Sh_ > 0.42) & (Vh_ > 0.5) & (ha > 0)
-    redm = cv2.morphologyEx(redm.astype(np.uint8), cv2.MORPH_OPEN, np.ones((7, 7), np.uint8)) > 0   # solid fills, not lines or text
-    blk = cv2.morphologyEx(blk.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)) > 0
-    covd = np.zeros((hn, hn), np.uint8)
-    for it in recs:
-        if it.get('cls') in ('fort', 'ditch', 'moat') or not (it['from'] <= 1902.01 < it.get('to', 9999)): continue
-        pts = np.array([[(x - hx0) / hres, (hy1 - y) / hres] for x, y in it['ring']], np.int32)
-        if pts[:, 0].max() < 0 or pts[:, 1].max() < 0 or pts[:, 0].min() > hn or pts[:, 1].min() > hn: continue
-        cv2.fillPoly(covd, [pts], 1)
-    covd = cv2.dilate(covd, np.ones((7, 7), np.uint8)) > 0
-    n02 = 0
-    for mask, kind in ((blk & ~covd, 'black'), (redm & ~covd, 'red')):
-        nl, lab, st, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), 8)
-        for i in range(1, nl):
-            if st[i, cv2.CC_STAT_AREA] * hres * hres < 60: continue
-            x, y, w, h = st[i, :4]
-            cs, _ = cv2.findContours((lab[y:y + h, x:x + w] == i).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            ap = cv2.approxPolyDP(max(cs, key=cv2.contourArea), 1.5, True).reshape(-1, 2)
-            if len(ap) < 3: continue
-            ring = [(hx0 + (x + px) * hres, hy1 - (y + py) * hres) for px, py in ap]; ring.append(ring[0])
+# ---------- buildings of the town plans 1891–1912 at 0.5 m (scripts/map_buildings.py → hi_buildings.json) ----------
+# a footprint of a plan that no model building covers at the plan's year (< 30 %) is missing; detections of the five
+# plans that overlap are chained into one building: from between the last plan without it and the first with it,
+# until between the last plan with it and the next without it (after 1912: the epoch maps 1926–1953 decide)
+HIJ = os.path.join(ROOT, 'data', 'historic', 'growth', 'hi_buildings.json')
+if os.path.exists(HIJ):
+    HB = json.load(open(HIJ))
+    HYS = sorted(int(y) for y in HB['plans'])
+    hx0, hy0, hx1, hy1 = HB['area']; hres = 1.0; hw = int((hx1 - hx0) / hres); hh_ = int((hy1 - hy0) / hres)
+    def hpx(ring): return np.array([[(x - hx0) / hres, (hy1 - y) / hres] for x, y in ring], np.int32)
+    det = []   # (year, polygon, covered share)
+    for Y in HYS:
+        cv_ = np.zeros((hh_, hw), np.uint8)
+        for it in recs:
+            if it.get('cls') in ('ditch', 'moat') or not visible(it, Y + 0.01): continue
+            cv2.fillPoly(cv_, [hpx(it['ring'])], 1)
+        cv_ = cv2.dilate(cv_, np.ones((3, 3), np.uint8))
+        for ring in HB['plans'][str(Y)]:
             pg = Polygon(ring).buffer(0)
-            if pg.area < 60: continue
-            fp = footprint(ring)
-            if fp is None: continue
+            if pg.is_empty or pg.area < 40: continue
+            if pg.geom_type != 'Polygon': pg = max(pg.geoms, key=lambda g: g.area)
+            _mr = list(pg.minimum_rotated_rectangle.exterior.coords); _L = max(math.dist(_mr[0], _mr[1]), math.dist(_mr[1], _mr[2]))
+            if pg.area / max(_L, 1e-6) < 4.5: continue   # mean width: plot boundaries, hatching along streets
+            m_ = np.zeros((hh_, hw), np.uint8); pts = hpx(pg.exterior.coords); cv2.fillPoly(m_, [pts], 1)
+            x0_, y0_ = max(pts[:, 0].min(), 0), max(pts[:, 1].min(), 0); x1_, y1_ = pts[:, 0].max() + 1, pts[:, 1].max() + 1
+            mm_ = m_[y0_:y1_, x0_:x1_] > 0
+            share = float(cv_[y0_:y1_, x0_:x1_][mm_].mean()) if mm_.any() else 1.0
+            det.append((Y, pg, share))
+    dtree = STRtree([d[1] for d in det])
+    def ovl(p_, q_):   # tolerant: the plans are locally misaligned by up to ~20 m even after registration
+        a_ = p_.buffer(6).intersection(q_).area
+        return a_ / max(min(p_.area, q_.area), 1e-6)
+    def onmap(Y, pg):
+        nm = str(Y); c_, r_ = to_px(pg.centroid.x, pg.centroid.y)
+        return 0 <= r_ < N and 0 <= c_ < N and C[nm][r_, c_]
+    used = set(); nhi = 0; nskip = 0
+    order = sorted(range(len(det)), key=lambda i: (det[i][2], -det[i][1].area))
+    for i in order:
+        Y, pg, share = det[i]
+        if i in used or share >= 0.3: continue
+        chain = {Y: pg}; used.add(i)
+        for j in dtree.query(pg):            # the same building on the other plans
+            Yj, pj, sj = det[j]
+            if Yj == Y or ovl(pg, pj) < 0.5 or not (0.33 < pj.area / pg.area < 3.0): continue
+            if Yj not in chain or ovl(pg, pj) > ovl(pg, chain[Yj]): chain[Yj] = pj
+            if sj < 0.3: used.add(j)
+        pres = sorted(chain)
+        absent = [y_ for y_ in HYS if y_ not in chain and onmap(y_, pg)]
+        if len(pres) < 2 and pg.area < 150: nskip += 1; continue    # one plan only and small: lettering, symbols
+        Yf, Yl = pres[0], pres[-1]
+        before = [y_ for y_ in absent if y_ < Yf]; after = [y_ for y_ in absent if y_ > Yl]
+        ring = list(chain[min(pres, key=lambda y_: [1912, 1908, 1891, 1895, 1902].index(y_))].exterior.coords)   # footprint of the best registered plan
+        fp = footprint(ring)
+        if fp is None: continue
+        st_ = states(*fp)
+        if before: fr = rng.uniform(before[-1] + 0.3, Yf - 0.2)
+        else:
+            kb = split_built(st_); lo_, hi_ = interval(kb)
+            fr = Yf - rng.uniform(1, 6) if (hi_ is None or hi_ >= Yf or lo_ is None) else rng.uniform(max(lo_, 1840.5), min(hi_, Yf - 0.5))
+        if after: to = rng.uniform(Yl + 0.3, after[0] - 0.2)
+        else:
+            kg = max(split_gone(st_), YEARS.index(Yl) + 1); lo_, hi_ = interval(kg)
+            to = lo_ + (hi_ - lo_) * rng.uniform(0.2, 0.8) if hi_ > lo_ else hi_
+        pgc = Polygon(ring).buffer(0)
+        if TURK.buffer(120).intersects(pgc) and not after: to = max(to, 1969.07) if to < 1969.07 else to
+        if to <= fr + 1: continue
+        A_ = pgc.area; hgt = 6.0 if A_ < 100 else 9.0 if A_ > 1500 else rng.uniform(11.0, 14.0)
+        c = pgc.representative_point()
+        recs.append({'ring': ring, 'x': c.x, 'y': c.y, 'from': fr, 'to': to, 'h0': hgt, 'h1': hgt, 'gaps': [], 'cls': 'town',
+                     'basis': 'plans ' + ', '.join(str(y_) for y_ in pres), 'id': f'hmap:{nhi}', 'house': False})
+        nhi += 1
+    print(f'town plans 1891–1912: {len(det)} footprints, {nhi} missing buildings added ({nskip} single small detections skipped)')
+
+# ---------- manual edits (editor/index.html → apps/historic-mapper/manual/) ----------
+# footprints added on a map exist in the map's year: from / to as entered, else from the epoch maps around it
+# (as the town-plan buildings above); buildings reconstructed from the vedute (veduta_recon.py) are gable houses
+MAN = os.path.join(HERE, '..', 'manual')
+MIDX = json.load(open(os.path.join(MAN, 'maps.json'), encoding='utf-8')) if os.path.exists(os.path.join(MAN, 'maps.json')) else {'maps': []}
+MYEAR = {m['id']: m['year'] for m in MIDX['maps']}
+nman = 0
+for f in sorted(os.listdir(MAN)) if os.path.isdir(MAN) else []:
+    if not (f.startswith('map_') and f.endswith('.json')): continue
+    E = json.load(open(os.path.join(MAN, f), encoding='utf-8')); Y = MYEAR.get(E['map'], E.get('year', 1900))
+    for k, b in enumerate(E.get('buildings', [])):
+        ring = [tuple(p) for p in b['ring']]; pg = Polygon(ring).buffer(0)
+        if pg.is_empty or pg.area < 4: continue
+        fp = footprint(ring + [ring[0]])
+        fr, to = b.get('from'), b.get('to')
+        if fp is not None and Y >= 1821:
             st_ = states(*fp)
-            k02 = YEARS.index(1902)
-            kg = max(split_gone(st_), k02 + 1); lo, hi = interval(kg)
-            to = 1969.07 if (kind == 'black' and TURK.buffer(120).intersects(pg)) else (lo + (hi - lo) * rng.uniform(0.2, 0.8) if hi > lo else hi)
-            c = pg.centroid
-            recs.append({'ring': list(pg.exterior.coords) if pg.geom_type == 'Polygon' else ring, 'x': c.x, 'y': c.y, 'from': rng.uniform(1899.0, 1901.8),
-                         'to': to, 'h0': 13.0 if kind == 'black' else 11.0, 'h1': 13.0 if kind == 'black' else 11.0, 'gaps': [], 'cls': 'town',
-                         'basis': 'plan 1902 (around the barracks)', 'id': f'h1902:{n02}', 'house': False})
-            n02 += 1
-    print('plan 1902 around the barracks:', n02, 'buildings added')
+            if fr is None:
+                kb = split_built(st_); lo_, hi_ = interval(kb)
+                fr = Y - rng.uniform(1, 8) if (hi_ is None or hi_ >= Y or lo_ is None) else rng.uniform(lo_, min(hi_, Y - 0.5))
+            if to is None:
+                ky = next((i for i, yy in enumerate(YEARS) if yy > Y), len(YEARS))
+                kg = max(split_gone(st_), ky); lo_, hi_ = interval(kg)
+                to = lo_ + (hi_ - lo_) * rng.uniform(0.2, 0.8) if hi_ > lo_ else hi_
+        fr = float(fr if fr is not None else Y - 30); to = float(to if to is not None else Y + 30)
+        if to <= fr + 0.5: continue
+        h = float(b.get('h') or (7.5 if Y < 1850 else 11.0)); c = pg.representative_point()
+        q = list(pg.minimum_rotated_rectangle.exterior.coords)[:4]
+        it = {'ring': ring + [ring[0]], 'x': c.x, 'y': c.y, 'from': fr, 'to': to, 'h0': h, 'h1': h, 'gaps': [],
+              'cls': 'inner' if WALL.contains(c) else 'town', 'basis': f"manual (map {E['map']})", 'id': f"man:{E['map']}:{k}", 'house': False}
+        if Y < 1850 and len(ring) == 4: it['imesh'] = fabric.gable_house(ring, h * 0.6, h * 0.4, True)
+        recs.append(it); nman += 1
+VB = os.path.join(MAN, 'veduta_buildings.json')
+if os.path.exists(VB):
+    for k, b in enumerate(json.load(open(VB, encoding='utf-8'))['buildings']):
+        q = [tuple(p) for p in b['ring']]; pg = Polygon(q); c = pg.centroid
+        recs.append({'ring': q + [q[0]], 'x': c.x, 'y': c.y, 'from': float(b['from']), 'to': float(b['to']), 'h0': b['ridge'], 'h1': b['ridge'], 'gaps': [],
+                     'cls': 'inner' if WALL.contains(c) else 'suburb', 'basis': f"manual (veduta {b['source']})", 'id': f"man:ved:{b['source']}:{k}",
+                     'imesh': fabric.gable_house(q, b['eave'], b['ridge'] - b['eave'], True)})
+        nman += 1
+print('manual edits:', nman, 'buildings')
 
 # ---------- consistency with the maps and between buildings (check_epochs.py reports the result) ----------
 # 1. duplicates: a demolished house from the 1840 cadastre and the same house from map 65 → one record
@@ -977,7 +1090,7 @@ if os.path.exists(HI02):
 #    not show ends before it; a real building without an exact date that the map does not show starts after it
 # 3. no two buildings on the same place at the same time (> 25 % of the smaller footprint): priority history /
 #    landmarks > RÚIAN exact date > other real buildings > generated houses; the lower one gives way
-PRI = lambda it: 4 if it.get('cls') == 'landmark' or it.get('basis') == 'history' else 3 if it.get('basis') == 'RÚIAN date' else \
+PRI = lambda it: 4 if it.get('cls') == 'landmark' or it.get('basis') == 'history' or str(it.get('basis', '')).startswith('manual') else 3 if it.get('basis') == 'RÚIAN date' else \
     1 if str(it.get('id', '')).startswith('gen:') else 2
 SKIPC = {'fort', 'ditch', 'moat'}
 cons = [it for it in recs if it.get('cls') not in SKIPC]
@@ -1002,7 +1115,7 @@ ngen = nreal = 0
 for name, Y in RELIABLE:   # 2. binding maps
     Bd = cv2.dilate(B[name].astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
     for it in cons:
-        if id(it) in drop or it.get('cls') == 'landmark' or it.get('basis') == 'history': continue
+        if id(it) in drop or it.get('cls') == 'landmark' or it.get('basis') == 'history' or str(it['id']).startswith(('hmap:', 'man:')): continue
         if not (it['from'] <= Y + 0.01 < it.get('to', 9999)) or any(a <= Y < b for a, b in it.get('gaps', [])): continue
         fp = footprint(it['ring'], dil=0)
         if fp is None: continue
@@ -1181,14 +1294,25 @@ if os.path.exists(_pg):
 WATER_RULES = [  # (raster, year, rule)
     ('1840_cadastre', 1840, lambda H, S, V: (H >= 150) & (H < 220) & (S > 0.15) & (V > 0.35) & (V < 0.9)),
     ('1908', 1908, lambda H, S, V: (H >= 160) & (H < 205) & (S > 0.18) & (V > 0.6)),
-    ('1926', 1926, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.4)),
-    ('1938', 1938, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.45)),
-    ('1947', 1947, lambda H, S, V: (H >= 165) & (H < 215) & (S > 0.15) & (V > 0.4)),
-]
+]   # from 1920 on (modern Plzeň) the present rivers (owner's decision 2026-11-24; to be refined by hand in the editor)
 for name, year, wr in WATER_RULES:
     im, alpha = imread(raw_path(name)); H, Sat, V = hsv(im); cov = coverage(name, im, alpha)
     water_ep.append((year, epoch_water(wr(H, Sat, V), cov, rivers_now)))   # present rivers + the water of this map (meanders, races, ponds)
+water_ep.append((1920, rivers_now))
 water_ep.append((1953, water_now))
+# water painted by hand in the editor (manual/water_<map>.png, frame raster): added to the epoch of the map, or a new
+# epoch at the map's year (the water of the previous epoch plus the painted water)
+for f in sorted(os.listdir(MAN)) if os.path.isdir(MAN) else []:
+    if not (f.startswith('water_') and f.endswith('.png')): continue
+    Y = MYEAR.get(f[6:-4]);  wm = cv2.imdecode(np.fromfile(os.path.join(MAN, f), np.uint8), 0)
+    if Y is None or wm is None: continue
+    wm = cv2.resize(wm, (N, N), interpolation=cv2.INTER_NEAREST) > 127
+    water_ep.sort(key=lambda e: e[0])
+    k = max([i for i, (yy, _) in enumerate(water_ep) if yy <= Y] or [0])
+    if water_ep[k][0] == Y: water_ep[k] = (Y, water_ep[k][1] | wm)
+    else: water_ep.insert(k + 1, (Y, water_ep[k][1] | wm))
+    print('  manual water', f, '→ epoch', Y, f'{wm.sum() * RES * RES / 1e4:.1f} ha')
+water_ep.sort(key=lambda e: e[0])
 for year, w in water_ep:
     f = f'water_{year}.png'
     cv2.imencode('.png', (cv2.resize(w.astype(np.uint8) * 255, (1024, 1024), interpolation=cv2.INTER_AREA)))[1].tofile(os.path.join(OUT, f))

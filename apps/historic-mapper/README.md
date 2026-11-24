@@ -113,7 +113,12 @@ versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM Vi
 | `fort_1781.json` | Zwinger and bastioned works digitised from the 1781 plan, with demolition years |
 | `city_heights.py` | building heights of the City of Plzeň 3D model 2024 (attributes, joined by parcel) |
 | `check_epochs.py` | footprint check of the model against every ground / epoch map at its first year (support by the map, buildings standing on one place at once) → `data/historic/growth/site/check/` |
-| `publish_site.py` | builds the publishable bilingual page (viewer in public mode: model, timeline, maps under the model) with its data → `data/historic/growth/publish/` |
+| `publish_site.py` | builds the publishable bilingual web for people → `data/historic/growth/publish/`: the video guide (`index.html`), the video and the interactive model (`model/`, viewer in public mode: model, timeline, maps under the model); no review or editing tools |
+| `map_buildings.py` | building footprints of the town plans 1891, 1895, 1902, 1908, 1912 at 0.5 m (city GIS, 3 × 3 km), one colour rule per plan; tiles registered to the 1912 plan / RÚIAN (tile shift + 4 × 4 local cells) → `data/historic/growth/hi_buildings.json`; `growth_model.py` chains them across the plans into dated buildings |
+| `check_hi.py` | overlay of the model (buildings standing in the plan's year) on the 0.5 m plans → `raw_hi/_model_<year>_<i>_<j>.jpg` |
+| `notable_buildings.json` | completion years and coordinates of 52 significant buildings (Czech Wikipedia); the RÚIAN building at the point (a `complex` with all joined buildings, e.g. the Bory prison 1878) stands from then on |
+| `manual_maps.py` | index of the map set for the manual editor (all frame maps, early grounds, 0.5 m plans with their registration, vedute with cameras) → `manual/maps.json` |
+| `veduta_recon.py` | gable houses from the points clicked on a veduta (footprint corners, eaves, ridge) and its fitted camera → `manual/veduta_buildings.json` |
 | `review_items.py` | yes / no review page for the footprint tiles of every map and the veduta links (`site/check/review.html`; decisions saved by `serve_site.py` to `site/check/review.json`) |
 | `veduta_fit.py` | fits the camera of the vedute to the model and estimates tower / gate heights → `veduta_heights.json`, saves the fitted views to the project |
 | `ham57.py` | registers HAM map 57 (medieval topography c. 1410) and vectorises its blocks, suburbs, suburb walls, moat, churches and rivers → `ham57_map.json` |
@@ -123,9 +128,20 @@ versioned; Python 3.13, PyTorch with CUDA 12.8, OpenCV, Segment Anything; SAM Vi
 | `fetch_terrain.py` | ČÚZK DMR 5G terrain for the growth frame |
 | `encode_video.py` | H.264 MP4 from the frames exported by `growth3d.html` (ffmpeg from `imageio-ffmpeg` in `.venv`) |
 | `sources_site.py` | guide to the growth video: chapters with short texts, video jumps, stills, overview and fortification timelines, previews of every source with licence labels; catalogue and chapters in `sources_site.json`; writes `data/historic/growth/site/` (not versioned: quoted third-party maps) |
-| `serve_site.py` | local server for the guide page with HTTP Range (video seeking): `http://localhost:5219/site/` |
+| `serve_site.py` | local server for the guide page with HTTP Range (video seeking): `http://localhost:5219/site/`; also the manual editor `http://localhost:5219/editor/` (saves into `manual/`) |
 
 ## Licence
 
 Code: MIT (repository licence). Source images keep their own licences (shown per source);
 they are never committed. Base layers are fetched live from their providers.
+
+### Manual editor (`editor/index.html`)
+
+Working tool, not part of the public web: `python scripts/serve_site.py` → `http://localhost:5219/editor/`.
+*Maps*: every map of the model (and the 0.5 m plans, drawn registered) with the model buildings of the map's year;
+a water brush / eraser and a footprint tool (click corners, Enter); optional from / to / height per footprint.
+*Vedute*: per building click the footprint corners, eave points and ridge ends on the drawing.
+Edits are saved in `manual/` (versioned): `map_<id>.json`, `water_<id>.png` (frame raster), `veduta_<id>.json`.
+`veduta_recon.py` turns the veduta points into 3D (needs the fitted camera of `veduta_fit.py`); `growth_model.py`
+adds the footprints (priority over generated and map-dated buildings), the reconstructed houses and the painted
+water (into the map's water epoch). Logos for the video and the web are copied locally to `public/logos/` (not versioned).

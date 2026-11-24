@@ -531,6 +531,11 @@ svg .f.unc{fill:none;stroke:var(--acc);stroke-dasharray:4 3}svg .mark{stroke:var
 #lb{position:fixed;inset:0;background:rgba(10,12,14,.92);display:none;align-items:center;justify-content:center;z-index:10;cursor:zoom-out;padding:16px}
 #lb.on{display:flex}#lb img{max-width:100%;max-height:100%;box-shadow:0 4px 30px #000}
 footer{color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);margin-top:30px;padding-top:12px}
+.org{display:flex;flex-wrap:wrap;align-items:center;gap:18px;background:#1f2427;border-radius:8px;padding:12px 16px;margin-top:10px}
+.org a{display:block}.org img{height:34px;display:block}.org .who{color:#e8e6e1;font-size:13px;margin-left:auto}.org .who a{color:#f0b9a8;display:inline}
+.links{font-size:13px;color:var(--mut)}.links a{color:var(--acc)}
+.cta{display:inline-block;background:var(--acc);color:var(--bg);border-radius:6px;padding:6px 14px;text-decoration:none;font-weight:600}
+.state{background:var(--ownbg);border-left:4px solid var(--own);padding:9px 12px;border-radius:4px;font-size:14px;margin-top:12px}.state ul{margin:4px 0 0;padding-left:20px}
 @media (max-width:980px){.wrap{display:block}aside{position:static;height:auto;padding-bottom:0}.toc{columns:2}}
 @media (max-width:600px){h1{font-size:23px}.toc{columns:1}.pic{height:150px}}
 """
@@ -569,6 +574,23 @@ legend = (f'<div class="tools"><span class="badge cite">{L("Citace", "Quotation"
           f'<span class="badge open">{L("Volné dílo", "Public domain")}</span>{L("nebo otevřená licence", "or open licence")}'
           f'<span class="badge own">{L("Vlastní výstup", "Own output")}</span></div>')
 
+STATE = [
+    ("Budovy: polohy z RÚIAN, tvary z 3D modelu města 2024, datace z historických map a plánů 1410–2025; středověké a raně novověké domy jsou generované podle map a vedut.",
+     "Buildings: positions from RÚIAN, shapes from the city 3D model 2024, dating from historical maps and plans 1410–2025; medieval and early modern houses are generated after the maps and vedute."),
+    ("Nově: budovy z plánů města 1891, 1895, 1902, 1908 a 1912 (0,5 m) navzájem sesouhlasené – např. blok domů proti kasárnám a areál Škodových závodů.",
+     "New: buildings from the town plans of 1891, 1895, 1902, 1908 and 1912 (0.5 m) registered to each other, e.g. the block opposite the barracks and the Škoda works."),
+    ("Nově: data dokončení 52 významných staveb podle Wikipedie (divadla, nádraží, synagogy, školy); hvězdicová věznice na Borech stojí celá od roku 1878.",
+     "New: completion years of 52 significant buildings after Wikipedia (theatres, stations, synagogues, schools); the star-shaped Bory prison stands complete from 1878."),
+    ("Řeky: středověká koryta podle atlasu (mapa 57) a plánu 1658, toky z map 1840 a 1908, od roku 1920 dnešní stav.",
+     "Rivers: medieval channels after the atlas (map 57) and the 1658 plan, courses of the 1840 and 1908 maps, the present state from 1920."),
+    ("Rozpracováno: ruční doplnění vodních ploch a půdorysů na všech mapách a 3D rekonstrukce budov z vedut podle bodů zadaných uživatelem.",
+     "In progress: manual completion of water and footprints on all maps and 3D reconstruction of buildings from the vedute from points entered by the user."),
+]
+_LOGO = os.path.join(HERE, '..', 'public', 'logos')
+if os.path.isdir(_LOGO):
+    import shutil
+    shutil.copytree(_LOGO, os.path.join(OUT, 'logos'), dirs_exist_ok=True)
+
 page = f"""<!doctype html>
 <html lang="cs" data-lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Plzeň 1295–2020: průvodce</title><style>{CSS}</style></head><body>
@@ -579,19 +601,26 @@ page = f"""<!doctype html>
 <video id="vid" controls preload="metadata" src="../video/plzen-growth-1295-2020.mp4"></video>
 <div class="now"><span class="y" id="nowy">1295</span><span class="c" id="nowc"></span></div>
 <ol class="toc">{toc}</ol>
+<p><a class="cta" href="model/">{L("Interaktivní 3D model s mapami →", "Interactive 3D model with the maps →")}</a></p>
+<div class="links">{L("Katedra informatiky a výpočetní techniky, Fakulta aplikovaných věd, Západočeská univerzita v Plzni", "Department of Computer Science and Engineering, Faculty of Applied Sciences, University of West Bohemia")}</div>
 <div class="tools"><label><input type="checkbox" id="follow" checked> {L("posouvat text s videem", "scroll text with the video")}</label><button id="lang">CS / EN</button></div>
 </aside>
 <main>
 <p class="txt">{L("Animace ukazuje, jak se Plzeň během 725 let rozrůstala od založeného města s náměstím po dnešní aglomeraci. Každá budova v ní je skutečný půdorys a dnešní budovy mají svůj skutečný tvar z 3D modelu města. Rok vzniku je odhadnutý z historických map, plánů, rytin a sčítání, takže animace ukazuje pořadí a tempo růstu, ne přesnou podobu jednotlivých domů.",
 "The animation shows how Plzeň grew over 725 years, from a founded town around a square to the present city. Every building in it is a real footprint, and present buildings have their real shape from the city 3D model. The year of origin is estimated from historical maps, plans, engravings and censuses, so the animation shows the order and pace of growth, not the exact look of each house.")}</p>
-<div class="box">{svg_overview()}</div>
+<div class="state"><b>{L("Stav projektu (listopad 2026)", "State of the project (November 2026)")}</b><ul>{''.join('<li>' + L(c, e) + '</li>' for c, e in STATE)}</ul></div>
+<div class="box" style="margin-top:12px">{svg_overview()}</div>
 {legend}
 <div class="note" style="margin-top:10px">{L(f"Ukázky z děl chráněných autorským právem ({n_cite}, štítek „Citace“) jsou užity jako citace podle § 31 odst. 1 písm. a) autorského zákona (č. 121/2000 Sb.) pro účel rozboru a výzkumu, s uvedením autora či držitele, názvu a zdroje. Čísla v závorkách odkazují na <a href='#refs'>seznam zdrojů</a>. Obrázky nejsou určeny k dalšímu šíření.",
 f"Excerpts of works under copyright ({n_cite}, label \"Quotation\") are used as quotations under § 31(1)(a) of the Czech Copyright Act (No. 121/2000 Coll.) for analysis and research, with the author or holder, title and source. Numbers in brackets point to the <a href='#refs'>list of sources</a>. The images are not for redistribution.")}</div>
 {flip_html}
 {chapters_html}
 <section id="refs" class="ch"><h2>{L("Zdroje", "Sources")}</h2>{reflist()}</section>
-<footer>{L("Projekt ca-geo. Model, animace i tato stránka jsou schematickou rekonstrukcí; datace budov je interpolovaná.", "Project ca-geo. The model, the animation and this page are a schematic reconstruction; building dates are interpolated.")}</footer>
+<footer>{L("Projekt ca-geo. Model, animace i tato stránka jsou schematickou rekonstrukcí; datace budov je interpolovaná.", "Project ca-geo. The model, the animation and this page are a schematic reconstruction; building dates are interpolated.")}
+<div class="org"><a href="https://www.kiv.zcu.cz/" target="_blank" rel="noopener" title="KIV"><img src="logos/kiv.svg" alt="KIV"></a>
+<a href="https://www.fav.zcu.cz/" target="_blank" rel="noopener" title="FAV"><img src="logos/fav.svg" alt="FAV"></a>
+<a href="https://www.zcu.cz/" target="_blank" rel="noopener" title="ZČU"><img class="cs" src="logos/zcu.png" alt="ZČU"><img class="en" src="logos/zcu-en.png" alt="UWB"></a>
+<span class="who">Richard Lipka · <a href="https://home.zcu.cz/~lipka/" target="_blank" rel="noopener">home.zcu.cz/~lipka</a></span></div></footer>
 </main></div>
 <div id="lb"><img alt=""></div><script>{(JS % json.dumps(SEG)).replace('%FLIP%', FLIPDATA)}</script></body></html>"""
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(page)
