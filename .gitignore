@@ -36,3 +36,6 @@ external/**
 
 # logos of KIV / FAV / ZČU (university marks, not under the repository licence): copied locally
 apps/historic-mapper/public/logos/
+
+# Python bytecode
+__pycache__/

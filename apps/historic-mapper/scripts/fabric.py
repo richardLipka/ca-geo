@@ -33,6 +33,28 @@ def gable_house(q, eave, roof, ridge_depth=True):
     return {'v': V, 't': T}
 
 
+def roof_house(q, eave, roof, kind='gable'):
+    """rectangular house q (4 corners, p0-p1 a short side) with a gable ('gable'), hipped ('hip'), shed ('shed') or
+    flat ('flat') roof; the ridge runs along the long sides (manual reconstructions of the vedute)"""
+    p = [tuple(c) for c in q]
+    if kind == 'gable': return gable_house(p, eave, roof, True)
+    V = [[x, y, 0.0, 0] for x, y in p] + [[x, y, eave, 0] for x, y in p]
+    T = []
+    for i in range(4):
+        j = (i + 1) % 4; T += [[i, j, 4 + j], [i, 4 + j, 4 + i]]
+    if kind == 'flat' or roof <= 0.05:
+        return {'v': V, 't': T + [[4, 5, 6], [4, 6, 7]]}
+    if kind == 'shed':   # the side p1-p2 raised by 'roof'
+        V += [[p[1][0], p[1][1], eave + roof, 0], [p[2][0], p[2][1], eave + roof, 0]]
+        return {'v': V, 't': T + [[4, 8, 9], [4, 9, 7], [5, 8, 4], [6, 7, 9], [5, 6, 9], [5, 9, 8]]}
+    # hip: the ridge is shorter than the house by the half width at both ends
+    w = math.dist(p[0], p[1]); L = math.dist(p[1], p[2]); k = min(0.5 * w / max(L, 1e-6), 0.5)
+    m0 = ((p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2); m1 = ((p[2][0] + p[3][0]) / 2, (p[2][1] + p[3][1]) / 2)
+    r0 = (m0[0] + (m1[0] - m0[0]) * k, m0[1] + (m1[1] - m0[1]) * k); r1 = (m1[0] + (m0[0] - m1[0]) * k, m1[1] + (m0[1] - m1[1]) * k)
+    V += [[r0[0], r0[1], eave + roof, 0], [r1[0], r1[1], eave + roof, 0]]
+    return {'v': V, 't': T + [[4, 5, 8], [5, 6, 9], [5, 9, 8], [6, 7, 9], [7, 4, 8], [7, 8, 9]]}
+
+
 def rect(c, u, w, d):
     """plot rectangle: front centre c, unit front direction u, width w, depth d (inwards = left normal)."""
     n = (-u[1], u[0])

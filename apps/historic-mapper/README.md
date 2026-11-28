@@ -146,3 +146,93 @@ Edits are saved in `manual/` (versioned): `map_<id>.json`, `water_<id>.png` (fra
 `veduta_recon.py` turns the veduta points into 3D (needs the fitted camera of `veduta_fit.py`); `growth_model.py`
 adds the footprints (priority over generated and map-dated buildings), the reconstructed houses and the painted
 water (into the map's water epoch). Logos for the video and the web are copied locally to `public/logos/` (not versioned).
+
+### Workbench: recognition → footprint review → model (`workbench.html`)
+
+`npm run dev` → `http://localhost:5218/workbench.html` (the vite dev server runs the pipeline: `POST /api/run/detect|model|vedute`,
+`GET /api/run` for the log; corrections are saved by `POST /api/manual/*` into `manual/`).
+1. *Recognition*: `map_buildings.py` (plans 1891–1912, registered), `detect_footprints.py` (vector footprints of every epoch
+   raster and plan → `data/historic/growth/detected/`), `manual_maps.py`.
+2. *Footprint review*: every map with its recognised footprints (blue); reject (Delete), edit vertices (drag, Alt+click,
+   double click on an edge), draw polygons or rectangles, paint water. Saved per map in `manual/map_<id>.json`
+   (`removed` rings, `buildings` rings, optional from / to / height) and `manual/water_<id>.png`.
+3. *Model*: `growth_model.py` applies the corrections to the recognition before dating (epoch rasters: removed rings erased,
+   drawn rings added; plans: rejected footprints dropped, drawn ones added) and `check_epochs.py` reports the result.
+4. *3D*: `growth3d.html`.
+
+Permanence of objects in `growth_model.py`: a building of the plans counts as demolished only where a plan covers the place
+and shows (almost) no building there (< 10 % of the footprint); a plan building or a drawn footprint on the place of a
+present building (overlap > 50 %) is that building – it is dated earlier and keeps its 3D model from the city catalogue
+(basis `… (permanence)`, exempt from the binding-map rule).
+
+### Houses from the vedute (`iso.html`)
+
+`http://localhost:5218/iso.html`: choose a veduta (cameras of `scripts/veduta_views.json`), add a house, click the footprint
+corners (3 are enough: completed to a rectangle), wall tops / eaves and ridge ends; roof gable / hipped / shed / flat.
+The house is reconstructed in the browser (corners back-projected onto the ground, heights fitted on the vertical lines
+through the corners and over the long axis) and shown in 3D with the drawing projected onto its visible walls and roof;
+"draughtsman's view" renders the 3D scene from the veduta camera under the drawing. Saving writes the clicks
+(`manual/veduta_<id>.json`) and the reconstruction (`manual/veduta_buildings.json`), which `growth_model.py` adds as
+houses (`fabric.roof_house`).
+
+### Register of the buildings (`growth3d.html`, dev mode)
+
+Every record of the model has a stable id: present buildings `ruian:<code>`, landmarks and fortification their names
+(pieces of one work `#2`, `#3` …), the others an id from their place (`h1840:dx/dy`, `ham65:…`, `hmap:…`, `gen:…` =
+centroid in metres from the square, `.2` … for several records on one place in time order). `growth_model.py` writes
+`register.json` (aligned with `model.json`: range of the start date, names, the automatic values of buildings set by
+hand, manual entries without a building) and `register.csv` (one row per building: id, name, class, from with its
+range, to, first height, up to two changes of height, up to two periods destroyed, basis, manual flag, position).
+Click a building in the viewer: the panel shows its history (timeline and events with the evidence) and lets any value
+be set by hand where there are no better data – stands from, demolished, first height, 1st / 2nd change (year,
+height), 1st / 2nd destruction (from, to), name, source, note; × returns a field to the automatic value. The model
+updates at once; saving writes `manual/buildings.json` (only the fields entered), which `growth_model.py` applies after
+all automatic rules (basis `manual (register)`; a place-based id that moved is matched within 3 m). The second change of
+height travels as `model.json` `ch2` (index → [year, height]).
+
+### Facades from photos and drawings (`facade.html`)
+
+Opened from the house panel ("Facades from photos / drawings →") or `facade.html?id=<id>&year=<year>` (`&block=1`
+selects the whole block, `&ved=te-1618` adds a veduta layer). The unit is a **block**: one building or several
+neighbouring ones textured together from one image ("whole block" = the houses standing in the image's year joined by
+footprints closer than 3 m, without walls, towers, earthworks and churches; Ctrl + click in 3D adds or removes a house).
+The walls are the edges of the model footprints (collinear edges merged, counter-clockwise: t runs left → right seen
+from outside) with the top profile of the model mesh (gables), scaled to the height in the image's year; party walls
+(covered by a neighbour, tested 0.45 m outside the wall) are left out, partly covered walls keep only their open parts.
+Per source image (a layer: photo or drawing uploaded into `data/historic/growth/facades/src/`, or a veduta with its
+camera) each wall gets four image points of a control rectangle, from which a homography rectifies the whole wall
+(gables included, sky cut off). The points come
+- by hand: four clicks per wall, or four clicks for a whole street front (Shift selects several walls in a row – the
+  homography of the front is split among them), optionally snapped to the strongest nearby corner (Harris; off by
+  default – on repetitive texture it can pick a neighbouring corner),
+- from a camera fitted to clicked points of the block (outline corners R*k*↓ at the ground and R*k*↑ at the eaves, gable
+  tops *house wall*S; residuals per point in the list): **veduta camera + local correction** (below), **affine camera**
+  for isometric drawings (≥ 4 points at two heights) or **perspective DLT** for photographs (≥ 6 points),
+- from the camera of a veduta (`scripts/veduta_views.json`) alone, without a click;
+and every corner can be dragged afterwards. With a camera, a software depth map of the houses around (120 m, 250 m
+for photos) hides what stands behind other houses (transparent in the texture; walls seen < 15 % are left to the
+fill), and the **roofs of the block** become one plan-view texture draped over the roofs of all its houses: slopes
+seen in the image are taken from it, slopes turned away are mirrored across the ridge of the same house, the rest is
+filled from the nearest textured roof pixel along the ridge (or of the block). **Walls the image does not show** get a
+copy of the opposite wall (same house first, similar length; "fill hidden walls with copies" does all at once) or a
+texture uploaded straight onto the wall (the whole image = the whole wall; its extent adjustable). The year of the
+image sets the height; validity (from–to) is prefilled with the period in which all houses of the block keep their
+state. Saving writes the rectified textures (`data/historic/growth/facades/tex/*.webp`, not versioned – the sources
+keep their own licences) and `manual/facades.json` (`blocks`: key = first house, `members`, layers with faces naming
+their building `b`, the camera, the clicked points and the roof texture); the dev viewer draws them at once (after a
+reload), `growth_model.py` copies the textures of the blocks in the model next to it (`facades/`) for the published
+viewer.
+
+**Local correction of a veduta camera** (the bird's-eye plates are drawn freely: the camera of the whole sheet is off
+by 20–60 px at a block of the inner town of Theatrum Europaeum 1618): P′(X) = H · q(X_ground) + h · w, with q the
+veduta camera, H a plan correction in the image (1 corner at the ground: shift, 2: similarity, 3: affine, ≥ 4 places:
+homography) and w the image vector per metre of height, taken from corners clicked both at the ground and at the
+eave (the draughtsman's verticals and his exaggeration of the heights); eave points far in the block are brought
+down to the ground with w and help to fix the depth.
+Tested on synthetic photos with a known camera: rectified checkerboard exact (1 m squares stay square); camera from
+9 points with ±1 px noise: 0.5 px error, wall quads within 1.2 px. Tested on Theatrum Europaeum 1618 (Mansfeld's
+siege), the south-east block of the square (17 generated houses): the plate's camera alone puts the block front
+17–55 px off; two front corners at the ground give a similarity within 1.4 px (plan × 1.7), adding their eaves gives
+0.9 px and shows the heights drawn × 3.6 against the plan; a fifth point at the corner on the square fixes the depth
+(the model's courtyard row then lands within ~10 px of the drawn street front – the plate shows the large block as two
+blocks with a lane). Roofs: 35 % from the plate, 20 % mirrored, the rest filled.

@@ -93,13 +93,18 @@ def fit(X, obs, W, H, kind, az_list=None, starts=(), wt=None):
                 hi = np.r_[[8000, Z0 + 4000, 8000], [np.pi] * 3, math.log(H / 2 / math.tan(math.radians(3) / 2)), [math.log(6.0)] * (len(p0) - 7)]
                 def res(p):
                     q, front = project(p, X, W, H)
-                    return np.r_[(((q - obs) / (0.01 * H)) * wt[:, None]).ravel(), (~front) * 50.0]
+                    # a drawing is never upside down: the camera's up axis keeps a positive world y (without this the
+                    # bird's-eye plates, whose points lie nearly on the ground plane, converge to a flipped camera
+                    # behind the town that turns all heights downwards)
+                    up = Rotation.from_rotvec(p[3:6]).as_matrix()[1, 1]
+                    return np.r_[(((q - obs) / (0.01 * H)) * wt[:, None]).ravel(), (~front) * 50.0, max(0.0, 0.25 - up) * 200.0]
                 try:
                     s = least_squares(res, np.clip(p0, lo + 1e-6, hi - 1e-6), bounds=(lo, hi), loss='soft_l1', f_scale=2.0, max_nfev=600)
                 except Exception:
                     continue
                 q, front = project(s.x, X, W, H)
-                rms = float(np.sqrt(((q - obs) ** 2).sum(1).mean())) if front.all() else 1e9
+                upright = Rotation.from_rotvec(s.x[3:6]).as_matrix()[1, 1] > 0.2
+                rms = float(np.sqrt(((q - obs) ** 2).sum(1).mean())) if front.all() and upright else 1e9
                 if best is None or rms < best[1]: best = (s.x, rms)
     return best
 
@@ -229,7 +234,8 @@ def main():
         im = mapping_image(sid, par, W, H, year, obs, used, title)
         cv2.imencode('.jpg', im, [cv2.IMWRITE_JPEG_QUALITY, 85])[1].tofile(os.path.join(SHOTS, f'vedmap_{sid}.jpg'))
         print(f'{sid:18s} {how:40s} error {rms:7.1f} px ({100 * rms / H:4.1f} %)  camera {np.round(par[:3]).astype(int)}  fov {v["fov"]:.1f}°')
-    json.dump({'note': 'cameras of the vedute estimated by veduta_views.py (three.js axes: x east, y up, z south; quaternion x y z w)', 'views': res},
+    json.dump({'note': 'cameras of the vedute estimated by veduta_views.py (three.js axes: x east, y up, z south; quaternion x y z w)',
+               'origin': M['origin'], 'ground': round(Z0, 2), 'views': res},
               open(OUTJ, 'w', encoding='utf-8'), indent=1)
 
 

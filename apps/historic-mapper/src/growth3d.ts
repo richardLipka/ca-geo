@@ -5,6 +5,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { getLang, setLang, t } from './i18n';
+import { maxHeight } from './facades3d';
+import { initRegister, initFacades } from './register';
 
 interface Model {
   origin: [number, number]; frame: [number, number, number, number]; years: [number, number];
@@ -13,7 +15,7 @@ interface Model {
   grounds: { year: number; file: string; label?: string }[]; water?: { year: number; file: string }[]; n: number;
   terrain?: { file: string; size: number; zmin: number; scale: number };
   rings: number[][]; from: number[]; to: number[]; h0: number[]; h1: number[]; tR: number[]; gaps: number[][]; cls: number[]; basisIdx: number[];
-  z?: number[]; ids?: string[]; mesh?: { file: string; files?: string[]; buildings: number };
+  z?: number[]; ids?: string[]; ch2?: Record<string, [number, number]>; facades?: string; mesh?: { file: string; files?: string[]; buildings: number };
   cuts?: { bits?: boolean; file: string; box: [number, number, number, number]; periods: [number, number][] };
 }
 interface ProjSource { id: string; title: string; kind: string; file: string; depicted?: [number, number]; made?: string; view?: View }
@@ -60,10 +62,10 @@ const PERIODS: [number, number, string][] = [
 ];
 const periodCol = (y: number) => { let c = PERIODS[0][1]; for (const [s, col] of PERIODS) if (y >= s) c = col; return c; };
 // colour by kind of evidence (how the date was obtained)
-const BASIS_COL = (b: string) => b === 'history' || b.startsWith('model 1618') ? 0x7a2e8c
+const BASIS_COL = (b: string) => b.startsWith('manual') ? 0xd0402a : b === 'history' || b.startsWith('model 1618') ? 0x7a2e8c
   : b.startsWith('RÚIAN date') ? 0x1f7a4d : b.includes('RÚIAN') ? 0x4f9a6a : b.startsWith('map 1840') ? 0xc77d2a : 0x9aa3ab;
 const FORT_KEYS: [number, string][] = [[0x7d8f45, 'g3d.k.earth'], [0x9a948a, 'g3d.k.wall'], [0x3f86c4, 'g3d.k.moat']];
-const BASIS_KEYS: [number, string][] = [[0x7a2e8c, 'g3d.b.history'], [0x1f7a4d, 'g3d.b.ruian'], [0x4f9a6a, 'g3d.b.ruianmap'], [0xc77d2a, 'g3d.b.pre1840'], [0x9aa3ab, 'g3d.b.map']];
+const BASIS_KEYS: [number, string][] = [[0x7a2e8c, 'g3d.b.history'], [0x1f7a4d, 'g3d.b.ruian'], [0x4f9a6a, 'g3d.b.ruianmap'], [0xc77d2a, 'g3d.b.pre1840'], [0x9aa3ab, 'g3d.b.map'], [0xd0402a, 'g3d.b.manual']];
 
 async function main() {
   document.title = t('g3d.title');
@@ -217,7 +219,8 @@ async function main() {
       if (M.cls[b] === MOAT) { c1.setHex(0x3f86c4); c2.setHex(0x3f86c4); }
       if (M.cls[b] === DITCH) { c1.setHex(0x8a7a58); c2.setHex(0x8a7a58); }
       if (M.cls[b] === FORT) { const masonry = /^g1618-|zwinger|suburb_wall/.test(IDS[b]) || !meshOf.has(b); const ck = masonry ? 0x9a948a : 0x7d8f45; c1.setHex(ck); c2.setHex(ck); }  // masonry grey, earthworks olive  // earthworks olive, masonry grey
-      bd.set([M.from[b], M.to[b], M.tR[b], M.cls[b], M.h0[b], M.h1[b], ZS[b], 0, g[0], g[1], g[2], g[3], c1.r, c1.g, c1.b, 0, c2.r, c2.g, c2.b, 0], o);
+      const c2_ = M.ch2?.[String(b)];   // second change of height (manual register): texel 1.w = year, texel 3.w = height
+      bd.set([M.from[b], M.to[b], M.tR[b], M.cls[b], M.h0[b], M.h1[b], ZS[b], c2_?.[0] ?? 0, g[0], g[1], g[2], g[3], c1.r, c1.g, c1.b, c2_?.[1] ?? 0, c2.r, c2.g, c2.b, 0], o);
     }
   }
   const btex = new THREE.DataTexture(bd, TW * TEXELS, TROWS, THREE.RGBAFormat, THREE.FloatType);
@@ -238,7 +241,7 @@ async function main() {
     const put = (x: number, y: number, u: number) => { pos[3 * v] = x; pos[3 * v + 1] = u; pos[3 * v + 2] = -y; aB[v] = b; v++; };
     const m = meshOf.get(b);
     if (m) {
-      const v0 = v, h = Math.max(M.h0[b], M.h1[b], 0.5);
+      const v0 = v, h = maxHeight(M, b);
       for (let i = 0; i < m.v.length; i += 3) put(m.v[i], m.v[i + 1], m.v[i + 2] / h);
       for (let i = 0; i < m.t.length; i++) idx[ii++] = v0 + m.t[i];
       continue;
@@ -269,7 +272,7 @@ async function main() {
       if (aG.y > 0.0 && yr >= aG.y) start = max(start, aG.y);   // rebuilt after the first destruction
       if (aG.w > 0.0 && yr >= aG.w) start = max(start, aG.w);   // rebuilt after the second destruction
       vis = yr >= aT.x && yr < aT.y && !(yr >= aG.x && yr < aG.y) && !(yr >= aG.z && yr < aG.w);
-      float h = (yr < aT.z ? hz.x : hz.y) * min(clamp((yr - start) / uRise, 0.0, 1.0), clamp((aT.y - yr) / 1.5, 0.0, 1.0));
+      float h = (yr < aT.z ? hz.x : (hz.w > 0.0 && yr >= hz.w ? bt(3).w : hz.y)) * min(clamp((yr - start) / uRise, 0.0, 1.0), clamp((aT.y - yr) / 1.5, 0.0, 1.0));
       if (yr >= aT.z) h *= clamp((yr - aT.z) / uRise, 0.35, 1.0);
       return vis ? hz.z + u * max(h, 0.2) : hz.z - 3.0;
     }`;
@@ -304,6 +307,8 @@ async function main() {
   // ---------- statistics for the chart and the automatic camera ----------
   const Y0 = M.years[0], Y1 = M.years[1];
   const visibleAt = (b: number, y: number) => y >= M.from[b] && y < M.to[b] && !(y >= M.gaps[b][0] && y < M.gaps[b][1]) && !(y >= M.gaps[b][2] && y < M.gaps[b][3]);
+  // facade textures (manual/facades.json via facade.html; in the published model data/facades/)
+  const facades = await initFacades({ scene, M, ZS, IDS, visibleAt, dev: !PUBLIC, data: DATA, meshOf });
   const cx = M.rings.map(r => { let s = 0; for (let i = 0; i < r.length; i += 2) s += r[i]; return s / (r.length / 2) / 10; });
   const cy = M.rings.map(r => { let s = 0; for (let i = 1; i < r.length; i += 2) s += r[i]; return s / (r.length / 2) / 10; });
   const counts: number[] = [], radius: number[] = [];
@@ -368,6 +373,7 @@ async function main() {
     const tx = groundTex(gr.file); if (groundMat.map !== tx) { groundMat.map = tx; groundMat.needsUpdate = true; }
     if (M.water?.length) { const wf = ([...M.water].reverse().find(w => w.year <= year + 0.01) ?? M.water[0]).file; groundUni.uWater.value = waterTex(wf); }
     stat.textContent = t('g3d.stat', { n: Math.round(atStep(counts, year)), g: gr.year > Y0 ? gr.year : '–' });
+    facades.update(year);
   };
   yr.oninput = () => { if (!exporting) setYear(+yr.value); };
   if (PUBLIC) {
@@ -397,6 +403,8 @@ async function main() {
 
   // ---------- one animation step (shared by the live loop and the frame export) ----------
   let exporting = false;
+  // export variants (exportVideo options): speed of the timeline, camera distance / elevation, portrait layout
+  let XSPEED = 1, XDIST = 1, XELEV = 0.62, VERTICAL = false;
   const resize = () => { if (exporting) return; const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix(); drawChart(); };
   addEventListener('resize', resize); resize();
   let az = -2.4;
@@ -408,11 +416,11 @@ async function main() {
     return { l, show, x: (tmp.x + 1) / 2, y: (1 - tmp.y) / 2 };
   });
   const step = (dt: number) => {
-    if (playing) { setYear(year + rate(year) * dt); if (year >= Y1) stopPlay(); }
+    if (playing) { setYear(year + rate(year) * dt * (exporting ? XSPEED : 1)); if (year >= Y1) stopPlay(); }
     if (auto.checked) { // slow orbit; distance follows the extent of the town
       az += dt * 0.05;
-      const R = Math.max(380, atStep(radius, year)) * 2.1;
-      const want = new THREE.Vector3(Math.cos(az) * R, terrainAt0(0, 0) + R * 0.62, Math.sin(az) * R);
+      const R = Math.max(380, atStep(radius, year)) * 2.1 * (exporting ? XDIST : 1);
+      const want = new THREE.Vector3(Math.cos(az) * R, terrainAt0(0, 0) + R * (exporting ? XELEV : 0.62), Math.sin(az) * R);
       cam.position.lerp(want, Math.min(1, dt * 1.5)); ctl.target.lerp(new THREE.Vector3(0, terrainAt0(0, 0), 0), Math.min(1, dt * 1.5));
     }
     ctl.update();
@@ -431,6 +439,7 @@ async function main() {
     comp.width = W; comp.height = H; const g = comp.getContext('2d')!;
     g.drawImage(src, 0, 0);
     g.textBaseline = 'top';
+    if (VERTICAL) return compositeVertical(g, W, H);
     for (const p of labelPos()) if (p.show) {
       g.font = `600 ${12 * k}px system-ui`; g.lineWidth = 3 * k; g.strokeStyle = 'rgba(255,255,255,.9)'; g.fillStyle = '#1f2427';
       const s = `${p.l.name} (${p.l.mention})`; g.strokeText(s, p.x * W - 20 * k, p.y * H - 8 * k); g.fillText(s, p.x * W - 20 * k, p.y * H - 8 * k);
@@ -468,24 +477,69 @@ async function main() {
     g.fillText(t('g3d.credits'), W - 14 * k, H - 22 * k); g.textAlign = 'left';
     return comp;
   };
-  const EXP_W = 1600, EXP_H = 900;
+  // portrait layout (YouTube Shorts, 1080 × 1920): logos and title at the top, captions below them, the year above
+  // the bottom quarter (kept free for the player's controls), no legend; nothing in the right margin
+  const compositeVertical = (g: CanvasRenderingContext2D, W: number, H: number) => {
+    const k = W / 720;
+    const box = (x: number, y: number, w: number, h: number, a: number) => { g.fillStyle = `rgba(31,36,39,${a})`; g.beginPath(); g.roundRect(x, y, w, h, 8 * k); g.fill(); };
+    for (const p of labelPos()) if (p.show && p.x > 0.04 && p.x < 0.84) {
+      g.font = `600 ${11 * k}px system-ui`; g.lineWidth = 3 * k; g.strokeStyle = 'rgba(255,255,255,.9)'; g.fillStyle = '#1f2427';
+      const s_ = p.l.name; g.strokeText(s_, p.x * W - 16 * k, p.y * H - 7 * k); g.fillText(s_, p.x * W - 16 * k, p.y * H - 7 * k);
+    }
+    // logos and title
+    const ims = LOGOS.map((im, i) => i === 2 && lang === 'en' && LOGOS_EN.complete && LOGOS_EN.naturalWidth ? LOGOS_EN : im).filter(im => im.complete && im.naturalWidth > 0);
+    const lh = 30 * k, gap = 14 * k, pad = 9 * k, top = 46 * k;
+    const ws = ims.map(im => lh * im.naturalWidth / im.naturalHeight), lw = ws.reduce((a_, b_) => a_ + b_, 0) + gap * Math.max(0, ims.length - 1);
+    box((W - lw) / 2 - pad, top, lw + 2 * pad, lh + 2 * pad + 34 * k, 0.8);
+    let x = (W - lw) / 2; ims.forEach((im, i) => { g.drawImage(im, x, top + pad, ws[i], lh); x += ws[i] + gap; });
+    g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = `700 ${19 * k}px "Segoe UI", system-ui`;
+    g.fillText(lang === 'cs' ? 'Růst Plzně 1295–2020' : 'Growth of Plzeň 1295–2020', W / 2, top + lh + 2 * pad + 4 * k, W * 0.86);
+    // event captions
+    caps.forEach((c, i) => {
+      const txt = `${c.e.year} — ${lang === 'cs' ? c.e.cs : c.e.en}`;
+      g.font = `600 ${(i ? 15 : 18) * k}px "Segoe UI", system-ui`; const tw = Math.min(g.measureText(txt).width, W * 0.86);
+      const y0 = top + lh + 2 * pad + 52 * k + i * 42 * k;
+      g.globalAlpha = Math.max(0, c.a) * (i ? 0.85 : 1); box((W - tw) / 2 - 12 * k, y0, tw + 24 * k, 34 * k, 0.8);
+      g.fillStyle = '#fff'; g.fillText(txt, W / 2, y0 + (i ? 9 : 7) * k, W * 0.86); g.globalAlpha = 1;
+    });
+    // year, building count, map
+    const yb = H - H * 0.24 - 76 * k;
+    box(W / 2 - 150 * k, yb, 300 * k, 70 * k, 0.8);
+    g.fillStyle = '#fff'; g.font = `700 ${44 * k}px "Segoe UI", system-ui`; g.textAlign = 'left'; g.fillText(String(Math.floor(year)), W / 2 - 138 * k, yb + 8 * k);
+    { const gy = mapg.checked ? ([...M.grounds].reverse().find(q => q.year <= year + 0.01)?.year ?? Y0) : Y0;
+      g.font = `${14 * k}px system-ui`;
+      g.fillText(`${t('g3d.nBuildings')}: ${Math.round(atStep(counts, year))}`, W / 2 - 10 * k, yb + 12 * k);
+      g.fillText(`${t('g3d.mapShort')}: ${gy > Y0 ? gy : '–'}`, W / 2 - 10 * k, yb + 38 * k); }
+    g.font = `${10 * k}px system-ui`; g.fillStyle = 'rgba(31,36,39,.85)'; g.textAlign = 'center';
+    g.fillText(lang === 'cs' ? 'schematický model · RÚIAN, 3D model města Plzně, historické mapy a veduty' : 'schematic model · RÚIAN, City of Plzeň 3D model, historical maps and vedute', W / 2, yb + 78 * k, W * 0.9);
+    g.textAlign = 'left';
+    return comp;
+  };
+  let EXP_W = 1600, EXP_H = 900;
   // all ground and water textures loaded before frames are rendered (otherwise the first frame after a map switch is black)
   const preload = () => Promise.all([
     ...M.grounds.map(gr => new Promise<void>(res => { const x = groundTex(gr.file); if (x.image) res(); else { const iv = setInterval(() => { if (x.image) { clearInterval(iv); res(); } }, 50); } })),
     ...(M.water ?? []).map(w => new Promise<void>(res => { const x = waterTex(w.file); if (x.image) res(); else { const iv = setInterval(() => { if (x.image) { clearInterval(iv); res(); } }, 50); } })),
   ]).then(() => new Promise(r => setTimeout(r, 300)));
-  const exportVideo = async (fps = 30) => {
+  // o: {vertical: portrait 1080 × 1920 for YouTube Shorts, speed: timeline faster, maps: the period maps under the
+  // model, fade: their dimming (0 = full colour … 1 = grey), dist / elev: camera distance factor and elevation}
+  const exportVideo = async (fps = 30, o: { vertical?: boolean; speed?: number; maps?: boolean; fade?: number; dist?: number; elev?: number } = {}) => {
     if (exporting) { exporting = false; return; }
+    const keep = { mapg: mapg.checked, fade: groundUni.uFade.value };
+    VERTICAL = !!o.vertical; XSPEED = o.speed ?? 1; XDIST = o.dist ?? 1; XELEV = o.elev ?? 0.62;
+    [EXP_W, EXP_H] = VERTICAL ? [1080, 1920] : [1600, 900];
+    if (o.maps !== undefined) mapg.checked = o.maps;
+    if (o.fade !== undefined) groundUni.uFade.value = o.fade;
     exporting = true; renderer.setAnimationLoop(null);
     await preload();
     // fixed output size, independent of the window; no user input while exporting
     const prevRatio = renderer.getPixelRatio();
     renderer.setPixelRatio(1); renderer.setSize(EXP_W, EXP_H, false); cam.aspect = EXP_W / EXP_H; cam.updateProjectionMatrix();
     ctl.enabled = false; playBtn.disabled = true; yr.disabled = true;
-    const run = `plzen-growth-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
+    const run = `plzen-growth${VERTICAL ? '-shorts' : ''}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
     recBtn.textContent = `■ ${t('g3d.stop')}`;
     setYear(Y0); auto.checked = true; playing = true; az = -2.4;
-    const R0 = Math.max(380, atStep(radius, Y0)) * 2.1; cam.position.set(Math.cos(az) * R0, R0 * 0.62, Math.sin(az) * R0);
+    const R0 = Math.max(380, atStep(radius, Y0)) * 2.1 * XDIST; cam.position.set(Math.cos(az) * R0, R0 * XELEV, Math.sin(az) * R0);
     let n = 0, tail = 3 * fps;
     while (exporting && (playing || tail-- > 0)) {
       step(1 / fps);
@@ -496,6 +550,7 @@ async function main() {
       n++; if (n % 30 === 0) stat.textContent = `${t('g3d.export')}: ${n} · ${Math.floor(year)}`;
     }
     exporting = false; recBtn.textContent = `● ${t('g3d.record')}`;
+    VERTICAL = false; XSPEED = 1; XDIST = 1; XELEV = 0.62; [EXP_W, EXP_H] = [1600, 900]; mapg.checked = keep.mapg; groundUni.uFade.value = keep.fade; setYear(year);
     ctl.enabled = true; playBtn.disabled = false; yr.disabled = false; renderer.setPixelRatio(prevRatio); resize();
     stat.textContent = t('g3d.saved', { f: `data/historic/growth/video/${run}/ (${n})` });
     (window as unknown as Record<string, unknown>).__g3dExport = { run, frames: n };
@@ -639,11 +694,13 @@ async function main() {
     lastXYZ = pf[3] > 0.5 ? [+pf[0].toFixed(2), +pf[1].toFixed(2), +pf[2].toFixed(2)] : null;
     return px[0] + px[1] * 256 + px[2] * 65536 - 1;
   };
+  // register of the buildings (dev): history of the selected building, manual dates and heights (manual/buildings.json)
+  const reg = PUBLIC ? null : await initRegister({ M, IDS, ZS, bd, btex, TW, TEXELS, data: DATA, getYear: () => year, setYear: (y: number) => { stopPlay(); auto.checked = false; setYear(y); }, select: (b: number) => { selB = b; uni.uSel.value = b; }, facades });
   let down: [number, number] | null = null;
   renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
   renderer.domElement.addEventListener('pointerup', e => {
     if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 4) return; // a drag, not a click
-    const b = pick(e); selB = b; uni.uSel.value = b;
+    const b = pick(e); selB = b; uni.uSel.value = b; reg?.select(b);
     vhelp.textContent = b >= 0 ? `${t('g3d.selected')}: ${describe(b)}` : t('g3d.vhelp');
     drawAnns();
   });
@@ -812,7 +869,7 @@ async function main() {
     });
   };
   startLoop();
-  Object.assign(window as unknown as Record<string, unknown>, { __g3d: { setYear, uni, cam, ctl, M, exportVideo, pick, snap, auto, stopPlay, fitCamera, vcam, vedUni, IDS } });
+  Object.assign(window as unknown as Record<string, unknown>, { __g3d: { setYear, uni, cam, ctl, M, exportVideo, pick, snap, auto, stopPlay, fitCamera, vcam, vedUni, IDS, reg, facades } });
 }
 
 main();

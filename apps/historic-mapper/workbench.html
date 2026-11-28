@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plzeň: kontrola půdorysů</title>
+<style>
+  :root { --bg: #f6f5f1; --panel: #fff; --ink: #1f2427; --mute: #67706f; --line: #d3d8d6; --acc: #8c3b2e; --ok: #2d6a3e; --det: #2f6fd0; --man: #d0402a; --sel: #e0a020 }
+  * { box-sizing: border-box }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, sans-serif }
+  #app { display: grid; grid-template-columns: 310px 1fr; grid-template-rows: auto 1fr auto; height: 100% }
+  header { grid-column: 1 / 3; display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line) }
+  header h1 { font-size: 15px; margin: 0 14px 0 0 }
+  .steps { display: flex; gap: 6px; flex: 1 }
+  .step { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 18px; padding: 4px 12px; background: #fbfbfa; cursor: pointer; font-weight: 600 }
+  .step b { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 11px }
+  .step.on { border-color: var(--acc); color: var(--acc) } .step.on b { background: var(--acc); color: #fff }
+  .step.done b { background: var(--ok); color: #fff }
+  aside { background: var(--panel); border-right: 1px solid var(--line); padding: 10px 12px; overflow: auto }
+  h2 { font-size: 12px; margin: 14px 0 5px; color: var(--acc); text-transform: uppercase; letter-spacing: .04em }
+  select, input[type=number], input[type=text] { width: 100%; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; font: inherit }
+  .row { display: flex; gap: 6px; align-items: center; margin: 4px 0 } .row > * { flex: 1 }
+  .tools { display: flex; flex-wrap: wrap; gap: 4px }
+  button { font: inherit; cursor: pointer } .tools button, .btn { padding: 4px 9px; border: 1px solid var(--line); background: #fbfbfa; border-radius: 4px }
+  .tools button.on { background: var(--acc); color: #fff; border-color: var(--acc) }
+  .primary { background: var(--ok); color: #fff; border: 0; padding: 7px 10px; border-radius: 4px; width: 100%; margin-top: 6px }
+  .run { background: var(--acc); color: #fff; border: 0; padding: 7px 10px; border-radius: 4px; width: 100% }
+  .hint { color: var(--mute); font-size: 12px } kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; font-size: 11px; background: #fbfbfa }
+  .stats { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 12.5px }
+  .lg { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 4px; vertical-align: -1px }
+  main { position: relative; overflow: hidden } canvas { display: block; width: 100%; height: 100%; cursor: crosshair }
+  #coord { position: absolute; left: 8px; bottom: 6px; background: rgba(255,255,255,.85); padding: 2px 6px; border-radius: 4px; font-size: 12px }
+  #log { grid-column: 1 / 3; height: 0; overflow: auto; background: #1f2427; color: #d8dcd9; font: 12px/1.35 ui-monospace, Consolas, monospace; padding: 0 12px; white-space: pre-wrap; transition: height .2s }
+  #log.open { height: 190px; padding: 8px 12px }
+  #status { min-height: 2.4em; color: var(--mute); margin-top: 6px }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 data-t="title">Růst Plzně: rozpoznání → kontrola → model</h1>
+    <div class="steps">
+      <div class="step" data-step="1"><b>1</b><span data-t="s1">Rozpoznání</span></div>
+      <div class="step on" data-step="2"><b>2</b><span data-t="s2">Kontrola půdorysů</span></div>
+      <div class="step" data-step="3"><b>3</b><span data-t="s3">Generování modelu</span></div>
+      <div class="step" data-step="4"><b>4</b><span data-t="s4">3D náhled</span></div>
+    </div>
+    <a class="btn" href="iso.html" data-t="iso">Domy z vedut →</a>
+    <button class="btn" id="lang">EN</button>
+  </header>
+  <aside>
+    <div id="p1" hidden>
+      <h2 data-t="s1">Rozpoznání</h2>
+      <p class="hint" data-t="p1h">Automaticky najde budovy na všech mapách (plány 1891–1912 v 0,5 m s registrací, epochy 1821–2001 v 2,5 m) a uloží je jako vektorové půdorysy ke kontrole.</p>
+      <button class="run" id="runDetect" data-t="runDetect">Spustit rozpoznání</button>
+    </div>
+    <div id="p2">
+      <h2 data-t="map">Mapa</h2>
+      <select id="mapSel"></select>
+      <div class="stats" id="stats"></div>
+      <h2 data-t="layers">Vrstvy</h2>
+      <label><input type="checkbox" id="lDet" checked> <span class="lg" style="background:var(--det)"></span><span data-t="lDet">rozpoznané půdorysy</span></label><br>
+      <label><input type="checkbox" id="lMan" checked> <span class="lg" style="background:var(--man)"></span><span data-t="lMan">ručně doplněné / upravené</span></label><br>
+      <label><input type="checkbox" id="lModel"> <span class="lg" style="background:#7a7a7a"></span><span data-t="lModel">budovy modelu v roce mapy</span></label><br>
+      <label><input type="checkbox" id="lWater" checked> <span class="lg" style="background:#2f7fd0"></span><span data-t="lWater">ručně zamodřená voda</span></label>
+      <div class="row"><span data-t="opacity">Mapa</span><input type="range" id="mapOp" min="0.1" max="1" step="0.05" value="1"></div>
+      <h2 data-t="tool">Nástroj</h2>
+      <div class="tools">
+        <button data-tool="select" class="on" data-t="tSel">Výběr / úprava</button>
+        <button data-tool="poly" data-t="tPoly">Polygon</button>
+        <button data-tool="rect" data-t="tRect">Obdélník</button>
+        <button data-tool="water" data-t="tWater">Voda</button>
+        <button data-tool="erase" data-t="tErase">Guma</button>
+      </div>
+      <div class="row"><span data-t="brush">Štětec (m)</span><input type="range" id="brush" min="3" max="60" value="12"></div>
+      <p class="hint" data-t="keys">Výběr: klik na půdorys, <kbd>Delete</kbd> odebere rozpoznaný (znovu <kbd>Delete</kbd> vrátí), tažením vrcholu ho upravíte, <kbd>Alt</kbd>+klik na vrchol ho smaže, dvojklik na hranu přidá vrchol. Polygon: rohy, <kbd>Enter</kbd>. Obdélník: dva rohy jedné strany a hloubka. Posun: prostřední tlačítko nebo mezerník, kolečko = zoom. <kbd>Ctrl</kbd>+<kbd>S</kbd> uloží.</p>
+      <div id="selBox" hidden>
+        <h2 data-t="selected">Vybraný půdorys</h2>
+        <div class="row"><span data-t="from">od</span><input type="number" id="bFrom" placeholder="auto"><span data-t="to">do</span><input type="number" id="bTo" placeholder="auto"></div>
+        <div class="row"><span data-t="height">výška (m)</span><input type="number" id="bH" placeholder="auto"></div>
+      </div>
+      <button class="primary" id="save" data-t="save">Uložit opravy této mapy</button>
+    </div>
+    <div id="p3" hidden>
+      <h2 data-t="s3">Generování modelu</h2>
+      <p class="hint" data-t="p3h">Opravy všech map se promítnou do rozpoznání (rastry epoch, půdorysy plánů) a model se sestaví znovu: datace budov, permanence objektů (dům stojí, dokud ho mapa jasně neukazuje jako zmizelý; na místě dnešní budovy je to tatáž budova s modelem z katalogu města), generovaná zástavba, opevnění. Trvá to několik minut.</p>
+      <button class="run" id="runModel" data-t="runModel">Generovat model</button>
+      <button class="btn" id="runVed" style="width:100%;margin-top:6px" data-t="runVed">Rekonstruovat domy z vedut a generovat</button>
+    </div>
+    <div id="p4" hidden>
+      <h2 data-t="s4">3D náhled</h2>
+      <p class="hint" data-t="p4h">Model se otevře v prohlížeči růstu města (časová osa, dobové mapy pod modelem).</p>
+      <a class="btn" href="growth3d.html" target="_blank" data-t="open3d">Otevřít 3D model</a>
+    </div>
+    <div id="status"></div>
+  </aside>
+  <main><canvas id="cv"></canvas><div id="coord"></div></main>
+  <div id="log"></div>
+</div>
+<script type="module" src="/src/workbench.ts"></script>
+</body>
+</html>

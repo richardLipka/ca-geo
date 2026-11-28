@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fasády z fotek a kreseb</title>
+<style>
+  :root { --bg: #f6f5f1; --panel: #fff; --ink: #1f2427; --mute: #67706f; --line: #d3d8d6; --acc: #8c3b2e; --ok: #2d6a3e }
+  * { box-sizing: border-box }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, sans-serif }
+  #app { display: grid; grid-template-columns: 300px 1fr 1fr; grid-template-rows: auto 1fr; height: 100% }
+  header { grid-column: 1 / 4; display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line) }
+  header h1 { font-size: 15px; margin: 0 10px 0 0 } header input { width: 210px } header .btn { white-space: nowrap }
+  aside { background: var(--panel); border-right: 1px solid var(--line); padding: 8px 12px; overflow: auto }
+  h2 { font-size: 12px; margin: 12px 0 5px; color: var(--acc); text-transform: uppercase; letter-spacing: .04em }
+  select, input[type=number], input[type=text] { width: 100%; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; font: inherit }
+  .row { display: flex; gap: 6px; align-items: center; margin: 4px 0 } .row > * { flex: 1 } .row > span { flex: 0 0 auto; min-width: 54px }
+  button { font: inherit; cursor: pointer } .btn, .tools button { padding: 4px 9px; border: 1px solid var(--line); background: #fbfbfa; border-radius: 4px; color: inherit; text-decoration: none }
+  .tools { display: flex; flex-wrap: wrap; gap: 4px } .tools button.on { background: var(--acc); color: #fff; border-color: var(--acc) }
+  .primary { background: var(--ok); color: #fff; border: 0; padding: 7px 10px; border-radius: 4px; width: 100%; margin-top: 8px }
+  ul { list-style: none; padding: 0; margin: 4px 0; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 4px }
+  li { padding: 3px 6px; cursor: pointer; display: flex; justify-content: space-between; gap: 6px } li:hover { background: #f1efe8 } li.on { background: #f4dfc9 }
+  li .ok { color: var(--ok); font-weight: 600 }
+  .hint { color: var(--mute); font-size: 12px } kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; font-size: 11px; background: #fbfbfa }
+  .pane { position: relative; overflow: hidden; border-right: 1px solid var(--line) }
+  .pane canvas { display: block; width: 100%; height: 100% }
+  .cap { position: absolute; left: 8px; top: 6px; background: rgba(255,255,255,.88); padding: 2px 8px; border-radius: 4px; font-size: 12px; pointer-events: none }
+  #next { position: absolute; left: 8px; bottom: 8px; right: 8px; background: rgba(31,36,39,.82); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 12.5px; pointer-events: none }
+  #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden }
+  #labels span { position: absolute; font: 600 11px system-ui; color: #1f2427; text-shadow: 0 0 3px #fff, 0 0 3px #fff; transform: translate(-50%, -120%); white-space: nowrap }
+  #labels span.on { color: #d0402a } #labels span.done { color: #2d6a3e }
+  #status { color: var(--mute); margin-top: 6px; min-height: 2.4em }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 data-t="title">Fasády z fotek a kreseb</h1>
+    <input type="text" id="bid" placeholder="ruian:… / h1840:…"><button class="btn" id="load" data-t="load">Načíst budovu</button>
+    <span id="binfo" class="hint"></span>
+    <span id="blk" class="hint"></span><button class="btn" id="blkAll" data-t="blkAll">celý blok</button><button class="btn" id="blkOne" data-t="blkOne">jen tento dům</button>
+    <span style="flex:1"></span>
+    <a class="btn" href="growth3d.html" data-t="back">← 3D model</a>
+    <button class="btn" id="lang">EN</button>
+  </header>
+  <aside>
+    <h2 data-t="sources">Obrazové zdroje</h2>
+    <div class="row"><button class="btn" id="addFile" data-t="addFile">+ fotka / kresba</button><input type="file" id="file" accept="image/*" hidden></div>
+    <div class="row"><select id="vedSel"><option value="" data-t="addVed">+ veduta s kamerou…</option></select></div>
+    <ul id="layers"></ul>
+    <div id="layEdit" hidden>
+      <div class="row"><input type="text" id="lLabel" placeholder="popis / label"></div>
+      <div class="row"><span data-t="kind">druh</span><select id="lKind"><option value="photo" data-t="photo">fotografie</option><option value="drawing" data-t="drawing">kresba / rytina</option><option value="veduta" data-t="veduta">veduta</option></select></div>
+      <div class="row"><span data-t="year">rok</span><input type="number" id="lYear"></div>
+      <div class="row"><span data-t="valid">platí</span><input type="number" id="lV0"><input type="number" id="lV1"></div>
+      <p class="hint" data-t="validHint">Rok zobrazení určuje výšku domu; platnost (od–do) je období, kdy se textura ukáže v modelu – předvyplní se podle změn domu v registru.</p>
+      <h2 data-t="mode">Postup</h2>
+      <div class="tools">
+        <button data-mode="quad" class="on" data-t="mQuad">4 rohy stěny</button>
+        <button data-mode="cam" data-t="mCam">kamera z bodů bloku</button>
+      </div>
+      <div class="row"><span data-t="camKind">kamera</span><select id="camKind"><option value="auto" data-t="cAuto">automaticky</option><option value="corr" data-t="cCorr">veduta + místní oprava</option><option value="affine" data-t="cAff">afinní (izometrická kresba)</option><option value="dlt" data-t="cDlt">perspektivní (fotka)</option></select></div>
+      <label><input type="checkbox" id="snap"> <span data-t="snap">přichytit kliknutí k rohu v obrázku</span></label><br>
+      <label><input type="checkbox" id="ovl" checked> <span data-t="ovl">obrys bloku podle kamery</span></label><br>
+      <label><input type="checkbox" id="roofOn" checked> <span data-t="roofOn">střechy bloku z obrázku</span></label> <span id="roofStat" class="hint"></span>
+      <p class="hint" id="modeHint"></p>
+      <div id="camBox" hidden>
+        <ul id="corners"></ul>
+        <div class="row"><button class="btn" id="camFit" data-t="camFit">Spočítat kameru</button><button class="btn" id="camApply" data-t="camApply">Promítnout na stěny</button></div>
+      </div>
+      <h2 data-t="walls">Stěny</h2>
+      <ul id="walls"></ul>
+      <div class="row"><button class="btn" id="fillHidden" data-t="fillHidden">Doplnit neviditelné stěny kopiemi</button></div>
+      <div id="wallEdit" hidden>
+        <div id="ctrlBox">
+        <div class="row"><span data-t="ctrl">body: zleva / zprava (m)</span><input type="number" step="0.1" id="c0"><input type="number" step="0.1" id="c1"></div>
+        <div class="row"><span data-t="ctrlz">body: dole / nahoře (m)</span><input type="number" step="0.1" id="z0"><input type="number" step="0.1" id="z1"></div>
+        </div>
+        <div class="row"><button class="btn" id="copyOpp" data-t="copyOpp">kopie z protější stěny</button><button class="btn" id="fileTex" data-t="fileTex">textura ze souboru…</button><input type="file" id="wfile" accept="image/*" hidden></div>
+        <div class="row"><button class="btn" id="faceDel" data-t="faceDel">odebrat stěnu z obrázku</button></div>
+      </div>
+      <button class="primary" id="save" data-t="save">Narovnat textury a uložit</button>
+    </div>
+    <div id="status"></div>
+  </aside>
+  <div class="pane"><canvas id="img"></canvas><div class="cap" data-t="capImg">Obrázek</div><div id="next"></div></div>
+  <div class="pane" id="p3"><canvas id="gl"></canvas><div id="labels"></div><div class="cap" data-t="cap3d">Blok s texturami (náhled)</div></div>
+</div>
+<script type="module" src="/src/facade.ts"></script>
+</body>
+</html>

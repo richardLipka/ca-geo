@@ -69,6 +69,14 @@ def coverage(name, im, alpha):
     else: m = ~((im > 245).all(2))
     return cv2.erode(m.astype(np.uint8), np.ones((15, 15), np.uint8)) > 0
 
+def building_mask(name, im, alpha):
+    """building pixels and map coverage of an epoch raster (as growth_model.py uses them before the manual corrections)"""
+    cov = coverage(name, im, alpha)
+    b = rule(name, im, alpha) & cov
+    if name == '1840_cadastre':  # add saturated yellow (wooden buildings); field colours are paler
+        H, S, V = hsv(im); b |= (H >= 45) & (H < 65) & (S > 0.5) & (V > 0.6) & cov
+    return b, cov
+
 # 2nd military survey (1840_vm2): the CENIA rendering has no separable settlement colour at this
 # scale — kept as a visual layer only, not classified
 # density thresholds per epoch (share of building pixels in the 150 m window)

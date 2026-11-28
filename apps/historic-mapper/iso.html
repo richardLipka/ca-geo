@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domy z vedut</title>
+<style>
+  :root { --bg: #f6f5f1; --panel: #fff; --ink: #1f2427; --mute: #67706f; --line: #d3d8d6; --acc: #8c3b2e; --ok: #2d6a3e }
+  * { box-sizing: border-box }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.4 system-ui, sans-serif }
+  #app { display: grid; grid-template-columns: 280px 1fr 1fr; grid-template-rows: auto 1fr; height: 100% }
+  header { grid-column: 1 / 4; display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--panel); border-bottom: 1px solid var(--line) }
+  header h1 { font-size: 15px; margin: 0 12px 0 0 } header select { min-width: 280px }
+  aside { background: var(--panel); border-right: 1px solid var(--line); padding: 10px 12px; overflow: auto }
+  h2 { font-size: 12px; margin: 14px 0 5px; color: var(--acc); text-transform: uppercase; letter-spacing: .04em }
+  select, input[type=number], input[type=text] { width: 100%; padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; font: inherit }
+  .row { display: flex; gap: 6px; align-items: center; margin: 4px 0 } .row > * { flex: 1 }
+  button { font: inherit; cursor: pointer } .btn, .tools button { padding: 4px 9px; border: 1px solid var(--line); background: #fbfbfa; border-radius: 4px }
+  .tools { display: flex; flex-wrap: wrap; gap: 4px } .tools button.on { background: var(--acc); color: #fff; border-color: var(--acc) }
+  .primary { background: var(--ok); color: #fff; border: 0; padding: 7px 10px; border-radius: 4px; width: 100%; margin-top: 8px }
+  ul { list-style: none; padding: 0; margin: 4px 0; max-height: 240px; overflow: auto; border: 1px solid var(--line); border-radius: 4px }
+  li { padding: 3px 6px; cursor: pointer; display: flex; justify-content: space-between; gap: 6px } li:hover { background: #f1efe8 } li.on { background: #f4dfc9 }
+  .hint { color: var(--mute); font-size: 12px } kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; font-size: 11px; background: #fbfbfa }
+  .lg { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px }
+  .pane { position: relative; overflow: hidden; border-right: 1px solid var(--line) }
+  .pane canvas { display: block; width: 100%; height: 100% }
+  .cap { position: absolute; left: 8px; top: 6px; background: rgba(255,255,255,.88); padding: 2px 8px; border-radius: 4px; font-size: 12px; pointer-events: none }
+  #ov { position: absolute; pointer-events: none; opacity: 0; }
+  #info { margin-top: 8px; font-size: 12.5px } #status { color: var(--mute); margin-top: 6px; min-height: 2.4em }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 data-t="title">Domy z vedut</h1>
+    <select id="vedSel"></select>
+    <span id="cam" class="hint"></span>
+    <span style="flex:1"></span>
+    <a class="btn" href="workbench.html" data-t="back">← kontrola půdorysů</a>
+    <button class="btn" id="lang">EN</button>
+  </header>
+  <aside>
+    <h2 data-t="houses">Domy</h2>
+    <div class="row"><button class="btn" id="new" data-t="new">+ nový dům</button><button class="btn" id="del" data-t="del">smazat</button></div>
+    <ul id="list"></ul>
+    <div id="edit" hidden>
+      <div class="row"><input type="text" id="name" placeholder="název / name"></div>
+      <div class="row"><span data-t="roof">střecha</span><select id="roof"><option value="gable" data-t="gable">sedlová</option><option value="hip" data-t="hip">valbová</option><option value="shed" data-t="shed">pultová</option><option value="flat" data-t="flat">plochá</option></select></div>
+      <div class="row"><span data-t="from">od</span><input type="number" id="from" placeholder="auto"><span data-t="to">do</span><input type="number" id="to" placeholder="auto"></div>
+      <h2 data-t="points">Body</h2>
+      <div class="tools">
+        <button data-pt="foot" class="on"><span class="lg" style="background:#2d9a4e"></span><span data-t="foot">1 půdorys</span></button>
+        <button data-pt="eave"><span class="lg" style="background:#d0402a"></span><span data-t="eave">2 zeď / okap</span></button>
+        <button data-pt="ridge"><span class="lg" style="background:#2f5fd0"></span><span data-t="ridge">3 střecha / hřeben</span></button>
+      </div>
+      <p class="hint" data-t="help">1 – rohy, kde zdi stojí na zemi (3 rohy stačí, dům se doplní na pravoúhlý). 2 – horní hrana zdi nad rohem. 3 – konce hřebene (u pultové horní hrana, u věže vrchol). Pravý klik smaže nejbližší bod. Kolečko = zoom, prostřední tlačítko / mezerník = posun.</p>
+      <div id="info"></div>
+    </div>
+    <h2 data-t="view3d">3D</h2>
+    <label><input type="checkbox" id="ctx" checked> <span data-t="ctx">budovy modelu kolem</span></label><br>
+    <label><input type="checkbox" id="drafts"> <span data-t="drafts">pohled kreslíře s vedutou</span></label>
+    <div class="row"><span data-t="ovop">průhlednost veduty</span><input type="range" id="ovop" min="0" max="1" step="0.05" value="0.5"></div>
+    <button class="primary" id="save" data-t="save">Uložit (body i rekonstrukci)</button>
+    <div id="status"></div>
+  </aside>
+  <div class="pane"><canvas id="img"></canvas><div class="cap" data-t="capImg">Veduta: klikejte body</div></div>
+  <div class="pane" id="p3"><canvas id="gl"></canvas><img id="ov" alt=""><div class="cap" data-t="cap3d">Rekonstrukce s texturou z veduty</div></div>
+</div>
+<script type="module" src="/src/iso.ts"></script>
+</body>
+</html>

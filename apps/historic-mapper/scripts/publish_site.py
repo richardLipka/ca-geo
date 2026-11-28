@@ -42,6 +42,8 @@ shutil.copy(os.path.join(dist, 'public3d.html'), os.path.join(OUT, 'index.html')
 M = json.load(open(os.path.join(WEB, 'model.json'), encoding='utf-8'))
 files = set(['terrain.png'] + [g['file'] for g in M['grounds']] + [w['file'] for w in M.get('water', [])] + ([M['cuts']['file']] if M.get('cuts') else []))
 for f in sorted(files): shutil.copy(os.path.join(WEB, f), os.path.join(OUT, 'data', f))
+if M.get('facades') and os.path.isdir(os.path.join(WEB, 'facades')):   # facade textures (facade.html) of buildings in the model
+    shutil.copytree(os.path.join(WEB, 'facades'), os.path.join(OUT, 'data', 'facades'))
 if M.get('mesh'):
     data = open(os.path.join(WEB, M['mesh']['file']), 'rb').read()
     parts = []

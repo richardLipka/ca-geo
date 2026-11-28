@@ -51,7 +51,7 @@ export const CATALOGUES = {
     'g3d.stat': 'budov: {n} · mapa: {g}', 'g3d.saved': 'Snímky uloženy: {f}', 'g3d.saveFail': 'Uložení snímku na server selhalo', 'g3d.fresh': 'právě postaveno / přestavěno',
     'g3d.p.medieval': 'středověk', 'g3d.p.early': 'raný novověk', 'g3d.p.baroque': 'po třicetileté válce', 'g3d.p.c19a': 'po 1840', 'g3d.p.c19b': 'industrializace', 'g3d.p.inter': 'meziválečné',
     'g3d.p.social': 'po 1946', 'g3d.p.recent': 'po 1990',
-    'g3d.b.history': 'písemné prameny / model 1618', 'g3d.b.ruian': 'RÚIAN – datum dokončení', 'g3d.b.ruianmap': 'RÚIAN věková třída + mapy', 'g3d.b.pre1840': 'stabilní katastr 1840 + zóna', 'g3d.b.map': 'jen mapové epochy',
+    'g3d.b.history': 'písemné prameny / model 1618', 'g3d.b.ruian': 'RÚIAN – datum dokončení', 'g3d.b.ruianmap': 'RÚIAN věková třída + mapy', 'g3d.b.pre1840': 'stabilní katastr 1840 + zóna', 'g3d.b.map': 'jen mapové epochy', 'g3d.b.manual': 'ručně (registr, kresby)',
     'v3d.title': '3D model', 'v3d.textures': 'Fasety z rytiny 1618', 'v3d.back': 'Zpět do mapovače', 'v3d.stat': 'zobrazeno {n} objektů, fasety u {f} budov', 'v3d.open': '3D model',
   },
   en: {
@@ -104,7 +104,7 @@ export const CATALOGUES = {
     'g3d.stat': 'buildings: {n} · map: {g}', 'g3d.saved': 'Frames saved: {f}', 'g3d.saveFail': 'Saving a frame on the server failed', 'g3d.fresh': 'just built / rebuilt',
     'g3d.p.medieval': 'medieval', 'g3d.p.early': 'early modern', 'g3d.p.baroque': 'after the Thirty Years War', 'g3d.p.c19a': 'after 1840', 'g3d.p.c19b': 'industrialisation', 'g3d.p.inter': 'interwar',
     'g3d.p.social': 'after 1946', 'g3d.p.recent': 'after 1990',
-    'g3d.b.history': 'written sources / 1618 model', 'g3d.b.ruian': 'RÚIAN completion date', 'g3d.b.ruianmap': 'RÚIAN age class + maps', 'g3d.b.pre1840': 'stable cadastre 1840 + zone', 'g3d.b.map': 'map epochs only',
+    'g3d.b.history': 'written sources / 1618 model', 'g3d.b.ruian': 'RÚIAN completion date', 'g3d.b.ruianmap': 'RÚIAN age class + maps', 'g3d.b.pre1840': 'stable cadastre 1840 + zone', 'g3d.b.map': 'map epochs only', 'g3d.b.manual': 'by hand (register, drawings)',
     'v3d.title': '3D model', 'v3d.textures': 'Facets from the 1618 plate', 'v3d.back': 'Back to the mapper', 'v3d.stat': '{n} objects shown, facets on {f} buildings', 'v3d.open': '3D model',
   },
 } as const;
